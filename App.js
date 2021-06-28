@@ -9,6 +9,7 @@ const path = require('path')
 const accRoute = require('./routes/Account')
 const postRoute = require('./routes/Story')
 const uploadRoute = require('./routes/Upload')
+require('dotenv').config()
 
 
 //----------------------------------------- END OF IMPORTS---------------------------------------------------
@@ -47,7 +48,7 @@ app.use('/photos', express.static(path.join('uploads/user')))
 
 //----------------------------------------- END OF ROUTES---------------------------------------------------
 try{
-  mongoose.connect("mongodb+srv://emmsamazing:iamamazing1998@cluster0.v2r5z.mongodb.net/YOURLIFE?retryWrites=true&w=majority", {
+  mongoose.connect(process.env.DB_CONNECTION, {
 useNewUrlParser: true,
 useUnifiedTopology: true
   });
@@ -56,6 +57,6 @@ useUnifiedTopology: true
   console.log(err)
 }
 //Start Server
-app.listen(4000, () => {
+app.listen(process.env.PORT || 4000, () => {
   console.log("Server Has Started");
 });
