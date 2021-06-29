@@ -8,9 +8,7 @@ function Login(){
     const [password, setPassword] = useState('');
     const history = useHistory()
     const cookies = new Cookies()
-
-    const USER_API = 'https://your-life-amazing.herokuapp.com/user/login'
-    const USER_FETCH = 'https://your-life-amazing.herokuapp.com/fetchAll'
+    
     const server_api = "https://yourlife-emmsdevs.herokuapp.com"
 
     const usernameChage = (e)=> {
