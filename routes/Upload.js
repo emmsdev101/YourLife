@@ -13,6 +13,7 @@ const storage = multer.diskStorage({
             fs.mkdir(dir, (err)=>{
                 if(err){
                     console.log(err)
+                    cb(err, null)
                 }
             })
         }
