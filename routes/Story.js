@@ -2,6 +2,7 @@ const Story = require('./../model/story')
 const Photo = require('./../model/photo')
 const bcrypt = require("bcrypt");
 const router = require('express').Router()
+const fs = require('fs')
 
 const auth = (req, res, next) => {
     if(req.session.user){
@@ -9,6 +10,11 @@ const auth = (req, res, next) => {
     }else{
         res.sendStatus(401)
     }
+}
+const admin = (req, res, next) => {
+    if(req.query.key === 'iamamazing1998'){
+        next()
+    } else res.sendStatus(401)
 }
 router.post('/create', auth, async(req, res, next)=>{
     const data = new Story({
@@ -19,7 +25,6 @@ router.post('/create', auth, async(req, res, next)=>{
         comments:0
         })
         const img_paths = req.body.imagePath
-        console.log(img_paths)
         data.save(function(err, post){
             if(err)return console.log(err)
 
@@ -45,5 +50,41 @@ router.get('/all-feeds', auth, async(req, res, next)=>{
     }catch(error){
         console.log(error)
     }
+})
+router.delete('/story', auth, async(req, res) => {
+    Story.findOneAndDelete({_id: req.body.post_id}, function(err, doc){
+        if(err){console.log(err);res.sendStatus(444)}
+        if(!doc) res.sendStatus(444)
+        
+        
+    })
+})
+// DELETING ALL STORIES 
+router.delete('/all',admin, (req, res, next) =>{
+    Story.deleteMany({}, (story_err, story_res) => {
+       if(story_err){
+           console.log(story_err); 
+           return res.sendStatus(444)
+        }
+        console.log('Story deleted from database')
+        Photo.deleteMany({}, function(photo_err, photo_del){
+            if(photo_err){
+                console.log(photo_err);
+                return res.sendStatus(444)
+            }
+            console.log('Photo deleted from database')
+            res.send({msg:'Story deleted'})
+            const dir = './uploads/user/'
+            // fs.unlinkSync(dir, (del_err)=>{
+            //     if(del_err){
+            //         console.log(del_err)
+            //         return res.sendStatus(444)
+            //     }
+            //     console.log('Photo deleted at :'+dir)
+            //     res.send({msg:'Story deleted'})
+            // })
+        })
+    })
+    
 })
 module.exports = router

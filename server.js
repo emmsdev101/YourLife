@@ -30,7 +30,7 @@ app.use(
 
 app.use(
   cors({
-    origin: "https://yourlife-emmsdevs.herokuapp.com", // <-- location of the react app were connecting to
+    origin: 'http://localhost:3000', // <-- location of the react app were connecting to
     credentials: true,
   })
 );
@@ -46,7 +46,6 @@ app.use('/photos', express.static(path.join('uploads/user')))
 // Routes
 //if (process.env.NODE_ENV === "development") {
     //Set static folder
-    console.log('running in production')
     app.use(express.static("client/build"));
     app.get("*", (req, res) => {
       res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));

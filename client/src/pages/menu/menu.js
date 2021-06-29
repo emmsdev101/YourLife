@@ -1,13 +1,16 @@
 import './style.css'
-import image1 from '../../res/images/mylove.jpg'
-import { FaCogs,FaHandshake,FaQuestionCircle, FaSignOutAlt, FaUserShield, FaHome, FaUsers, FaBell, FaEnvelope, FaBars} from 'react-icons/fa'
+import { FaCogs,FaHandshake,FaQuestionCircle, FaSignOutAlt, FaUserShield, FaHome, FaUsers, FaBell, FaEnvelope, FaBars, FaUserCircle} from 'react-icons/fa'
 import { useHistory} from 'react-router-dom'
 import axios from 'axios'
 import Cookies from 'universal-cookie'
-const API_URL = "https://your-life-amazing.herokuapp.com/user"
+
 const cookie = new Cookies()
 function Menu(){
+    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
+    const API_URL = my_api+"/user"
+
     const history = useHistory()
+
     function switchPage(page){
         history.push(page)
     }
@@ -36,7 +39,10 @@ function Menu(){
         </header>
             <h2 className = "menu-title">Menu</h2>
            <div className ="menu-item"onClick = {()=>{switchPage('/profile')}}>
-               <img className = "menuitem-img" src = {image1}></img>
+              {// <img className = "menuitem-img" src = {}></img>
+              }
+              <FaUserCircle className = 'alt-dp'/>
+
                <strong><p className = "menuitem-title">See your profile</p></strong>
             </div>
            <div className ="menu-item">

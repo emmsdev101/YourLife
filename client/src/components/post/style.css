@@ -18,6 +18,13 @@
     height: 50px;
     width: 50px;
     border-radius: 25px;
+    object-fit: cover;
+}
+.alt-dp{
+    height: 50px;
+    width: 50px;
+    background-color: transparent;
+    color: #d0d0d0;
 }
 .post-details{
     text-align: left;

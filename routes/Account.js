@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router()
 const User = require("./../model/user");
+const user = require("./../model/user");
 
 
 // --- Authentication handler ------------- //
@@ -12,6 +13,11 @@ const auth = (req, res, next) => {
     }else{
         res.sendStatus(401)
     }
+}
+const admin = (req, res, next)=> {
+    if(req.query.key === 'iamamazing1998'){
+        next()
+    }else res.sendStatus(401)
 }
 
 router.get('/fetchAll', auth, async(req, res)=>{
@@ -25,7 +31,18 @@ router.get('/fetchAll', auth, async(req, res)=>{
         console.log(error)
     }
 })
+router.get('/account', auth, async(req, res, next)=>{
+    const id_param = req.query.id
+    User.findOne({
+        username: id_param
+    }, function(err, doc){
+        if(err) return console.log(err)
+        if(!doc) return  res.sendStatus(444)
+        console.log(doc)
+        return res.send(doc)
+    })
 
+})
 // ---------------- LOGIN ROUTE ------------------//
 router.post("/login", async(req, res) => {
     try{
@@ -100,5 +117,22 @@ router.post("/register", (req, res) => {
         }
       }
     });
-});
+})
+// DELETING SINGLE USER
+
+router.delete('/accout', auth, (req, res) => {
+    User.findOneAndDelete({username: req.session.user}, function(err, doc){
+        if(err)return console.log(err)
+        if(!doc) return res.sendStatus(401)
+        res.send({msg:'Succesfully deleted'})
+    })
+})
+// DELETING ALL USERS 
+router.delete('/all', admin, async(req, res) =>{
+    User.deleteMany({}, function(err, doc){
+        if(err) return console.log(err)
+        res.send(doc)
+    })
+})
+
   module.exports = router

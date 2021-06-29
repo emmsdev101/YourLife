@@ -1,38 +1,54 @@
 import './style.css'
 import {useEffect, useState} from 'react'
-import image1 from '../../res/images/test2.jpg'
-import { FaComment, FaEllipsisH, FaThumbsUp } from 'react-icons/fa'
+import { FaComment, FaEllipsisH, FaThumbsUp, FaUserCircle } from 'react-icons/fa'
 import axios from 'axios'
+import Cookies from 'universal-cookie'
 
 function Post({content}){
+    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
+
     const [photos, setPhotos] = useState([]);
-    const server_api = "https://yourlife-emmsdevs.herokuapp.com"
+    const [profileDetails, setProfileDetails] = useState('')
+    const username = new Cookies().get('username')
     const fetchImages = async() => {
         const fetched_images = await axios({
             method:'get',
             withCredentials: true,
-            url: server_api+'/upload/post/',
+            url: my_api+'/upload/post/',
             params : {id: content._id}
         }
         )
         if(fetched_images.status === 200){
             setPhotos(fetched_images.data)
-            console.log(fetched_images.data)
         }else{
             console.log(fetched_images.status)
         }
     }
+    const fetchUser = async() => {
+        const fetch_res = await axios({
+            method:'get',
+            withCredentials: true,
+            url:  my_api+'/user/account',
+            params : {id: username}
+        })
+        if(fetch_res.status === 200){
+            setProfileDetails(fetch_res.data)
+            console.log(fetch_res.data)
+        }
+    }
     useEffect(() => {
-        fetchImages()   
+        fetchImages()
+        fetchUser()
     }, []);
     return(
         <>
         <div className = "post-div" id = {content._id}>
             <div className = "post-heading">
-                <img className = "profile-photo" src = {image1}>
-                </img>
+                {//profileDetails !== true? <img className = "profile-photo" src = {profileDetails.photo} alt = "profile picture"/>:<FaUserCircle className = 'alt-dp'/>
+                }
+                <FaUserCircle className = 'alt-dp'/>
                 <div className = "post-details">
-                    <h4>Emmanuel Katipunan</h4>
+                    <h4>{profileDetails !== ''? profileDetails.firstname + ' ' + profileDetails.lastname :''}</h4>
                     <p>13 minutes ago</p>
                 </div>
                 <div className = "post-menu"> <FaEllipsisH className = "post-menu-icon"></FaEllipsisH> </div>
@@ -45,8 +61,7 @@ function Post({content}){
                     <div className = 'images-section'>
                         {photos.map((photo, id)=>{
                             if(id < 4){
-                                const src = "https://your-life-amazing.herokuapp.com/photos/"+photo.path
-                                if(photos.length > 4) console.log(photo.path) 
+                                const src =  my_api+"/photos/"+photo.path
                                 if(photos.length === 1){
                                     return (<img src = {src} id = {id} className = 'single content-photo'></img>)
                                 }else if(photos.length === 2){

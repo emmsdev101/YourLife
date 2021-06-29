@@ -5,8 +5,6 @@ const multer = require('multer')
 
 const ImageModel = require('./../model/photo')
 
-
-
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
         const dir = './uploads/user/'+req.session.user;
@@ -26,6 +24,13 @@ const storage = multer.diskStorage({
 })
 const uploads = multer({storage:storage})
 
+const auth = (req, res, next) => {
+    if(req.session.user){
+        next()
+    }else{
+        res.sendStatus(401)
+    }
+}
 router.post('/', uploads.array('image'), async (req, res, next)=> {
     const files = req.files
     const paths = []
@@ -35,7 +40,7 @@ router.post('/', uploads.array('image'), async (req, res, next)=> {
     res.send(paths)
 })
 
-router.get('/', (req, res) => {
+router.get('/', auth, (req, res) => {
     const uploadsDirectory = path.join('uploads')
     fs.ReadStream(uploadsDirectory, (err, files) => {
         if(err){
@@ -48,7 +53,7 @@ router.get('/', (req, res) => {
     })
 
 })
-router.get('/post/', async(req, res)=>{
+router.get('/post/', auth, async(req, res)=>{
     try{
         const fetch_res = await ImageModel.find({
             post_id: req.query.id
@@ -57,6 +62,11 @@ router.get('/post/', async(req, res)=>{
     }catch(err){
         res.sendStatus(500)
     }
-    
+})
+router.get('/fetch-all', async(req, res)=> {
+    ImageModel.find({}, function(err, doc){
+        if(err)return console.log(err)
+        res.send(doc)
+    })
 })
 module.exports = router

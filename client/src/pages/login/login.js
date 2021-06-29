@@ -4,12 +4,12 @@ import axios from 'axios';
 import './style.css'
 import Cookies from 'universal-cookie'
 function Login(){
+    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' :''
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const history = useHistory()
     const cookies = new Cookies()
-    
-    const server_api = "https://yourlife-emmsdevs.herokuapp.com"
+
 
     const usernameChage = (e)=> {
         setUsername(e.target.value)
@@ -21,7 +21,7 @@ function Login(){
         const res = await axios({
             method: 'post',
             withCredentials: true,
-            url: server_api+'/user/login',
+            url:my_api+'/user/login',
             data: {
                 username:username,
                 password:password,
@@ -46,7 +46,7 @@ function Login(){
         const fetched_user = await axios({
             method:'get',
             withCredentials: true,
-            url: server_api+'/fetchAll',
+            url: my_api+'/fetchAll',
         })
         console.log(fetched_user.data)
     }

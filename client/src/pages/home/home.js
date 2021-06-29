@@ -8,11 +8,10 @@ import { useHistory } from "react-router-dom";
 import CreatePost from '../../components/createPost/createPost'
 import axios from "axios";
 function Home(){
+    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
     const [createPost, setCreatePost] = useState(false);
     const [feeds, setFeeds] = useState([])
     const history = useHistory()
-
-    const server_api = "https://yourlife-emmsdevs.herokuapp.com"
     
     function switchPage(page){
         history.push(page)
@@ -32,7 +31,7 @@ function Home(){
         const get_feeds = await axios({
             method:'get',
             withCredentials: true,
-            url:server_api+'/post/all-feeds'
+            url: my_api+'/post/all-feeds'
         })
         if(get_feeds.status === 200){
             setFeeds(get_feeds.data)

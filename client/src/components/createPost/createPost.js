@@ -9,7 +9,9 @@ import photo2 from './../../res/images/test2.jpg'
 import photo3 from './../../res/images/test3.jpg'
 import photo4 from './../../res/images/test4.jpg'
 function CreatePost({showMe, addStory}){
-    const POST_API = 'https://your-life-amazing.herokuapp.com/post/create'
+    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
+    const POST_API = my_api + '/post/create'
+    const UPLOAD_API = my_api + '/upload'
     const cookie = new Cookies()
     const owner = cookie.get('username')
     
@@ -77,7 +79,7 @@ function CreatePost({showMe, addStory}){
                 withCredentials:true,
                 headers:{"Content-Type" : "multipart/form-data"},
                 data:form_data,
-                url:"https://your-life-amazing.herokuapp.com/upload"
+                url:UPLOAD_API
             })
             if(upload.status === 200){
                 return upload.data

@@ -8,8 +8,9 @@ function Signup(){
     const [age, setAge] = useState();
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
-    const USER_API = 'https://your-life-amazing.herokuapp.com/user/register'
-
+    
+    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
+    const USER_API = my_api+'/user/register'
     const gender_options = [
         {
             label: 'Male',
