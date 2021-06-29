@@ -1,0 +1,132 @@
+.post-div{
+    width: 100%;
+    height: auto;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    background-color: white;
+    margin-bottom: 20px;
+
+}
+.post-heading{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-left: 10px;
+}
+.profile-photo{
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+}
+.post-details{
+    text-align: left;
+    margin-right: auto;
+    margin-left: 5px;
+}
+.post-details h4, p{
+    margin: 0;
+}
+.post-details p{
+    font-size: small;
+    color: rgb(102, 102, 102);
+}
+.post-menu{
+    height: 50px;
+    margin-right: 10px;
+}
+.content-text{
+    width: 100%;
+    height: auto;
+    text-align: left;
+    padding:10px ;
+}
+.content-footer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-size: small;
+    margin-top: 20px;
+}
+.post-footer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+
+}
+.like-button{
+    border: none;
+    background-color: transparent;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    color: rgb(34, 34, 34);
+    
+}
+.like-icon{
+    width: 20px;
+    height: 20px;
+    margin-right: 6px;
+}
+.comment-status{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: rgb(102, 102, 102);
+    font-size: small;
+}
+.comment-count{
+    margin-right: 2px;
+}
+
+.single{
+    width: 100%;
+    object-fit: cover;
+    height:auto;
+}
+.double{
+    width: 50%;
+    height: 300px;
+    object-fit: cover;
+}
+.tripple{
+    object-fit: cover;
+    width: 50%;
+    
+}
+.tripple-row{
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.quad{
+    object-fit: cover;
+    width: 50%;
+    height: 200px;
+    
+}
+.images-section{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin-top: 10px;
+}
+.content-photo{
+    padding: 3px;
+}
+.more-btn{
+    width: 100%;
+    height: 40px;
+    background-color: #EF5DA8;
+    color: white;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+}

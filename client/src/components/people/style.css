@@ -1,0 +1,45 @@
+.user-div{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: rgb(73, 73, 73);
+}
+.user-picture{
+    height: 90px;
+    width: 90px;
+    margin: 10px;
+    border-radius: 45px;
+}
+.user-detail{
+    margin: 5px;
+    }
+.user-status{
+    margin: 0;
+    font-size: small;
+    text-align: left;
+}
+.user-name{
+    margin: 0;
+    text-align: left;
+    font-size:21px;
+    font-weight: 500;
+    color: rgb(37, 37, 37);
+}
+.user-detail button{
+    outline: none;
+    border: none;
+    height: 40px;
+    width: 110px;
+    color: white;
+    border-radius: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+.user-follow{
+    background-color: #5D5FEF;
+}
+.user-remove{
+    background-color: #EF5DA8;
+}

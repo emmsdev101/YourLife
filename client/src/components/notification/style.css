@@ -1,0 +1,44 @@
+::rot{
+    --width : 100vw
+}
+.unread{
+    background-color: #FCDDEC;
+}
+.notification-div{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: left;
+    color: rgb(73, 73, 73);
+    padding-top: 5px;
+    padding-bottom: 5px;  
+    
+}
+.notification-picture{
+    height: 90px;
+    width: 90px;
+    border-radius: 50px;
+    margin-left: 10px;
+}
+.notification-detail{
+    margin-left: 10px;
+    width: calc(100% - 100px);
+
+    }
+.notification-status{
+    margin: 0;
+    font-size: smaller;
+    text-align: left;
+}
+.notification-name{
+    margin: 0;
+    text-align: left;
+    font-size: medium;
+    font-weight: 700;
+}
+.notification-content{
+    font-size: small;
+    text-align: left;
+}

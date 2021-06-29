@@ -1,0 +1,339 @@
+:root{
+  --width:720px;
+}
+.profile-header-div{
+    width: 100%;
+    height: auto;
+    background-color: #EF5DA8;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    padding-bottom: 20px;
+  }
+  .row1-profile-header{
+      height: auto;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+      align-items: center;
+      padding-top: 40px;
+      padding-bottom:20px;
+  }
+  .follower-div{
+      width: auto;
+      height: auto;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      
+  }
+  .follow-count{
+    font-weight: bold;
+    text-align: center;
+    font-size: x-large;
+  }
+  .follower-div p, .following-div p{
+      padding: 0;
+      margin: 0;
+      width: 90%;
+  }
+  .follow-count-title{
+    font-weight: lighter;
+    text-align: center;
+    font-size: medium;
+  }
+  .dp-div{
+    width: 200px;
+    height: 200px;
+    color: white;
+    background-color: rgb(150, 150, 150);
+    border-radius: 100px;
+    background-size: cover;
+    
+  }
+  .following-div{
+    width: 50px;
+    height: auto;
+    color: white;
+  }
+  .camera-div{
+    color: rgb(34, 34, 34);
+    width: 40px;
+    height: 40px;
+    background-color: rgb(209, 209, 209);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    position: relative;
+    top: 150px;
+    left: 150px;
+  }
+  .information-div{
+    color: white;
+  }
+  .fullname ,.age, .gender{
+    margin: 0;
+    padding: 0;
+  }
+  .fullname{
+    font-size: x-large;
+    font-weight: bold;
+  }
+  .age, .gender{
+    font-size: larger;
+    font-weight:500;
+  }
+  .editprofile-div{
+    width: 100%;
+    height: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: white;
+    
+  }
+  .editprofile-div button{
+    width: 95%;
+    height: 50px;
+    background-color: #A5A6F6;
+    outline: none;
+    border: none;
+    color: white;
+    border-radius: 1px;
+    font-size: larger;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: medium;
+    margin: auto;
+  }
+  .edit-icon{
+    margin-right: 5px;
+  }
+  .photos-div{
+    background-color: rgb(255, 255, 255);
+    text-align: left;
+    padding: 10px;
+    padding-bottom: 40px;
+    margin-top: 10px;
+    width: 100%;
+    height: auto;
+  }
+  .photo-list-div{
+    height: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    padding-bottom: 20px;
+  }
+  .photo-item-div{
+    width:calc(var(--width)/2 - 20px);
+    height:calc(var(--width)/2 - 20px);
+    margin: 5px;
+    border-radius: 10px;
+    background-size: cover;
+  }
+  .photos-div h4{
+    margin-left: 10px;
+    font-weight: bolder;
+    font-size: larger;
+  }
+  .photos-button-div{
+    width: 100%;
+    height: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: white;
+  }
+  .generic-button-div button{
+    width: 98%;
+    height: 40px;
+    background-color: #A5A6F6;
+    outline: none;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    font-size: larger;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: medium;
+    margin: auto;
+  }
+.friends-div{
+  height:auto;
+  width: 100%;
+  background-color: white;
+  text-align: left;
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+
+}
+.friends-list-div{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+}
+.friends-item-div{
+  width: calc(var(--width)/3 - 20px);
+  height:auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 10px;
+  font-size: medium;
+}
+.friends-div h4{
+  margin-left: 10px;
+  padding-top: 20px;
+}
+.friend-image{
+  width: 100%;
+  height:calc(var(--width)/3 - 20px);
+  background-size: cover;
+  border-radius: 10px;
+}
+.primary-button{
+  width: 100%;
+  height: auto;
+}
+.primary-button button{
+  width: 98%;
+  height: 50px;
+  border-radius: 5px;
+  background-color: #5D5FEF;
+  border: none;
+  color: white;
+  outline: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+
+}
+.primary-button-icon{
+  height: 20px;
+  width: 20px;
+  margin-right: 5px;
+}
+.stories-div{
+  height: 100vh;
+  width: 100%;
+}
+.section-title{
+  text-align: center;
+
+}
+.post-div-list{
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+  padding-top: 20px ;
+  background-color: rgb(189, 189, 189);
+}
+.profile-action{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+}
+.button-follow, .button-message{
+  height: 50px;
+  width: 170px;
+  background-color: #5D5FEF;
+  color: white;
+  border: none;
+  outline: none;
+  border-radius: 2px;
+  margin: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.follow-icon, .message-icon{
+  height: 20px;
+  width: 20px;
+  margin: 5px;
+}
+
+  
+
+  @media only screen and (max-width: 768px){
+    .follow-count-title{
+      font-weight: lighter;
+      text-align: center;
+      font-size: small;
+    }
+    .follow-count{
+      font-weight: bold;
+      text-align: center;
+      font-size:large;
+    }
+    .dp-div{
+      width: 150px;
+      height: 150px;
+    
+    }
+    .camera-div{
+      color: rgb(34, 34, 34);
+      width: 40px;
+      height: 40px;
+      top: 110px;
+      left: 105px;
+    }
+    .row1-profile-header{
+      padding-top: 20px;
+      padding-bottom:20px;
+  }
+  
+  :root{
+    --width:100vw;
+  }
+  }
+  @media only screen and (max-width: 440px){
+    .follow-count-title{
+      font-weight: bold;
+      text-align: center;
+      font-size: small;
+    }
+    .follow-count{
+      font-weight: bold;
+      text-align: center;
+      font-size:x-large;
+    }
+    .dp-div{
+      width: 150px;
+      height: 150px;
+    
+    }
+    .camera-div{
+      color: rgb(34, 34, 34);
+      width: 40px;
+      height: 40px;
+      top: 110px;
+      left: 105px;
+    }
+    .row1-profile-header{
+      padding-top: 20px;
+      padding-bottom:20px;
+  }
+
+  }
