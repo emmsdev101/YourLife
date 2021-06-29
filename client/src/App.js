@@ -14,8 +14,8 @@ import Cookies from 'universal-cookie'
 function App() {
   const cookie = new Cookies()
   const username = cookie.get('username')
+
   const isLogged = ()=>{
-    console.log("username :"+username)
     if(username === undefined){
       return true
     }
