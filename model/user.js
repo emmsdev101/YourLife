@@ -28,6 +28,14 @@ const UserSchema = new mongoose.Schema({
 		type:String,
 		required:false
 	},
+	followers:{
+		type:Number,
+		default: 0
+	},
+	followiing:{
+		type: Number,
+		default: 0
+	},
 	date :{
 		type:Date,
 		default:Date.now

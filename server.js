@@ -13,9 +13,6 @@ require('dotenv').config()
 
 
 //----------------------------------------- END OF IMPORTS---------------------------------------------------
-
-
-
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

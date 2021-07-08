@@ -33,14 +33,19 @@ router.get('/fetchAll', auth, async(req, res)=>{
 })
 router.get('/account', auth, async(req, res, next)=>{
     const id_param = req.query.id
-    User.findOne({
-        username: id_param
-    }, function(err, doc){
-        if(err) return console.log(err)
-        if(!doc) return  res.sendStatus(444)
-        console.log(doc)
-        return res.send(doc)
-    })
+    try{
+        User.findOne({
+            username: id_param
+        }, function(err, doc){
+            if(err) return console.log(err)
+            if(!doc) return  res.sendStatus(444)
+            console.log(doc)
+            return res.send(doc)
+        })
+    }catch(err){
+        console.log(err)
+        res.send(444)
+    }
 
 })
 // ---------------- LOGIN ROUTE ------------------//

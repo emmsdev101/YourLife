@@ -5,8 +5,12 @@ import mylove from '../../res/images/mylove.jpg'
 import mylove1 from '../../res/images/mylove1.jpg'
 import User from '../../components/people/user'
 import { useHistory } from "react-router-dom";
+import usePeople from '../../logic/usePeople'
 function People(){
     const history = useHistory()
+
+    const people = usePeople()
+
     function switchPage(page){
         history.push(page)
     }
@@ -25,9 +29,9 @@ function People(){
               <button className = "search-button"><FaSearch className = "search-icon"></FaSearch></button>
           </div>
           <div className = "people-list-div">
-             <User></User>
-             <User></User>
-             <User></User>
+             {people.map((user,id)=>(
+                 <User  data = {user}/>
+             ))}
           </div>
       </div>
 </>

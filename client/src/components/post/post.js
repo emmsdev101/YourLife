@@ -10,6 +10,7 @@ function Post({content}){
     const [photos, setPhotos] = useState([]);
     const [profileDetails, setProfileDetails] = useState('')
     const username = new Cookies().get('username')
+    const [owner, setOwner] = useState({})
     const fetchImages = async() => {
         const fetched_images = await axios({
             method:'get',
@@ -29,7 +30,7 @@ function Post({content}){
             method:'get',
             withCredentials: true,
             url:  my_api+'/user/account',
-            params : {id: username}
+            params : {id: content.owner}
         })
         if(fetch_res.status === 200){
             setProfileDetails(fetch_res.data)
