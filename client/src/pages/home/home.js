@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { FaBars, FaBell, FaPlusCircle, FaEnvelope, FaHome, FaUsers } from "react-icons/fa";
 import './style.css'
 import Post from '../../components/post/post'
@@ -8,12 +8,14 @@ import { useHistory } from "react-router-dom";
 import CreatePost from '../../components/createPost/createPost'
 import axios from "axios";
 import useFeed from "../../logic/useFeed";
+import { GlobalUserContext } from "../../logic/userContext";
 function Home(){
     
     const [createPost, setCreatePost] = useState(false);
-    const {feeds, addFeed} = useFeed()
+    const [uploading, setUploading] = useState(false)
+    const {postStory,uploadPhoto, uploadingProgress, feedStories, addFeed} = useFeed()
     const history = useHistory()
-    
+    const user_context = useContext(GlobalUserContext);
 
     function switchPage(page){
         history.push(page)
@@ -26,10 +28,22 @@ function Home(){
         }
         
     }
-    
+    const Loader = ()=> {
+        return(
+            <div className = "loader-div"><div class="loader"></div></div>
+        )
+    }
+    const Uploading = ()=>{
+        return(
+            <div className = "upload_progress">
+            <p id = "progress_label">{uploadingProgress < 100 ? "Uploading" :"Done!!!" }</p>
+                <progress id="uploading" value={uploadingProgress} max="100"> </progress>
+         </div>
+        )
+    }
     return(
         <>
-        {createPost? <CreatePost showMe = {createStory} addStory = {addFeed}/>: 
+        {createPost? <CreatePost showMe = {createStory} addStory = {addFeed} postStory = {postStory} uploadPhoto = {uploadPhoto}/>: 
         <>
         <header className="home-header">
             <div className = "active" onClick = {()=>{switchPage('/home')}}> <FaHome className = "nav-icon"></FaHome></div>
@@ -39,22 +53,23 @@ function Home(){
             <div className = "inactive" onClick = {()=>{switchPage('/menu')}}><FaBars className = "nav-icon"></FaBars></div>
         </header> 
       <div className = "home-body">
+          {uploadingProgress > 0 && uploadingProgress < 100? <Uploading/>:''}
           <div className = "home-title">
               <div className = "primary-button">
-            <button onClick = {createStory}> <FaPlusCircle className = "primary-button-icon"></FaPlusCircle>Share a story</button>
+                <button onClick = {createStory}> <FaPlusCircle className = "primary-button-icon"></FaPlusCircle>Share a story</button>
+            </div>
         </div>
-              </div>
+        {feedStories.length < 1? <Loader/>:''}
           <div className = "post-list-div">
-              {feeds.map((post, post_id)=>(
-                  <Post content = {post}/>
-              ))}
+             {feedStories.map((story, id)=>(
+                 <>
+                 <Post content = {story} id = {id}/>
+                 <div className = "span"></div>
+                 </>
+             ))}
           </div>
       </div>
         </>
-
-        
-        
-        
         }
         
 </>

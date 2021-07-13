@@ -1,5 +1,5 @@
 import { useHistory } from 'react-router-dom'
-import { useState, useEffect } from "react";
+import React, {useEffect, useState, useContext, createContext} from 'react'
 import axios from 'axios';
 import './style.css'
 import Cookies from 'universal-cookie'
@@ -8,47 +8,49 @@ import photo1 from './../../res/images/test1.jpg'
 import photo2 from './../../res/images/test2.jpg'
 import photo3 from './../../res/images/test3.jpg'
 import photo4 from './../../res/images/test4.jpg'
-function CreatePost({showMe, addStory}){
+import { GlobalUserActionsContext, GlobalUserContext } from '../../logic/userContext';
+import usePeople from './../../logic/usePeople'
+import useFeed from '../../logic/useFeed';
+function CreatePost({showMe, addStory, postStory, uploadPhoto}){
     const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
-    const POST_API = my_api + '/post/create'
-    const UPLOAD_API = my_api + '/upload'
+    
     const cookie = new Cookies()
     const owner = cookie.get('username')
+    const {getUserInfo} = usePeople()
     
     const [photos, setPhots] = useState([])
     const [content, setContent] = useState('')
 
+    const user_context = useContext(GlobalUserContext);
+    const set_user_context = useContext(GlobalUserActionsContext)
+
+
     let picker
+
+
     useEffect(() => {
+        async function fetchUser(){
+            const user_info = await getUserInfo(owner)
+            set_user_context(user_info)
+        }
+        if(owner !== undefined){
+            fetchUser()
+        }
     }, []);
     const handleInput = (e) =>{
         setContent(e.target.value)
     }
+
     const handleSubmit = async() => {
-        const paths = await uploadHandler()
-        console.log(paths)
-        postStory(paths)
-        
-    }
-    const postStory = async(paths) => {
-        const posting = await axios({
-            method : 'post',
-            withCredentials: true,
-            url : POST_API,
-            data:{
-                owner:owner,
-                content:content,
-                imagePath:paths
-            }
-        })
-        alert('posting')
-        if(posting.status === 200){
-            alert('Posted')
-            addStory(posting.data)
-            showMe()
-        }else{
-            console.log(posting.status)
-        }
+        showMe()
+        const formData = new FormData()
+        photos.forEach(photo => {
+            formData.append('image',photo)
+        });
+
+        const uploads =  await  uploadPhoto(formData)
+        const new_feed = await postStory(user_context,uploads,content)
+         addStory(new_feed)
     }
     const openPicker = () =>{
         picker = document.getElementById('image-picker')
@@ -66,31 +68,18 @@ function CreatePost({showMe, addStory}){
         const image_url = URL.createObjectURL(pic)
         return image_url
       }
-    const uploadHandler = async() => {
-        const form_data = new FormData()
-        const images = document.getElementById('image-picker').files
-        photos.forEach(photo => {
-            form_data.append('image',photo)
-        });
-       
-        try {
-            const upload = await axios({
-                method:'post',
-                withCredentials:true,
-                headers:{"Content-Type" : "multipart/form-data"},
-                data:form_data,
-                url:UPLOAD_API
-            })
-            if(upload.status === 200){
-                return upload.data
-            }
-            return false
-        } catch (errors) {
-            console.log(errors)
-        }
-    }
+    // const Uploading = ()=>{
+    //     return(
+    //         <div className = "upload_progress">
+    //         <p id = "progress_label">{uploadingProgress < 100 ? "Uploading" :"Done!!!" }</p>
+    //             <progress id="uploading" value={uploadingProgress} max="100"> </progress>
+    //      </div>
+    //     )
+    // }
 
     return(
+        <>
+        {/* {uploadingProgress > 0 && uploadingProgress < 100? <Uploading/>:''} */}
         <div className = "createPost">
             <div className = "createPost-header">
                 <button className = 'back-btn' onClick = {showMe}> <FaArrowLeft className = 'back-icon'/></button>
@@ -127,7 +116,7 @@ function CreatePost({showMe, addStory}){
                 </div>
             </div>
         </div>
-    )
+    </>)
 
 }
 export default CreatePost

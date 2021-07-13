@@ -19,6 +19,7 @@ const admin = (req, res, next) => {
 router.post('/create', auth, async(req, res, next)=>{
     const data = new Story({
         owner:req.body.owner,
+        owner_fullname: req.body.fullname,
         content:req.body.content,
         images:req.body.images,
         likes:0,

@@ -9,7 +9,7 @@ import usePeople from '../../logic/usePeople'
 function People(){
     const history = useHistory()
 
-    const people = usePeople()
+    const {people} = usePeople()
 
     function switchPage(page){
         history.push(page)

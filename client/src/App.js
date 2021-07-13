@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { FaBell, FaEnvelope, FaEnvelopeSquare, FaHome, FaUsers, FaArrowLeft, FaBackward, FaBars, FaBeer, FaCamera } from 'react-icons/fa';
 import './App.css';
 import Profile from './pages/profile/profile';
@@ -11,6 +11,10 @@ import Signup from './pages/sign-up/signup'
 import Login from './pages/login/login'
 import { Route, BrowserRouter, Switch, Link, useHistory} from 'react-router-dom';
 import Cookies from 'universal-cookie'
+import UserContext from './logic/userContext';
+import {GlobalUserActionsContext, GlobalUserContext} from './logic/userContext'
+import axios from 'axios';
+import usePeople from './logic/usePeople';
 function App() {
   const cookie = new Cookies()
   const username = cookie.get('username')
@@ -21,28 +25,31 @@ function App() {
     }
     return false
   }
- 
   return (
     <BrowserRouter>
     <Switch>
-    {!isLogged()?
-    <div className="App"> 
-    <Route exact path = "/menu"><Menu/></Route> 
-    <Route exact path = "/people"><People/></Route>
-    <Route exact path = "/notification"><Notification/></Route>
-    <Route exact path = "/chat"><Chat/></Route>
-    <Route exact path = "/home"><Home/></Route>
-    <Route exact path = "/profile"><Profile/></Route>
-    <Route exact path = "/login"><Home/></Route>
-    <Route exact path = "/signup"><Home/></Route>
-    <Route exact path = "/"><Home/></Route>
-</div>
-  : <>
-    <Route exact path = "/"><Login/></Route>
-    <Route exact path = "/signup"><Signup/></Route>
-    <Route exact path = "/login"><Login/></Route>
-  </>
-}
+      <UserContext>
+      {!isLogged()?
+        <div className="App"> 
+          <Route exact path = "/menu"><Menu/></Route> 
+          <Route exact path = "/people"><People/></Route>
+          <Route exact path = "/notification"><Notification/></Route>
+          <Route exact path = "/chat"><Chat/></Route>
+          <Route exact path = "/home"><Home/></Route>
+          <Route exact path = "/profile"><Profile/></Route>
+          <Route exact path = "/login"><Home/></Route>
+          <Route exact path = "/signup"><Home/></Route>
+          <Route exact path = "/"><Home/></Route>
+        </div>
+      : <>
+          <Route exact path = "/"><Login/></Route>
+          <Route exact path = "/signup"><Signup/></Route>
+          <Route exact path = "/login"><Login/></Route>
+      </>
+    }
+
+      </UserContext>
+    
     </Switch>
     </BrowserRouter>
   );

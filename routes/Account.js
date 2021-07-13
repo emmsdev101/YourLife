@@ -36,10 +36,12 @@ router.get('/account', auth, async(req, res, next)=>{
     try{
         User.findOne({
             username: id_param
+        },{
+            _id : 0,
+            password:0
         }, function(err, doc){
             if(err) return console.log(err)
             if(!doc) return  res.sendStatus(444)
-            console.log(doc)
             return res.send(doc)
         })
     }catch(err){
@@ -65,7 +67,10 @@ router.post("/login", async(req, res) => {
                       firstname:account.firstname,
                       lastname:account.lastname,
                       age:account.age,
-                      gender:account.gender
+                      gender:account.gender,
+                      followers:account.followers,
+                      following: account.following,
+                      photo: account.photo
                   })
                 } else {
                   res.send({
