@@ -29,9 +29,8 @@ function CreatePost({showMe, addStory, postStory, uploadPhoto}){
 
 
     useEffect(() => {
-        async function fetchUser(){
-            const user_info = await getUserInfo(owner)
-            set_user_context(user_info)
+        function fetchUser(){
+            set_user_context(owner)
         }
         if(owner !== undefined){
             fetchUser()

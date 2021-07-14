@@ -1,24 +1,67 @@
-import { FaArrowLeft, FaBackward, FaBars, FaBeer, FaCamera, FaEdit, FaEnvelope, FaMailBulk, FaMailchimp, FaPen, FaPlusCircle, FaUserPlus } from 'react-icons/fa';
+
+import {useContext, useState, useEffect, useRef} from 'react'
+import { FaArrowLeft, FaUserCircle, FaBars, FaCamera, FaEnvelope, FaPen, FaPlusCircle, FaUserPlus, FaWindowClose, FaRegWindowClose, FaArrowAltCircleLeft } from 'react-icons/fa';
 import './profile.css'
 import testimage1 from '../../res/images/test1.jpg'
 import testimage2 from '../../res/images/test2.jpg'
 import testimage3 from '../../res/images/test3.jpg'
 import testimage4 from '../../res/images/test4.jpg'
 
+import ChangeDp from './../../components/changeDp/changeDp'
+
 import Post from '../../components/post/post'
 import { useHistory } from 'react-router-dom';
+import { GlobalUserActionsContext, GlobalUserContext } from "../../logic/userContext";
+import axios from 'axios';
+import usePeople from '../../logic/usePeople';
+import Cookies from 'universal-cookie'
 
 function Profile(){
+    const owner = new Cookies().get("username")
+    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
     let isOwn =  true
     const history = useHistory()
+    const user_context = useContext(GlobalUserContext);
+    const set_user_context = useContext(GlobalUserActionsContext)
 
+    const [photos, setPhotos] = useState([]);
+    const [upload, setUpload] = useState(false)
+    const {fetchPhotos} = usePeople()
+    
+    const fullname = user_context.firstname + ' ' +user_context.lastname
+    const followers = user_context.followers
+    const following = user_context.followiing
+    const [profile_photo_url, setProfilePhotoUrl] = useState()
+
+    const gender = user_context.gender
+    const age = user_context.age
+
+    useEffect(() => {
+        
+        if(user_context.username === undefined){
+            console.log("initializing")
+            console.log(owner)
+            set_user_context(owner)
+        }
+        async function setupPhotos (){
+            const fetchResult = await fetchPhotos(user_context.username)
+            setPhotos(fetchResult)
+        }
+        setupPhotos()
+    }, []);
+    useEffect(() => {
+        setProfilePhotoUrl(my_api + "/photos/"+user_context.photo)
+    }, [user_context]);
 
     function back(){
         history.push("/menu")
     }
-    const PhtoItem =({image})=>{
+    const uploadEnable = ()=> {
+        setUpload(true)
+    }
+    const PhtoItem =({image, id})=>{
         return(
-            <div className = "photo-item-div" style = {{backgroundImage:'url('+image+')'}}>
+            <div id = {id} className = "photo-item-div" style = {{backgroundImage:'url('+my_api+'/photos/'+image+')'}}>
             </div>
         )
     }
@@ -31,8 +74,30 @@ function Profile(){
                 </div>
         </>)
     }
+    const Avatar = () => {
+        return(
+            <div className = "dp-div">
+                <img className = "avatar" src = {profile_photo_url}></img>
+                {isOwn? <div className = "camera-div" onClick = {uploadEnable} >
+                    <FaCamera/>
+                </div>:''}
+              </div>
+        )
+    }
+    const TempAvatar = () => {
+        return(
+            <div className = "dp-div">
+                <FaUserCircle className = "temp-avatar"/>
+                {isOwn? <div className = "camera-div" onClick = {uploadEnable} >
+                    <FaCamera/>
+                </div>:''}
+              </div>
+        )
+    }
+    
     return(
         <>
+        {upload? <ChangeDp setUpload = {setUpload} setProfilePhotoUrl = {setProfilePhotoUrl} profile_photo_url = {profile_photo_url}/>:''}
         <header className="App-header">
         <div className = "back-btn-div" onClick = {()=>{back()}}>
           <FaArrowLeft className = "back-icon"/>
@@ -44,23 +109,19 @@ function Profile(){
       <div className = "profile-header-div">
           <div className = "row1-profile-header">
               <div className = "follower-div">
-                  <p className = "follow-count">300</p>
+                  <p className = "follow-count">{followers}</p>
                   <p className = "follow-count-title"> Followers</p>
               </div>
-              <div className = "dp-div" style = {{backgroundImage:'url('+testimage3+')'}}>
-                {isOwn? <div className = "camera-div" >
-                    <FaCamera/>
-                </div>:''}
-              </div>
+              {user_context.photo !== undefined? <Avatar/>:<TempAvatar/>}
               <div className = "following-div">
-                  <p className = "follow-count">150</p>
+                  <p className = "follow-count">{following}</p>
                   <p className = "follow-count-title">Following</p>
               </div>
           </div>
           <div className = "information-div">
-              <p className = "fullname">Emmanuel Katipunan</p>
-              <p className = "gender">Male</p>
-              <p className = "age">22</p>
+              <p className = "fullname">{fullname}</p>
+              <p className = "gender">{gender}</p>
+              <p className = "age">{age}</p>
           </div>
           {!isOwn? <div className = "profile-action">
               <button className = "button-follow"> <FaUserPlus className = "follow-icon"></FaUserPlus> Follow</button>
@@ -73,10 +134,9 @@ function Profile(){
         <div className = "photos-div">
             <h4>Photos</h4>
             <div className = "photo-list-div">
-                <PhtoItem image = {testimage1}></PhtoItem>
-                <PhtoItem image = {testimage2}></PhtoItem>
-                <PhtoItem image = {testimage3}></PhtoItem>
-                <PhtoItem image = {testimage4}></PhtoItem>
+                { photos.map((image, id)=>(
+                    <PhtoItem image = {image.path} id = {id}/>
+                ))}
             </div>
             <div className = "generic-button-div">
             <button> See more</button>

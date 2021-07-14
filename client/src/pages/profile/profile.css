@@ -50,9 +50,9 @@
     width: 200px;
     height: 200px;
     color: white;
-    background-color: rgb(150, 150, 150);
+    background-color: #5D5FEF;
     border-radius: 100px;
-    background-size: cover;
+    padding: 5px;
     
   }
   .following-div{
@@ -70,8 +70,9 @@
     justify-content: center;
     border-radius: 20px;
     position: relative;
-    top: 150px;
-    left: 150px;
+    top: -50px;
+    right: -140px;
+
   }
   .information-div{
     color: white;
@@ -273,9 +274,129 @@
   width: 20px;
   margin: 5px;
 }
+.upload-menu{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  z-index: 4;
+  background-color: #ffffff67;
 
-  
+}
+.close-upload{
+  background-color: transparent;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  font-size: large;
+  margin-right: 100%;
+  margin-top: 10px;
+  margin-left: 10px;
 
+}
+.upload-menu-body{
+  background-color: rgb(255, 255, 255);
+  height: auto;
+  min-height: 200px;
+  width: var(--width);
+  border-radius: 10px;
+  box-shadow: 0 1px 10px;
+}
+.upload-menu-header{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.profilepic-preview{
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 5px solid #5D5FEF;
+  margin: 10px;
+}
+.upload{
+  width: 90%;
+  height: 50px;
+  background-color: transparent;
+  outline: none;
+  border-radius: 10px;
+  border: 1px solid #5D5FEF;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: #5D5FEF;
+}
+.upload-menu-title{
+  color: #5D5FEF;
+}
+.close-upload-menu{
+  font-weight: 700;
+  margin: 10px;
+  background-color: #EF5DA8;
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  width: 90%;
+  height: 50px;
+  margin-bottom: 20px;
+}
+.upload-picked{
+  font-weight: 700;
+  margin: 10px;
+  background-color: #5D5FEF;
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  width: 90%;
+  height: 50px;
+}
+.temp-avatar{
+  color: white;
+  width: 100%;
+  height: 100%;
+}
+.temp-profilepic-preview{
+  margin: auto;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 5px solid #5D5FEF;
+  background-color: #5D5FEF;
+}
+.temp-avatar-prev{
+  width: 100%;
+  height: 100%;
+  margin-top: 0;
+  color: white;
+}
+.avatar{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+#uploading-dp{
+  height: 40px;
+  width: 90%;
+}
+.uploading-view{
+  width: calc(var(--width) - 30px);
+  background-color: white;
+  border-radius: 10px;
+  height: auto;
+  box-shadow: 0 1px 10px;
+}
   @media only screen and (max-width: 768px){
     .follow-count-title{
       font-weight: lighter;
@@ -290,14 +411,16 @@
     .dp-div{
       width: 150px;
       height: 150px;
-    
+      
     }
     .camera-div{
       color: rgb(34, 34, 34);
       width: 40px;
       height: 40px;
-      top: 110px;
-      left: 105px;
+      position: relative;
+      top: -50px;
+      right: -107px;
+
     }
     .row1-profile-header{
       padding-top: 20px;
@@ -308,6 +431,8 @@
     --width:100vw;
   }
   }
+
+  
   @media only screen and (max-width: 440px){
     .follow-count-title{
       font-weight: bold;
@@ -328,8 +453,9 @@
       color: rgb(34, 34, 34);
       width: 40px;
       height: 40px;
-      top: 110px;
-      left: 105px;
+      position: relative;
+      top: -50px;
+      right: -107px;
     }
     .row1-profile-header{
       padding-top: 20px;

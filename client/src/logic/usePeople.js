@@ -36,7 +36,40 @@ function usePeople(){
             
         }
       }
+      const fetchPhotos = async(user_context) => {
+        const fetchResult = await axios({
+            method:'GET',
+            withCredentials:true,
+            url:my_api +'/upload/fetch-photos',
+            params: {id: user_context}
+        })
+        if(fetchResult.status === 200){
+            return fetchResult.data
+        }else{
+            console.log(fetchResult.status)
+            return null
+        }
+    }
+    const updateDp = async(image_path, username) => {
+        try {
+            const updateProfile = await axios({
+                method:'put',
+                withCredentials:true,
+                url:my_api + "/user/update-dp",
+                data:{
+                    username:username,
+                    path: image_path
+                },
+            })
+            if(updateProfile.status === 200){
+                return true
+            }
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+    }
 
-    return {people, getUserInfo}
+    return {people, getUserInfo, fetchPhotos, updateDp}
 }
 export default usePeople

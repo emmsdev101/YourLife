@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useContext, createContext} from 'react'
 import Cookies from 'universal-cookie'
+import usePeople from './usePeople'
 
 
 export const GlobalUserContext = createContext()
@@ -7,10 +8,16 @@ export const GlobalUserActionsContext = createContext()
 
 function UserContext(props){
     const [user, setUser] = useState({})
+    const {getUserInfo} = usePeople()
+
+    const setupUser = async(username) => {
+        const user_info = await getUserInfo(username)
+        setUser(user_info)
+    }
 
     return(
         <GlobalUserContext.Provider value = {user}>
-             <GlobalUserActionsContext.Provider value = {setUser}>
+             <GlobalUserActionsContext.Provider value = {setupUser}>
                 {props.children}
              </GlobalUserActionsContext.Provider>
         </GlobalUserContext.Provider>

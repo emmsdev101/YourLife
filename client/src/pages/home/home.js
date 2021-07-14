@@ -8,15 +8,22 @@ import { useHistory } from "react-router-dom";
 import CreatePost from '../../components/createPost/createPost'
 import axios from "axios";
 import useFeed from "../../logic/useFeed";
-import { GlobalUserContext } from "../../logic/userContext";
+import Cookies from "universal-cookie";
+import { GlobalUserActionsContext, GlobalUserContext } from "../../logic/userContext";
 function Home(){
-    
+    const username = new Cookies().get('username')
     const [createPost, setCreatePost] = useState(false);
     const [uploading, setUploading] = useState(false)
     const {postStory,uploadPhoto, uploadingProgress, feedStories, addFeed} = useFeed()
     const history = useHistory()
     const user_context = useContext(GlobalUserContext);
+    const set_user_context = useContext(GlobalUserActionsContext)
 
+    useEffect(() => {
+        
+        set_user_context(username)
+    }, []);
+    
     function switchPage(page){
         history.push(page)
     }

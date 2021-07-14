@@ -86,6 +86,23 @@ router.post("/login", async(req, res) => {
     }
     
   });
+  // ----------- UPDATE ACCOUNT ROUTE --------------//
+  router.put("/update-dp", auth, async(req, res) =>{
+      User.updateOne({username: req.body.username},{
+          photo:req.body.path
+      }, function(err, doc){
+          if(err){
+              console.log(err)
+              res.sendStatus(444)
+          }
+          if(!doc){
+              res.send({
+                  error:"No user account found"
+              })
+          }
+          res.sendStatus(200)
+      })
+  })
   router.get("/logout", async(req, res) => {
       req.session.destroy
       res.sendStatus(200)
