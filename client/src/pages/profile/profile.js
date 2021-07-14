@@ -12,7 +12,7 @@ import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
 function Profile(){
     const {Cookies, useHistory, useContext, useState, useEffect} = useReactHooks()
     const {GlobalUserActionsContext, GlobalUserContext, usePeople} = useCustomHooks()
-    
+
     const {FaUserCircle, FaBars, FaPlusCircle, FaEnvelope, FaCamera,FaArrowLeft, FaUserPlus,FaPen} = useIcons()
     const owner = new Cookies().get("username")
     const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
@@ -34,7 +34,6 @@ function Profile(){
     const age = user_context.age
 
     useEffect(() => {
-        
         if(user_context.username === undefined){
             console.log("initializing")
             console.log(owner)

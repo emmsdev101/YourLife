@@ -24,6 +24,7 @@ function People(){
               <h3>Follow more</h3>
               <button className = "search-button"><FaSearch className = "search-icon"></FaSearch></button>
           </div>
+          <hr></hr>
           <div className = "people-list-div">
              {people.map((user,id)=>(
                  <User  data = {user} id = {id}/>

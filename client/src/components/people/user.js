@@ -10,7 +10,7 @@ function User({data, id}){
             <FaUserCircle className = "user-picture"/>}
             <div className = "user-detail">
                 <p className = "user-name">{data.firstname + ' ' + data.lastname}</p>
-                <p className = "user-status">Follower </p>
+                <p className = "user-status">Followers {data.followers}</p>
                 <button className = "user-follow">Follow</button>
                 <button className = "user-remove">Remove</button>
             </div>
