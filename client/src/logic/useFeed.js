@@ -8,7 +8,6 @@ function useFeed (){
     
     const [feedStories, setFeedStories] = useState([])
     const [uploadingProgress, setUploadingProgress] = useState(0)
-    const [uploading, setUploading] = useState(true)
 
     useEffect(() => {
         fetchFeeds()
@@ -24,7 +23,6 @@ function useFeed (){
         })
         if(get_feeds.status === 200){
             setFeedStories(get_feeds.data)
-            setUploading(false)
             }
     }
     const fetchImages = async(feed_item)=>{
@@ -74,6 +72,7 @@ function useFeed (){
             url : POST_API,
             data:{
                 owner:user_context.username,
+                fullname:fullname,
                 content:content,
                 imagePath:paths
             },
@@ -85,7 +84,7 @@ function useFeed (){
         }
     }
     
-    return {feedStories, fetchImages, postStory,uploadPhoto, uploadingProgress, addFeed, uploading}
+    return {feedStories, fetchImages, postStory,uploadPhoto, uploadingProgress, addFeed}
 
 }
 export default useFeed

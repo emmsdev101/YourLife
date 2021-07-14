@@ -8,26 +8,14 @@ import { useHistory } from "react-router-dom";
 import CreatePost from '../../components/createPost/createPost'
 import axios from "axios";
 import useFeed from "../../logic/useFeed";
-import { GlobalUserActionsContext, GlobalUserContext } from "../../logic/userContext";
-import usePeople from "../../logic/usePeople";
-import Cookies from 'universal-cookie'
+import { GlobalUserContext } from "../../logic/userContext";
 function Home(){
     
     const [createPost, setCreatePost] = useState(false);
-    const {getUserInfo} = usePeople()
-    const {postStory,uploadPhoto, uploadingProgress, feedStories, addFeed, uploading} = useFeed()
+    const [uploading, setUploading] = useState(false)
+    const {postStory,uploadPhoto, uploadingProgress, feedStories, addFeed} = useFeed()
     const history = useHistory()
     const user_context = useContext(GlobalUserContext);
-    const set_user_context = useContext(GlobalUserActionsContext)
-    const username = new Cookies().get("username")
-
-    useEffect(()=>{
-        async function getUser(){
-            const user_info = await getUserInfo(username)
-            set_user_context(user_info)
-        }
-        getUser()
-    }, [])
 
     function switchPage(page){
         history.push(page)
@@ -71,7 +59,7 @@ function Home(){
                 <button onClick = {createStory}> <FaPlusCircle className = "primary-button-icon"></FaPlusCircle>Share a story</button>
             </div>
         </div>
-        {uploading? <Loader/>:''}
+        {feedStories.length < 1? <Loader/>:''}
           <div className = "post-list-div">
              {feedStories.map((story, id)=>(
                  <>

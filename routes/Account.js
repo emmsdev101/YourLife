@@ -37,6 +37,7 @@ router.get('/account', auth, async(req, res, next)=>{
         User.findOne({
             username: id_param
         },{
+            _id : 0,
             password:0
         }, function(err, doc){
             if(err) return console.log(err)
@@ -126,16 +127,6 @@ router.post("/register", (req, res) => {
         }
       }
     });
-})
-// UPDATING USER PROFILE
-router.put('/account', auth, async(req, res)=>{
-    console.log(req.body.username)
-    console.log(req.body.path)
-     User.updateOne({username:req.body.username},
-        {photo:req.body.path}, function(err, doc){
-            if(err){console.log(err);res.send(444);}
-            res.send(doc)
-        })
 })
 // DELETING SINGLE USER
 

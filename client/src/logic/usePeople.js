@@ -36,21 +36,7 @@ function usePeople(){
             
         }
       }
-      const fetchPhotos = async(user_context) => {
-        const fetchResult = await axios({
-            method:'GET',
-            withCredentials:true,
-            url:my_api +'/upload/fetch-photos',
-            params: {id: user_context}
-        })
-        if(fetchResult.status === 200){
-            return fetchResult.data
-        }else{
-            console.log(fetchResult.status)
-            return null
-        }
-    }
 
-    return {people, getUserInfo, fetchPhotos}
+    return {people, getUserInfo}
 }
 export default usePeople

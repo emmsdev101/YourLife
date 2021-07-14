@@ -1,18 +1,13 @@
-import {useContext} from 'react'
 import './style.css'
 import { FaCogs,FaHandshake,FaQuestionCircle, FaSignOutAlt, FaUserShield, FaHome, FaUsers, FaBell, FaEnvelope, FaBars, FaUserCircle} from 'react-icons/fa'
 import { useHistory} from 'react-router-dom'
 import axios from 'axios'
 import Cookies from 'universal-cookie'
-import { GlobalUserContext } from '../../logic/userContext'
 
 const cookie = new Cookies()
 function Menu(){
     const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
     const API_URL = my_api+"/user"
-
-    const user_context = useContext(GlobalUserContext);
-    const profile_photo_url = my_api+"/photos/"+user_context.photo
 
     const history = useHistory()
 
@@ -44,9 +39,10 @@ function Menu(){
         </header>
             <h2 className = "menu-title">Menu</h2>
            <div className ="menu-item"onClick = {()=>{switchPage('/profile')}}>
-           { user_context.photo !== undefined?<img className = "menuitem-img" src = {profile_photo_url}></img>:<FaUserCircle className = "alt-dp"/>}
-           
-              
+              {// <img className = "menuitem-img" src = {}></img>
+              }
+              <FaUserCircle className = 'alt-dp'/>
+
                <strong><p className = "menuitem-title">See your profile</p></strong>
             </div>
            <div className ="menu-item">
