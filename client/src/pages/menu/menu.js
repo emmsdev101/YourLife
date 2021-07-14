@@ -1,13 +1,11 @@
-import {useContext} from 'react'
+import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
 import './style.css'
-import { FaCogs,FaHandshake,FaQuestionCircle, FaSignOutAlt, FaUserShield, FaHome, FaUsers, FaBell, FaEnvelope, FaBars, FaUserCircle} from 'react-icons/fa'
-import { useHistory} from 'react-router-dom'
-import axios from 'axios'
-import Cookies from 'universal-cookie'
-import { GlobalUserContext } from '../../logic/userContext'
 
-const cookie = new Cookies()
 function Menu(){
+    const  {useContext, useHistory, Cookies, axios} = useReactHooks()
+    const {GlobalUserContext} = useCustomHooks()
+    const {FaEnvelope, FaBars, FaCogs, FaQuestionCircle, FaUserCircle, FaHandshake, FaSignOutAlt, FaHome, FaBell, FaUserShield, FaUsers} = useIcons()
+    const cookie = new Cookies()
     const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
     const API_URL = my_api+"/user"
 

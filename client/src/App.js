@@ -1,5 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
-import { FaBell, FaEnvelope, FaEnvelopeSquare, FaHome, FaUsers, FaArrowLeft, FaBackward, FaBars, FaBeer, FaCamera } from 'react-icons/fa';
+
 import './App.css';
 import Profile from './pages/profile/profile';
 import Home from './pages/home/home'
@@ -9,12 +8,10 @@ import Chat from './pages/chats/chat'
 import Menu from "./pages/menu/menu";
 import Signup from './pages/sign-up/signup'
 import Login from './pages/login/login'
-import { Route, BrowserRouter, Switch, Link, useHistory} from 'react-router-dom';
+import { Route, BrowserRouter, Switch} from 'react-router-dom';
 import Cookies from 'universal-cookie'
 import UserContext from './logic/userContext';
-import {GlobalUserActionsContext, GlobalUserContext} from './logic/userContext'
-import axios from 'axios';
-import usePeople from './logic/usePeople';
+
 function App() {
   const cookie = new Cookies()
   const username = cookie.get('username')

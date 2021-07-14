@@ -1,10 +1,9 @@
-import { useHistory } from 'react-router-dom'
-import { useState, useContext } from "react";
-import axios from 'axios';
+
+import { useCustomHooks, useReactHooks } from '../../logic/library';
 import './style.css'
-import Cookies from 'universal-cookie'
-import { GlobalUserActionsContext } from "../../logic/userContext";
 function Login(){
+    const {useState, useHistory, Cookies, useContext, axios} = useReactHooks()
+    const {GlobalUserActionsContext} = useCustomHooks()
     const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' :''
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -12,7 +11,6 @@ function Login(){
     const cookies = new Cookies()
 
     const set_user_context = useContext(GlobalUserActionsContext);
-
 
     const usernameChage = (e)=> {
         setUsername(e.target.value)
@@ -46,16 +44,6 @@ function Login(){
             alert('Error')
         }
     }
-   async function getUsers(){
-        const fetched_user = await axios({
-            method:'get',
-            withCredentials: true,
-            url: my_api+'/fetchAll',
-        })
-        console.log(fetched_user.data)
-    }
-
-
     return (
         <div className = "signup">
             <div className = "signup-header">

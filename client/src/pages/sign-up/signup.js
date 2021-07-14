@@ -1,10 +1,10 @@
+import { useReactHooks } from '../../logic/library';
 import './style.css'
-
-import { useState } from "react";
 function Signup(){
+    const {useState} = useReactHooks()
     const [firstname, setFirstname] = useState('');
     const [lastname, setLatname] = useState('');
-    const [gender, setGender] = useState('');
+    const [gender, setGender] = useState('male');
     const [age, setAge] = useState();
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
@@ -37,8 +37,7 @@ function Signup(){
         })
         if(user.ok){
             const data = await user.json()
-            console.log(data)
-            alert(user.status)
+            window.location.replace("/login")
         }else{
             console.log(user.status)
         }

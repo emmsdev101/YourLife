@@ -1,6 +1,4 @@
 
-import {useContext, useState, useEffect, useRef} from 'react'
-import { FaArrowLeft, FaUserCircle, FaBars, FaCamera, FaEnvelope, FaPen, FaPlusCircle, FaUserPlus, FaWindowClose, FaRegWindowClose, FaArrowAltCircleLeft } from 'react-icons/fa';
 import './profile.css'
 import testimage1 from '../../res/images/test1.jpg'
 import testimage2 from '../../res/images/test2.jpg'
@@ -8,15 +6,14 @@ import testimage3 from '../../res/images/test3.jpg'
 import testimage4 from '../../res/images/test4.jpg'
 
 import ChangeDp from './../../components/changeDp/changeDp'
-
 import Post from '../../components/post/post'
-import { useHistory } from 'react-router-dom';
-import { GlobalUserActionsContext, GlobalUserContext } from "../../logic/userContext";
-import axios from 'axios';
-import usePeople from '../../logic/usePeople';
-import Cookies from 'universal-cookie'
+import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
 
 function Profile(){
+    const {Cookies, useHistory, useContext, useState, useEffect} = useReactHooks()
+    const {GlobalUserActionsContext, GlobalUserContext, usePeople} = useCustomHooks()
+    
+    const {FaUserCircle, FaBars, FaPlusCircle, FaEnvelope, FaCamera,FaArrowLeft, FaUserPlus,FaPen} = useIcons()
     const owner = new Cookies().get("username")
     const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
     let isOwn =  true

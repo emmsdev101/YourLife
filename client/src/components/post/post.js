@@ -1,34 +1,37 @@
 import './style.css'
-import {useEffect, useState} from 'react'
-import { FaComment, FaEllipsisH, FaThumbsUp, FaUserCircle } from 'react-icons/fa'
-import axios from 'axios'
-import Cookies from 'universal-cookie'
-import useFeed from '../../logic/useFeed'
-import usePeople from '../../logic/usePeople'
+import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
 
 function Post({content, id}){
+    const {useState, useRef,useEffect} = useReactHooks()
+    const {useFeed, usePeople} = useCustomHooks()
+    const {FaComment, FaEllipsisH, FaThumbsUp, FaUserCircle } = useIcons()
     const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
     const {fetchImages} = useFeed()
     const {getUserInfo} = usePeople()
     const [photos, setPhotos] = useState([])
     const [render, setRender] = useState(false)
     const [userDetails, setUserDetails] = useState({})
+    const isMounted = useRef(true)
     const profile_photo_url = my_api + "/photos/"+userDetails.photo
+    
     useEffect(() => {
-
         const getUserDetails = async()=>{
             const fetchResult = await getUserInfo(content.owner)
-            console.log(fetchResult)
-            setUserDetails(fetchResult)
+            if(isMounted.current)setUserDetails(fetchResult)
         }
         getUserDetails()
         setPhotos([])
-
         const images = fetchImages(content._id)
         images.then((items)=>{
-            setPhotos(items)
+            if(isMounted.current){
+                if(items.length > 0)setPhotos(items)
+                else setRender(true)
+            }
         }, (reasion)=>{
             console.log(reasion)
+        return()=>{
+            isMounted.current = false
+        }
         })
     }, [content]);
     useEffect(()=>{
@@ -42,7 +45,6 @@ function Post({content, id}){
     }, [photos])
     if(render){
         return(
-            <>
             <div className = "post-div" id = {id}>
                 <div className = "post-heading">
                     {userDetails.photo !== undefined? <img className = "profile-photo" src = {profile_photo_url} alt = "profile picture"/>
@@ -92,7 +94,6 @@ function Post({content, id}){
                     <button className = "like-button"><FaComment className = "like-icon"></FaComment>Comment</button>
                 </div>
             </div>
-            </>
         )
     }else return(<></>)
     

@@ -1,8 +1,5 @@
-import React, {useEffect, useState, useContext, createContext} from 'react'
-import Cookies from 'universal-cookie'
+import React, {useState, createContext} from 'react'
 import usePeople from './usePeople'
-
-
 export const GlobalUserContext = createContext()
 export const GlobalUserActionsContext = createContext()  
 

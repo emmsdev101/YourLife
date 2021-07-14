@@ -1,24 +1,19 @@
-import { FaArrowLeft, FaBars, FaBell, FaCamera, FaEllipsisV, FaEnvelope, FaEnvelopeSquare, FaHome, FaImage, FaPaperPlane, FaPen, FaPhotoVideo, FaSearch, FaUsers } from "react-icons/fa";
 import './style.css'
-import Post from '../../components/post/post'
-import mylove from '../../res/images/mylove.jpg'
-import mylove1 from '../../res/images/mylove1.jpg'
-import User from '../../components/people/user'
-import image1 from '../../res/images/mylove.jpg'
 import image2 from '../../res/images/test1.jpg'
 import './style.css'
+import { useIcons } from '../../logic/library'
 function Chat({setOpen}){
-const MessageItem = ({isme}) => {
-    return(<>
-        <div className = {isme? "msg-div me": "msg-div"}>
-            <p className = "msg-content">Bacon Powder</p>
-        </div>
-
-    </>)
-}
+    const { FaArrowLeft, FaCamera, FaEllipsisV, FaImage, FaPaperPlane } = useIcons()
+    
+    const MessageItem = ({isme, id}) => {
+        return(
+            <div className = {isme? "msg-div me": "msg-div"} id = {id}>
+                <p className = "msg-content">Bacon Powder</p>
+            </div>
+            )
+    }
     return(
         <>
-
        <div className = "conversation">
        <div className = "conversation-nav">
                 <div className = "conversation-back" onClick = {()=>{setOpen(false)}}><FaArrowLeft className = "back-icon"></FaArrowLeft></div>

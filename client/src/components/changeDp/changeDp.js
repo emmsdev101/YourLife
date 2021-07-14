@@ -1,23 +1,16 @@
 
-import {useState, useContext, useRef, useEffect} from 'react'
-import { FaUserCircle } from 'react-icons/fa'
-import axios from 'axios'
-import { GlobalUserContext } from '../../logic/userContext'
-import useFeed from '../../logic/useFeed'
-import usePeople from '../../logic/usePeople'
+import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
+
 function ChangeDp({setUpload, setProfilePhotoUrl,profile_photo_url}){
+    const {useState, useContext, useRef} = useReactHooks()
+    const {FaUserCircle} = useIcons()
+    const {useFeed,usePeople,GlobalUserContext} = useCustomHooks()
     const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
     const uploadPicker = useRef()
     const {uploadDp, uploadingProgress} = useFeed()
     const {updateDp} = usePeople()
     const [pickedPhoto, setPickedPhoto] = useState(null)
     const user_context = useContext(GlobalUserContext);
-
-    useEffect(() => {
-        if(uploadingProgress >= 100){
-            setUpload(false)
-        }
-    }, [uploadingProgress]);
 
     const uploadProfile = () => {
         uploadPicker.current?.click()
@@ -38,8 +31,10 @@ function ChangeDp({setUpload, setProfilePhotoUrl,profile_photo_url}){
         const uploadResult = await uploadDp(formData)
         if(uploadResult){
             const updateResult = await updateDp(uploadResult, user_context.username)
-            setProfilePhotoUrl(my_api + "/photos/"+uploadResult)
-            setUpload(false)
+            if(updateResult){
+                setProfilePhotoUrl(my_api + "/photos/"+uploadResult)
+                setUpload(false)
+            }
         }
         
     }

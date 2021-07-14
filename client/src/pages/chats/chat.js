@@ -1,16 +1,10 @@
-import { FaArrowLeft, FaBars, FaBell, FaEnvelope, FaEnvelopeSquare, FaHome, FaPen, FaSearch, FaUsers } from "react-icons/fa";
 import './style.css'
-import Post from '../../components/post/post'
-import mylove from '../../res/images/mylove.jpg'
-import mylove1 from '../../res/images/mylove1.jpg'
-import User from '../../components/people/user'
 import image1 from '../../res/images/mylove.jpg'
-import './style.css'
-import { BrowserRouter, Link, useHistory } from "react-router-dom";
-import { useState, useEffect } from 'react';
-
 import Conversation from "../Conversation/conversation";
+import { useIcons, useReactHooks } from '../../logic/library'
 function Chat(){
+    const {useHistory, useState} = useReactHooks()
+    const {FaArrowLeft,  FaPen, FaSearch} = useIcons()
     const history = useHistory()
     const [onread, setOnread] = useState(false);
 

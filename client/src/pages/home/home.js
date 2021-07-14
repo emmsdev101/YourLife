@@ -1,26 +1,18 @@
-import { useState, useEffect, useContext } from "react";
-import { FaBars, FaBell, FaPlusCircle, FaEnvelope, FaHome, FaUsers } from "react-icons/fa";
 import './style.css'
 import Post from '../../components/post/post'
-import mylove from '../../res/images/mylove.jpg'
-import mylove1 from '../../res/images/mylove1.jpg'
-import { useHistory } from "react-router-dom";
 import CreatePost from '../../components/createPost/createPost'
-import axios from "axios";
-import useFeed from "../../logic/useFeed";
-import Cookies from "universal-cookie";
-import { GlobalUserActionsContext, GlobalUserContext } from "../../logic/userContext";
+import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library";
 function Home(){
+    const {useState, useContext, useHistory,useEffect, Cookies} = useReactHooks()
+    const {useFeed, GlobalUserActionsContext} = useCustomHooks()
+    const {FaBars, FaBell, FaPlusCircle, FaEnvelope, FaHome, FaUsers} = useIcons()
+    
     const username = new Cookies().get('username')
     const [createPost, setCreatePost] = useState(false);
-    const [uploading, setUploading] = useState(false)
     const {postStory,uploadPhoto, uploadingProgress, feedStories, addFeed} = useFeed()
     const history = useHistory()
-    const user_context = useContext(GlobalUserContext);
     const set_user_context = useContext(GlobalUserActionsContext)
-
     useEffect(() => {
-        
         set_user_context(username)
     }, []);
     

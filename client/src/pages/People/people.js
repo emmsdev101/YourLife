@@ -1,16 +1,12 @@
-import { FaBars, FaBell, FaEnvelope, FaEnvelopeSquare, FaHome, FaSearch, FaUsers } from "react-icons/fa";
 import './style.css'
-import Post from '../../components/post/post'
-import mylove from '../../res/images/mylove.jpg'
-import mylove1 from '../../res/images/mylove1.jpg'
 import User from '../../components/people/user'
-import { useHistory } from "react-router-dom";
-import usePeople from '../../logic/usePeople'
+import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library';
 function People(){
+    const {FaBars, FaBell, FaEnvelope, FaHome, FaSearch, FaUsers} = useIcons()
+    const {useHistory} = useReactHooks()
+    const {usePeople} = useCustomHooks()
     const history = useHistory()
-
     const {people} = usePeople()
-
     function switchPage(page){
         history.push(page)
     }
@@ -30,7 +26,7 @@ function People(){
           </div>
           <div className = "people-list-div">
              {people.map((user,id)=>(
-                 <User  data = {user}/>
+                 <User  data = {user} id = {id}/>
              ))}
           </div>
       </div>

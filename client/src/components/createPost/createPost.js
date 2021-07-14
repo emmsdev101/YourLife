@@ -1,33 +1,19 @@
-import { useHistory } from 'react-router-dom'
-import React, {useEffect, useState, useContext, createContext} from 'react'
-import axios from 'axios';
+import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library"
 import './style.css'
-import Cookies from 'universal-cookie'
-import { FaArrowLeft, FaCamera, FaImages, FaVideo, FaVimeoV } from 'react-icons/fa';
-import photo1 from './../../res/images/test1.jpg'
-import photo2 from './../../res/images/test2.jpg'
-import photo3 from './../../res/images/test3.jpg'
-import photo4 from './../../res/images/test4.jpg'
-import { GlobalUserActionsContext, GlobalUserContext } from '../../logic/userContext';
-import usePeople from './../../logic/usePeople'
-import useFeed from '../../logic/useFeed';
 function CreatePost({showMe, addStory, postStory, uploadPhoto}){
-    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
-    
+    const {useState, useContext,useEffect, Cookies} = useReactHooks()
+    const {GlobalUserContext, GlobalUserActionsContext} = useCustomHooks()
+    const{FaCamera,FaArrowLeft, FaImages,FaVideo} = useIcons()
     const cookie = new Cookies()
     const owner = cookie.get('username')
-    const {getUserInfo} = usePeople()
-    
+
     const [photos, setPhots] = useState([])
     const [content, setContent] = useState('')
 
     const user_context = useContext(GlobalUserContext);
     const set_user_context = useContext(GlobalUserActionsContext)
-
-
+    
     let picker
-
-
     useEffect(() => {
         function fetchUser(){
             set_user_context(owner)
@@ -42,14 +28,20 @@ function CreatePost({showMe, addStory, postStory, uploadPhoto}){
 
     const handleSubmit = async() => {
         showMe()
-        const formData = new FormData()
-        photos.forEach(photo => {
-            formData.append('image',photo)
-        });
+        if(photos.length > 0){
+            const formData = new FormData()
+            photos.forEach(photo => {
+                formData.append('image',photo)
+            });
 
-        const uploads =  await  uploadPhoto(formData)
-        const new_feed = await postStory(user_context,uploads,content)
-         addStory(new_feed)
+            const uploads =  await  uploadPhoto(formData)
+            const new_feed = await postStory(user_context,uploads,content)
+            addStory(new_feed)
+        }else{
+            const new_feed = await postStory(user_context,[],content)
+            addStory(new_feed)
+        }
+         
     }
     const openPicker = () =>{
         picker = document.getElementById('image-picker')
@@ -67,18 +59,8 @@ function CreatePost({showMe, addStory, postStory, uploadPhoto}){
         const image_url = URL.createObjectURL(pic)
         return image_url
       }
-    // const Uploading = ()=>{
-    //     return(
-    //         <div className = "upload_progress">
-    //         <p id = "progress_label">{uploadingProgress < 100 ? "Uploading" :"Done!!!" }</p>
-    //             <progress id="uploading" value={uploadingProgress} max="100"> </progress>
-    //      </div>
-    //     )
-    // }
-
     return(
         <>
-        {/* {uploadingProgress > 0 && uploadingProgress < 100? <Uploading/>:''} */}
         <div className = "createPost">
             <div className = "createPost-header">
                 <button className = 'back-btn' onClick = {showMe}> <FaArrowLeft className = 'back-icon'/></button>

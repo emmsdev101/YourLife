@@ -1,11 +1,9 @@
-import { FaBars, FaBell, FaEnvelope, FaEnvelopeSquare, FaHome, FaSearch, FaUsers } from "react-icons/fa";
 import './style.css'
-import Post from '../../components/post/post'
-import mylove from '../../res/images/mylove.jpg'
-import mylove1 from '../../res/images/mylove1.jpg'
 import NotificationItem from '../../components/notification/notification'
-import { useHistory } from "react-router-dom";
+import { useIcons, useReactHooks } from '../../logic/library'
 function Notification(){
+    const {FaBars, FaBell, FaEnvelope, FaHome, FaSearch, FaUsers} = useIcons()
+    const {useHistory} = useReactHooks()
     const history = useHistory()
     function switchPage(page){
         history.push(page)
