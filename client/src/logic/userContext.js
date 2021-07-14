@@ -8,6 +8,8 @@ export const GlobalUserActionsContext = createContext()
 function UserContext(props){
     const [user, setUser] = useState({})
 
+    
+
     return(
         <GlobalUserContext.Provider value = {user}>
              <GlobalUserActionsContext.Provider value = {setUser}>

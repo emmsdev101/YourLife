@@ -4,16 +4,26 @@ import { FaComment, FaEllipsisH, FaThumbsUp, FaUserCircle } from 'react-icons/fa
 import axios from 'axios'
 import Cookies from 'universal-cookie'
 import useFeed from '../../logic/useFeed'
+import usePeople from '../../logic/usePeople'
 
 function Post({content, id}){
     const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
     const {fetchImages} = useFeed()
+    const {getUserInfo} = usePeople()
     const [photos, setPhotos] = useState([])
-    const [render, setRender] = useState(true)
-
-    
+    const [render, setRender] = useState(false)
+    const [userDetails, setUserDetails] = useState({})
+    const profile_photo_url = my_api + "/photos/"+userDetails.photo
     useEffect(() => {
+
+        const getUserDetails = async()=>{
+            const fetchResult = await getUserInfo(content.owner)
+            console.log(fetchResult)
+            setUserDetails(fetchResult)
+        }
+        getUserDetails()
         setPhotos([])
+
         const images = fetchImages(content._id)
         images.then((items)=>{
             setPhotos(items)
@@ -35,11 +45,10 @@ function Post({content, id}){
             <>
             <div className = "post-div" id = {id}>
                 <div className = "post-heading">
-                    {//profileDetails !== true? <img className = "profile-photo" src = {profileDetails.photo} alt = "profile picture"/>:<FaUserCircle className = 'alt-dp'/>
-                    }
-                    <FaUserCircle className = 'alt-dp'/>
+                    {userDetails.photo !== undefined? <img className = "profile-photo" src = {profile_photo_url} alt = "profile picture"/>
+                    : <FaUserCircle className = "alt-dp"/>}
                     <div className = "post-details">
-                        <h4>{content.owner_fullname}</h4>
+                        <h4>{userDetails.firstname + ' ' + userDetails.lastname}</h4>
                         <p>13 minutes ago</p>
                     </div>
                     <div className = "post-menu"> <FaEllipsisH className = "post-menu-icon"></FaEllipsisH> </div>

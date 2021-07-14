@@ -1,9 +1,12 @@
-import image1 from '../../res/images/mylove.jpg'
+import { FaUserCircle } from 'react-icons/fa';
 import './style.css'
 function User({data}){
+    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
+    const profilePhoto = my_api + "/photos/"+data.photo;
     return(<>
         <div className = "user-div">
-            <img className = "user-picture" src = {image1}></img>
+            {data.photo !== undefined? <img className = "user-picture" src = {profilePhoto}></img>:
+            <FaUserCircle className = "user-picture"/>}
             <div className = "user-detail">
                 <p className = "user-name">{data.firstname + ' ' + data.lastname}</p>
                 <p className = "user-status">Follower </p>

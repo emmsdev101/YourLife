@@ -40,7 +40,11 @@ router.post('/', uploads.array('image'), async (req, res, next)=> {
     });
     res.send(paths)
 })
-
+router.post('/change-profile', uploads.single('profile'), async (req, res, next)=> {
+    const file = req.file
+    const path = req.session.user+'/'+file.filename
+    res.send(path)
+})
 router.get('/', auth, (req, res) => {
     const uploadsDirectory = path.join('uploads')
     fs.ReadStream(uploadsDirectory, (err, files) => {
@@ -70,4 +74,11 @@ router.get('/fetch-all', async(req, res)=> {
         res.send(doc)
     })
 })
+router.get('/fetch-photos', async(req, res)=> {
+    ImageModel.find({owner:req.query.id}, function(err, doc){
+        if(err)return console.log(err)
+        res.send(doc)
+    })
+})
+
 module.exports = router
