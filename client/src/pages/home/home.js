@@ -1,4 +1,4 @@
-import './style.css'
+import './homeStyle.css'
 import Post from '../../components/post/post'
 import CreatePost from '../../components/createPost/createPost'
 import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library";
@@ -16,9 +16,6 @@ function Home(){
         set_user_context(username)
     }, []);
     
-    function switchPage(page){
-        history.push(page)
-    }
     const createStory = ()=>{
         if(createPost){
             setCreatePost(false)
@@ -43,14 +40,6 @@ function Home(){
     return(
         <>
         {createPost? <CreatePost showMe = {createStory} addStory = {addFeed} postStory = {postStory} uploadPhoto = {uploadPhoto}/>: 
-        <>
-        <header className="home-header">
-            <div className = "active" onClick = {()=>{switchPage('/home')}}> <FaHome className = "nav-icon"></FaHome></div>
-            <div className = "inactive" onClick = {()=>{switchPage('/people')}}><FaUsers className = "nav-icon"></FaUsers></div> 
-            <div className = "inactive" onClick = {()=>{switchPage('/notification')}}><FaBell className = "nav-icon"></FaBell></div> 
-            <div className = "inactive" onClick = {()=>{switchPage('/chat')}}><FaEnvelope className = "nav-icon"></FaEnvelope></div> 
-            <div className = "inactive" onClick = {()=>{switchPage('/menu')}}><FaBars className = "nav-icon"></FaBars></div>
-        </header> 
       <div className = "home-body">
           {uploadingProgress > 0 && uploadingProgress < 100? <Uploading/>:''}
           <div className = "home-title">
@@ -68,7 +57,6 @@ function Home(){
              ))}
           </div>
       </div>
-        </>
         }
         
 </>

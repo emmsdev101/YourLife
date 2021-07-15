@@ -1,6 +1,6 @@
 
 import { useCustomHooks, useReactHooks } from '../../logic/library';
-import './style.css'
+import './loginStyle.css'
 function Login(){
     const {useState, useHistory, Cookies, useContext, axios} = useReactHooks()
     const {GlobalUserActionsContext} = useCustomHooks()

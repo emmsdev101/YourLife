@@ -9,14 +9,6 @@ function Notification(){
         history.push(page)
     }
     return(
-        <>
-        <header className="home-header">
-            <div className = "inactive" onClick = {()=>{switchPage('/home')}}> <FaHome className = "nav-icon"></FaHome></div>
-            <div className = "inactive" onClick = {()=>{switchPage('/people')}}><FaUsers className = "nav-icon"></FaUsers></div> 
-            <div className = "active" onClick = {()=>{switchPage('/notification')}}><FaBell className = "nav-icon"></FaBell></div> 
-            <div className = "inactive" onClick = {()=>{switchPage('/chat')}}><FaEnvelope className = "nav-icon"></FaEnvelope></div> 
-            <div className = "inactive" onClick = {()=>{switchPage('/menu')}}><FaBars className = "nav-icon"></FaBars></div>
-        </header> 
       <div className = "people-body">
           <div className = "people-header">
               <h3>Notification</h3>
@@ -28,8 +20,6 @@ function Notification(){
                 <NotificationItem  unread = {true}></NotificationItem>
                 <NotificationItem></NotificationItem>
           </div>
-      </div>
-</>
-    )
+      </div>    )
 }
 export default Notification

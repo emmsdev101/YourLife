@@ -1,6 +1,8 @@
 import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
-import './style.css'
 
+import './../../generalStyle/generalStyle.css'
+import './menuStyle.css'
+import '../home/homeStyle.css'
 function Menu(){
     const  {useContext, useHistory, Cookies, axios} = useReactHooks()
     const {GlobalUserContext} = useCustomHooks()
@@ -15,8 +17,9 @@ function Menu(){
     const history = useHistory()
 
     function switchPage(page){
-        history.push(page)
+       history.push(page)
     }
+
     const logout = async()=>{
         const logged_out = await axios({
             method : 'get',
@@ -33,18 +36,9 @@ function Menu(){
     }
     return(
          <div className = "menu-div">
-             <header className="home-header">
-            <div className = "inactive" onClick = {()=>{switchPage('/home')}}> <FaHome className = "nav-icon"></FaHome></div>
-            <div className = "inactive" onClick = {()=>{switchPage('/people')}}><FaUsers className = "nav-icon"></FaUsers></div> 
-            <div className = "inactive" onClick = {()=>{switchPage('/notification')}}><FaBell className = "nav-icon"></FaBell></div> 
-            <div className = "inactive" onClick = {()=>{switchPage('/chat')}}><FaEnvelope className = "nav-icon"></FaEnvelope></div> 
-            <div className = "active" onClick = {()=>{switchPage('/menu')}}><FaBars className = "nav-icon"></FaBars></div>
-        </header>
             <h2 className = "menu-title">Menu</h2>
            <div className ="menu-item"onClick = {()=>{switchPage('/profile')}}>
            { user_context.photo !== undefined?<img className = "menuitem-img" src = {profile_photo_url}></img>:<FaUserCircle className = "alt-dp"/>}
-           
-              
                <strong><p className = "menuitem-title">See your profile</p></strong>
             </div>
            <div className ="menu-item">

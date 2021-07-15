@@ -94,14 +94,6 @@ function Profile(){
     return(
         <>
         {upload? <ChangeDp setUpload = {setUpload} setProfilePhotoUrl = {setProfilePhotoUrl} profile_photo_url = {profile_photo_url}/>:''}
-        <header className="App-header">
-        <div className = "back-btn-div" onClick = {()=>{back()}}>
-          <FaArrowLeft className = "back-icon"/>
-          </div>
-          <div className = "menu-btn-div">
-          <FaBars className = "menu-icon"/>
-          </div>
-      </header>
       <div className = "profile-header-div">
           <div className = "row1-profile-header">
               <div className = "follower-div">
