@@ -60,11 +60,12 @@ function App() {
           </Suspense>
         </div>
       : 
-      <>
+     
+      <Suspense fallback = {<div>Loading...</div>}>
           <Route exact path = "/"><Login/></Route>
           <Route exact path = "/signup"><Signup/></Route>
           <Route exact path = "/login"><Login/></Route>
-      </>
+          </Suspense>
       
     }
       </UserContext>
