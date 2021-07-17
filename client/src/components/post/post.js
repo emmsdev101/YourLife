@@ -19,10 +19,10 @@ function Post({content, id}){
         const getUserDetails = async()=>{
             const fetchResult = await getUserInfo(content.owner)
             if(isMounted.current){
+                setRender(true)
                 let pp = new Image()
                 pp.onload = ()=> {
                     setUserDetails(fetchResult)
-                    setRender(true)
                 }
                 pp.src = my_api + "/photos/"+fetchResult.photo
             }
