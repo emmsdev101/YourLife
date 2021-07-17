@@ -11,18 +11,18 @@ function Post({content, id}){
     const {getUserInfo} = usePeople()
     const [photos, setPhotos] = useState([])
     const [render, setRender] = useState(false)
-    const [userDetails, setUserDetails] = useState({})
+    const [userDetails, setUserDetails] = useState(null)
     const isMounted = useRef(true)
-    const profile_photo_url = my_api + "/photos/"+userDetails.photo
+    const profile_photo_url = userDetails !== null?my_api + "/photos/"+userDetails.photo:''
 
     useEffect(() => {
         const getUserDetails = async()=>{
             const fetchResult = await getUserInfo(content.owner)
             if(isMounted.current){
-                setRender(true)
+                setUserDetails(fetchResult)
                 let pp = new Image()
                 pp.onload = ()=> {
-                    setUserDetails(fetchResult)
+                    setRender(true)
                 }
                 pp.src = my_api + "/photos/"+fetchResult.photo
             }
@@ -52,13 +52,11 @@ function Post({content, id}){
     function trackProgress(){
         console.log("Image loaded")
     }
-
-
-    if(render){
+    if(userDetails !== null){
         return(
             <div className = "post-div" id = {id}>
                 <div className = "post-heading">
-                    {userDetails.photo !== undefined?<img className = "profile-photo" src = {profile_photo_url} alt = "profile picture"/>
+                    {render?<img className = "profile-photo" src = {profile_photo_url} alt = "profile picture"/>
                     : <FaUserCircle className = "alt-dp"/>}
                     <div className = "post-details">
                         <h4>{userDetails.firstname + ' ' + userDetails.lastname}</h4>
