@@ -1,12 +1,23 @@
-import { useIcons } from '../../logic/library';
+import { useIcons, useReactHooks } from '../../logic/library';
 import './style.css'
 function User({data, id}){
     const {FaUserCircle} = useIcons()
     const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
     const profilePhoto = my_api + "/photos/"+data.photo;
+    const {useState, useEffect} = useReactHooks()
+    const [dpLoad, setDpLoad] = useState(false);
+
+    useEffect(() => {
+        let preload = new Image()
+        preload.onload = () => {
+            setDpLoad(true)
+        }
+        preload.src = profilePhoto
+    }, []);
+
     return(
         <div className = "user-div" id = {id}>
-            {data.photo !== undefined? <img className = "user-picture" src = {profilePhoto}></img>:
+            {dpLoad? <img className = "user-picture" src = {profilePhoto}></img>:
             <FaUserCircle className = "user-picture"/>}
             <div className = "user-detail">
                 <p className = "user-name">{data.firstname + ' ' + data.lastname}</p>

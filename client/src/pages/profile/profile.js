@@ -46,7 +46,11 @@ function Profile(){
         setupPhotos()
     }, []);
     useEffect(() => {
-        setProfilePhotoUrl(my_api + "/photos/"+user_context.photo)
+        let pp = new Image()
+        pp.onload =()=>{
+            setProfilePhotoUrl(my_api + "/photos/"+user_context.photo)
+        }
+        pp.src = my_api + "/photos/"+user_context.photo
     }, [user_context]);
 
     function back(){
@@ -73,7 +77,7 @@ function Profile(){
     const Avatar = () => {
         return(
             <div className = "dp-div">
-                <img className = "avatar" src = {profile_photo_url}></img>
+                <img className = "avatar" src = {profile_photo_url}></img>:
                 {isOwn? <div className = "camera-div" onClick = {uploadEnable} >
                     <FaCamera/>
                 </div>:''}
@@ -100,7 +104,7 @@ function Profile(){
                   <p className = "follow-count">{followers}</p>
                   <p className = "follow-count-title"> Followers</p>
               </div>
-              {user_context.photo !== undefined? <Avatar/>:<TempAvatar/>}
+              {profile_photo_url !== undefined? <Avatar/>:<TempAvatar/>}
               <div className = "following-div">
                   <p className = "follow-count">{following}</p>
                   <p className = "follow-count-title">Following</p>

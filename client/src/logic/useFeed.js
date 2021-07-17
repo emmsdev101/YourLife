@@ -12,9 +12,6 @@ function useFeed (){
     useEffect(() => {
         fetchFeeds()
     }, []);
-
-
-  
     const fetchFeeds = async()=> {
         const get_feeds = await axios({
             method:'get',

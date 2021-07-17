@@ -33,7 +33,6 @@ function usePeople(){
         }else{
             console.log(userInfo.status)
             return null
-            
         }
       }
       const fetchPhotos = async(user_context) => {
@@ -68,6 +67,9 @@ function usePeople(){
             console.log(error)
             return false
         }
+    }
+    const checkLogged = () => {
+
     }
 
     return {people, getUserInfo, fetchPhotos, updateDp}

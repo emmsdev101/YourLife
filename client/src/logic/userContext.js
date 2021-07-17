@@ -9,9 +9,13 @@ function UserContext(props){
 
     const setupUser = async(username) => {
         const user_info = await getUserInfo(username)
-        setUser(user_info)
+        if(user_info === null){
+            return false;
+        }else{
+            setUser(user_info)
+            return true
+        }
     }
-
     return(
         <GlobalUserContext.Provider value = {user}>
              <GlobalUserActionsContext.Provider value = {setupUser}>

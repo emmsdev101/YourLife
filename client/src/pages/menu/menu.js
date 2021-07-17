@@ -4,7 +4,7 @@ import './../../generalStyle/generalStyle.css'
 import './menuStyle.css'
 import '../home/homeStyle.css'
 function Menu(){
-    const  {useContext, useHistory, Cookies, axios} = useReactHooks()
+    const  {useContext, useHistory,useEffect, useState, Cookies, axios} = useReactHooks()
     const {GlobalUserContext} = useCustomHooks()
     const {FaEnvelope, FaBars, FaCogs, FaQuestionCircle, FaUserCircle, FaHandshake, FaSignOutAlt, FaHome, FaBell, FaUserShield, FaUsers} = useIcons()
     const cookie = new Cookies()
@@ -12,13 +12,20 @@ function Menu(){
     const API_URL = my_api+"/user"
 
     const user_context = useContext(GlobalUserContext);
-    const profile_photo_url = my_api+"/photos/"+user_context.photo
+    const [profile_photo_url, setProfilePhotoUrl] = useState(null)
 
     const history = useHistory()
 
     function switchPage(page){
        history.push(page)
     }
+    useEffect(() => {
+       let temp_img = new Image()
+       temp_img.onload = () => {
+           setProfilePhotoUrl(my_api+"/photos/"+user_context.photo)
+       }
+       temp_img.src = my_api+"/photos/"+user_context.photo
+    }, []);
 
     const logout = async()=>{
         const logged_out = await axios({
@@ -38,7 +45,7 @@ function Menu(){
          <div className = "menu-div">
             <h2 className = "menu-title">Menu</h2>
            <div className ="menu-item"onClick = {()=>{switchPage('/profile')}}>
-           { user_context.photo !== undefined?<img className = "menuitem-img" src = {profile_photo_url}></img>:<FaUserCircle className = "alt-dp"/>}
+           { profile_photo_url !== null?<img className = "menuitem-img" src = {profile_photo_url}></img>:<FaUserCircle className = "alt-dp"/>}
                <strong><p className = "menuitem-title">See your profile</p></strong>
             </div>
            <div className ="menu-item">

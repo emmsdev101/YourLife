@@ -1,5 +1,6 @@
 import './style.css'
 import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
+import PostImage from '../postImage/postImage'
 
 function Post({content, id}){
     const {useState, useRef,useEffect} = useReactHooks()
@@ -13,19 +14,26 @@ function Post({content, id}){
     const [userDetails, setUserDetails] = useState({})
     const isMounted = useRef(true)
     const profile_photo_url = my_api + "/photos/"+userDetails.photo
-    
+
     useEffect(() => {
         const getUserDetails = async()=>{
             const fetchResult = await getUserInfo(content.owner)
-            if(isMounted.current)setUserDetails(fetchResult)
+            if(isMounted.current){
+                let pp = new Image()
+                pp.onload = ()=> {
+                    setUserDetails(fetchResult)
+                    setRender(true)
+                }
+                pp.src = my_api + "/photos/"+fetchResult.photo
+            }
         }
         getUserDetails()
         setPhotos([])
-        const images = fetchImages(content._id)
+        const images =  fetchImages(content._id)
         images.then((items)=>{
             if(isMounted.current){
-                if(items.length > 0)setPhotos(items)
-                else setRender(true)
+                setPhotos(items)
+
             }
         }, (reasion)=>{
             console.log(reasion)
@@ -34,20 +42,23 @@ function Post({content, id}){
         }
         })
     }, [content]);
-    useEffect(()=>{
-        if(photos.length>0){
-            photos.forEach(photo => {
-                let image = new Image()
-                image.src = photo.path
-            });
-            setRender(true)
+    useEffect(() => {
+        for (var i = 0; i < photos.length; i++) {
+            var tempImage = new Image();
+            tempImage.addEventListener("load", trackProgress, true);
+            tempImage.src = photos[i].path;
         }
-    }, [photos])
+    }, [photos]);
+    function trackProgress(){
+        console.log("Image loaded")
+    }
+
+
     if(render){
         return(
             <div className = "post-div" id = {id}>
                 <div className = "post-heading">
-                    {userDetails.photo !== undefined? <img className = "profile-photo" src = {profile_photo_url} alt = "profile picture"/>
+                    {userDetails.photo !== undefined?<img className = "profile-photo" src = {profile_photo_url} alt = "profile picture"/>
                     : <FaUserCircle className = "alt-dp"/>}
                     <div className = "post-details">
                         <h4>{userDetails.firstname + ' ' + userDetails.lastname}</h4>
@@ -61,24 +72,10 @@ function Post({content, id}){
                             {content.content}
                         </p>
                         <div className = 'images-section'>
-                            {photos !== undefined? photos.map((photo, id)=>{
-                                if(id < 4){
-                                    const src =  my_api+"/photos/"+photo.path
-                                    if(photos.length === 1){
-                                        return (<img src = {src} id = {id} className = 'single content-photo'></img>)
-                                    }else if(photos.length === 2){
-                                        return (<img src = {src} id = {id} className = 'double content-photo'></img>)
-                                    }else if(photos.length === 3){
-                                        if(id < 2 ){
-                                            return (<img src = {src} id = {id} className = 'tripple content-photo'></img>)
-                                        }else{
-                                            return (<img src = {src} id = {id} className = 'tripple-row content-photo'></img>)
-                                        } 
-                                    }else if(photos.length > 3){
-                                        return (<img src = {src} id = {id} className = 'quad content-photo'></img>) 
-                                    }
-                                }
-                            }):''}
+                            {photos !== undefined? photos.map((photo, id)=>(
+                                <PostImage photosQuant = {photos.length} photo = {photo} id = {id} src = {my_api+"/photos/"+photo.path}/>
+                            )
+                            ):''}
                             {photos !== undefined && photos.length > 4 ? <button className = 'more-btn'>{photos.length - 4} more</button>:''}
                         </div>
                         
@@ -96,6 +93,5 @@ function Post({content, id}){
             </div>
         )
     }else return(<></>)
-    
 }
 export default Post
