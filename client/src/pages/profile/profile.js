@@ -1,14 +1,9 @@
 
 import './profile.css'
-import testimage1 from '../../res/images/test1.jpg'
-import testimage2 from '../../res/images/test2.jpg'
-import testimage3 from '../../res/images/test3.jpg'
-import testimage4 from '../../res/images/test4.jpg'
-
 import ChangeDp from './../../components/changeDp/changeDp'
 import Post from '../../components/post/post'
 import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
-
+import  FriendItem  from "./friend";
 function Profile(){
     const {Cookies, useHistory, useContext, useState, useEffect} = useReactHooks()
     const {GlobalUserActionsContext, GlobalUserContext, usePeople} = useCustomHooks()
@@ -23,12 +18,13 @@ function Profile(){
 
     const [photos, setPhotos] = useState([]);
     const [upload, setUpload] = useState(false)
-    const {fetchPhotos} = usePeople()
+    const {fetchPhotos, getFollowing} = usePeople()
     
     const fullname = user_context.firstname + ' ' +user_context.lastname
     const followers = user_context.followers
     const following = user_context.followiing
     const [profile_photo_url, setProfilePhotoUrl] = useState()
+    const [follows, setFollows] = useState([])
 
     const gender = user_context.gender
     const age = user_context.age
@@ -43,7 +39,11 @@ function Profile(){
             const fetchResult = await fetchPhotos(user_context.username)
             setPhotos(fetchResult)
         }
+        async function getFollows() {
+            setFollows(await getFollowing())
+        }
         setupPhotos()
+        getFollows()
     }, []);
     useEffect(() => {
         let pp = new Image()
@@ -65,19 +65,11 @@ function Profile(){
             </div>
         )
     }
-    const FriendItem = ({image})=> {
-        return(<>
-                <div className = "friends-item-div">
-                <div className = "friend-image" style = {{backgroundImage:'url('+image+')'}}>
-            </div>
-                    <p>Jasper Gequillio</p>
-                </div>
-        </>)
-    }
+    
     const Avatar = () => {
         return(
             <div className = "dp-div">
-                <img className = "avatar" src = {profile_photo_url}></img>:
+                <img className = "avatar" src = {profile_photo_url}></img>
                 {isOwn? <div className = "camera-div" onClick = {uploadEnable} >
                     <FaCamera/>
                 </div>:''}
@@ -135,14 +127,11 @@ function Profile(){
         </div>
         </div>
         <div className = "friends-div">
-            <h4>Followers</h4>
+            <h4>Following</h4>
             <div className = "friends-list-div">
-                <FriendItem image = {testimage1}></FriendItem>
-                <FriendItem image = {testimage2}></FriendItem>
-                <FriendItem image = {testimage3}></FriendItem>
-                <FriendItem image = {testimage4}></FriendItem>
-                <FriendItem image = {testimage4}></FriendItem>
-                <FriendItem image = {testimage4}></FriendItem>
+                {follows.map((user, id)=>(
+                    <FriendItem username = {user.following} id = {id}/>
+                ))}
             </div>
             <div className = "generic-button-div">
             <button> See more followers</button>

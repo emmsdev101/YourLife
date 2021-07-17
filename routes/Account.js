@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router()
 const User = require("./../model/user");
-const user = require("./../model/user");
+const Following = require("./../model/following")
 
 
 // --- Authentication handler ------------- //
@@ -19,7 +19,7 @@ const admin = (req, res, next)=> {
         next()
     }else res.sendStatus(401)
 }
-
+// --------------- GET ROUTES ---------------
 router.get('/fetchAll', auth, async(req, res)=>{
     try{
         const users = await User.find({},{
@@ -49,6 +49,54 @@ router.get('/account', auth, async(req, res, next)=>{
         res.send(444)
     }
 
+})
+router.get('/follows', async(req, res)=>{
+    try{
+        Following.find((err, doc)=>{
+            if(err){
+                console.log(err)
+            }
+            res.send(doc)
+        })
+    
+    }catch(err){
+        console.log(err)
+        res.sendStatus(444)
+    }
+    
+})
+router.get('/isfollowing', auth, async(req, res)=> {
+    try{
+        const get_user = await User.findOne({_id:req.session.user})
+        if(get_user){
+            const isfollowing = await Following.findOne({follower:get_user.username, following:req.query.username})
+            if(isfollowing){
+                res.send(true)
+            }else{
+                res.send(false)
+            }
+        }else{
+            res.sendStatus(404)
+        }
+    }catch(err){
+        console.log(err)
+        res.sendStatus(444)
+    }
+    
+})
+router.get('/followers', auth, async(req, res)=>{
+    try{
+        const follower = await User.findOne({_id:req.session.user},null,{limit:6})
+        if(follower){
+            const followers = await Following.find({follower:follower.username})
+            res.send(followers)
+        }else{
+            res.sendStatus(404)
+        }
+    }catch(err){
+        console.log(err)
+        res.send(444)
+    }
 })
 // ---------------- LOGIN ROUTE ------------------//
 router.post("/login", async(req, res) => {
@@ -145,9 +193,52 @@ router.post("/register", (req, res) => {
       }
     });
 })
+// FOLLOWING
+router.post('/follow', auth, async(req, res)=>{
+    const follow = async(follower) => {
+        const follow = new Following({
+            follower:follower,
+            following:req.body.username
+        })
+        follow.save(function(err, doc){
+            if(err){
+                console.log(err)
+            }else{
+                res.send(true)
+            }
+        })
+    }
+    const unfollow = async(follower) => {
+        Following.deleteOne({follower:follower, following:req.body.username},(err)=>{
+            if(err){
+                console.log(err)
+                res.send(444)
+            }else{
+                res.send(true)
+            }
+        })
+    }
+    try{
+        const user_follower = await User.findOne({_id:req.session.user})
+        if(user_follower){
+            const following = await Following.findOne({follower:user_follower.username,following:req.body.username})
+            if(following){
+                unfollow(user_follower.username)
+            }else{
+                follow(user_follower.username)
+            }
+            
+        }else{
+            res.sendStatus(404)
+        }
+    }catch(err){
+        console.log(err)
+    }
+})
+router
 // DELETING SINGLE USER
 
-router.delete('/accout', auth, (req, res) => {
+router.delete('/accout', auth, async(req, res) => {
     User.findOneAndDelete({username: req.session.user}, function(err, doc){
         if(err)return console.log(err)
         if(!doc) return res.sendStatus(401)

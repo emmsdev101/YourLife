@@ -21,10 +21,11 @@ function usePeople(){
     }
     const getUserInfo = async(username) =>{
         const userInfo = await axios({
-          method : 'get',
-                withCredentials: true,
-                url :  my_api+'/user/account',
-                params:{
+            method : 'get',
+            headers:{"Content-Type" : "application/json"},
+            withCredentials: true,
+            url :  my_api+'/user/account',
+            params:{
                     id: username
                 }
         })
@@ -68,10 +69,61 @@ function usePeople(){
             return false
         }
     }
-    const checkLogged = () => {
-
+    const follow = async(username) => {
+        console.log(username)
+        try{
+            const follow_request = await axios({
+                method: "post",
+                withCredentials: "true",
+                headers:{"Content-Type" : "application/json"},
+                url: my_api + "/user/follow",
+                data:{
+                    username:username
+                }
+            })
+            if(follow_request.status === 200){
+                console.log(follow_request.data)
+                if(follow_request.data === true)console.log(follow_request.data)
+                else return false
+            }
+        }catch(error){
+            console.log(error)
+        }
     }
-
-    return {people, getUserInfo, fetchPhotos, updateDp}
+    const isFollowing = async(username) => {
+        try{
+            const isFollowingReq = await axios({
+                method : "get",
+                headers:{ "Content-type":"application/json"},
+                withCredentials: true,
+                url : my_api + "/user/isfollowing",
+                params : {username:username}
+            })
+            if(isFollowingReq.status === 200){
+                return isFollowingReq.data
+            }else{
+                console.log(isFollowingReq.status)
+            }
+        }catch(err){
+            console.log(err)
+        }
+ }
+    const getFollowing = async() => {
+        try{
+            const followers = await axios({
+                method:"get",
+                headers: {"Content-type": "application/json"},
+                withCredentials:true,
+                url: my_api + "/user/followers"
+            })
+            if(followers.status === 200){
+                console.log(followers.data)
+                return followers.data
+            }
+        }catch(err) {
+            console.log(err)
+        }
+    }
+    return {people, getUserInfo, fetchPhotos, updateDp, follow, isFollowing, getFollowing}
 }
 export default usePeople
