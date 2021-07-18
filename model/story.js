@@ -6,7 +6,11 @@ const StorySchema = new mongoose.Schema({
 	},
 	content: {
 		type: String,
-		required: true
+		required: false
+	},
+	photo_only:{
+		type:Boolean,
+		default:false
 	},
 	likes:{
 		type:Number,

@@ -41,7 +41,7 @@ function Post({content}){
         };
     }, [content]);
 
-    if(photos.length > 0 && userDetails !== null){
+    if(((content.photo_only && photos.length > 0) || content.photo_only === false) && userDetails !== null){
         return(
             <React.Fragment>
             <div className = "post-div">

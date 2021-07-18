@@ -28,11 +28,22 @@ function CreatePost({showMe, addStory, postStory, uploadPhoto}){
         setContent(e.target.value)
     }
     const handleSubmit = async() => {
-        showMe()
         try{
-            const uploads =  await uploadPhoto(imgFiles)
-            const newPost = await postStory(user_context, uploads, content) 
-            addStory(newPost)
+            if(imgFiles.length > 0){
+                const uploads =  await uploadPhoto(imgFiles)
+                const newPost = await postStory(user_context, uploads, content) 
+                addStory(newPost)
+                showMe()
+            }
+            else{
+                if(content !== ""){
+                    const newPost = await postStory(user_context, null, content) 
+                    addStory(newPost)
+                    showMe()
+                }else{
+                    alert("Please dont post empty")
+                }
+            }
         }catch(err){
             console.log(err)
         }

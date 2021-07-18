@@ -20,28 +20,54 @@ const admin = (req, res, next) => {
 }
 router.post('/create', auth, async(req, res, next)=>{
     try{
+        const img_paths = req.body.imagePath
+        const content = req.body.content
+        const owner = req.body.owner
+
         const data = new Story({
-            owner:req.body.owner,
-            content:req.body.content,
-            images:req.body.images,
+            owner:owner,
+            content:content,
+            photo_only: content !== "" && content !== undefined?false:true,
             likes:0,
             comments:0
             })
-            const img_paths = req.body.imagePath
+
+        if(img_paths !== null){
+ 
             data.save(function(err, post){
                 if(err)return console.log(err)
+
                 img_paths.forEach(path => {
+
                     const photo = new Photo({
                         owner:post.owner,
                         post_id: post._id,
                         path:path
                     })
                     photo.save(function(err, saved_photo){
-                        if(err)return console.log(err)
-                    })
-                });
-                res.send(post)
-            })
+                            if(err)return console.log(err)
+                        })
+                    });
+                    res.send(post)
+                })
+        }else{
+            if(content !== undefined && content !== ""){
+                data.save(function(err, post){
+                    if(err){
+                        console.log(err)
+                        res.sendStatus(444)
+                    }
+                    if(post){
+                        res.send(post)
+                    }else{
+                        res.sendStatus(444)
+                    }
+                })
+            }else{
+                console.log(content)
+                res.sendStatus(403)
+            }
+        }
     }catch(err){
         console.log(err)
         res.sendStatus(444)
@@ -51,7 +77,7 @@ router.get('/my-posts', auth, async(req, res, next) => {
     try{
         const user = await User.findOne({_id:req.session.user})
         if(user){
-            const stories = await Story.find({owner:user.username},null, {limit:10})
+            const stories = await Story.find({owner:user.username},null, {limit:10}).sort({date:-1})
             res.send(stories)
         }
     }catch(err){
