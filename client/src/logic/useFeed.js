@@ -113,8 +113,24 @@ function useFeed (){
             return false
         }
     }
+    const getMyStory = async() => {
+        try{
+            const get_feeds = await axios({
+                method:'get',
+                withCredentials: true,
+                url: my_api+'/post/my-posts'
+            })
+            if(get_feeds.status === 200){
+                return get_feeds.data
+            }else{
+                console.log(get_feeds.status)
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }
     
-    return {feedStories, fetchImages, postStory,uploadPhoto, uploadingProgress, addFeed, uploadDp, uploadDataUrl}
+    return {feedStories, fetchImages, postStory,uploadPhoto, uploadingProgress, addFeed, uploadDp, uploadDataUrl,getMyStory}
 
 }
 export default useFeed

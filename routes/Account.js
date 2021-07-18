@@ -86,9 +86,9 @@ router.get('/isfollowing', auth, async(req, res)=> {
 })
 router.get('/followers', auth, async(req, res)=>{
     try{
-        const follower = await User.findOne({_id:req.session.user},null,{limit:6})
+        const follower = await User.findOne({_id:req.session.user})
         if(follower){
-            const followers = await Following.find({follower:follower.username})
+            const followers = await Following.find({follower:follower.username},null,{limit:6})
             res.send(followers)
         }else{
             res.sendStatus(404)
@@ -97,6 +97,24 @@ router.get('/followers', auth, async(req, res)=>{
         console.log(err)
         res.send(444)
     }
+})
+router.get('/status', async(req, res, next)=> {
+    try{
+        const user = await User.findOne({_id:req.session.user})
+        if(user){
+            const followers = await Following.countDocuments({following:user.username})
+            const following = await Following.countDocuments({follower:user.username})
+            console.log(followers)
+            console.log(following)
+            res.send({followers, following})
+        }else{
+            res.sendStatus(404)
+        }
+    }catch(err){
+        console.log(err)
+        res.sendStatus(444)
+    }
+    
 })
 // ---------------- LOGIN ROUTE ------------------//
 router.post("/login", async(req, res) => {

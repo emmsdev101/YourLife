@@ -90,9 +90,7 @@ router.post('/', uploads.array('image'), async (req, res, next)=> {
 router.post('/change-profile', auth, async (req, res, next)=> {
     try{
         const file = req.body.file
-        console.log(file)
         const path = await saveImage(req, res, file)
-        console.log(path)
         res.send(path)
     }catch(err){
         console.log(err)

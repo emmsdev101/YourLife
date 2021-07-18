@@ -1,8 +1,10 @@
 const Story = require('./../model/story')
 const Photo = require('./../model/photo')
+const User = require('./../model/user')
 const bcrypt = require("bcrypt");
 const router = require('express').Router()
-const fs = require('fs')
+const fs = require('fs');
+const following = require('../model/following');
 
 const auth = (req, res, next) => {
     if(req.session.user){
@@ -48,7 +50,11 @@ router.post('/create', auth, async(req, res, next)=>{
 })
 router.get('/my-posts', auth, async(req, res, next) => {
     try{
-
+        const user = await User.findOne({_id:req.session.user})
+        if(user){
+            const stories = await Story.find({owner:user.username},null, {limit:10})
+            res.send(stories)
+        }
     }catch(err){
         console.log(err)
         res.sendStatus(444)

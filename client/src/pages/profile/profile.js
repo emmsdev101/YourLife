@@ -6,7 +6,7 @@ import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
 import  FriendItem  from "./friend";
 function Profile(){
     const {Cookies, useHistory, useContext, useState, useEffect} = useReactHooks()
-    const {GlobalUserActionsContext, GlobalUserContext, usePeople} = useCustomHooks()
+    const {GlobalUserActionsContext, GlobalUserContext, usePeople, useFeed} = useCustomHooks()
 
     const {FaUserCircle, FaBars, FaPlusCircle, FaEnvelope, FaCamera,FaArrowLeft, FaUserPlus,FaPen} = useIcons()
     const owner = new Cookies().get("username")
@@ -18,13 +18,14 @@ function Profile(){
 
     const [photos, setPhotos] = useState([]);
     const [upload, setUpload] = useState(false)
-    const {fetchPhotos, getFollowing} = usePeople()
+    const {fetchPhotos, getFollowing, getFollowStatus} = usePeople()
+    const {getMyStory} = useFeed()
     
     const fullname = user_context.firstname + ' ' +user_context.lastname
-    const followers = user_context.followers
-    const following = user_context.followiing
     const [profile_photo_url, setProfilePhotoUrl] = useState()
     const [follows, setFollows] = useState([])
+    const [followStatus, setFollowStatus] = useState({})
+    const [myStories, setMyStories] = useState([])
 
     const gender = user_context.gender
     const age = user_context.age
@@ -39,11 +40,13 @@ function Profile(){
             const fetchResult = await fetchPhotos(user_context.username)
             setPhotos(fetchResult)
         }
-        async function getFollows() {
+        async function fetchProfileData() {
             setFollows(await getFollowing())
+            setFollowStatus(await getFollowStatus())
+            setMyStories(await getMyStory())
         }
         setupPhotos()
-        getFollows()
+        fetchProfileData()
     }, []);
     useEffect(() => {
         let pp = new Image()
@@ -93,12 +96,12 @@ function Profile(){
       <div className = "profile-header-div">
           <div className = "row1-profile-header">
               <div className = "follower-div">
-                  <p className = "follow-count">{followers}</p>
-                  <p className = "follow-count-title"> Followers</p>
+                  <p className = "follow-count">{followStatus.followers}</p>
+                  <p className = "follow-count-title">Followers</p>
               </div>
               {profile_photo_url !== undefined? <Avatar/>:<TempAvatar/>}
               <div className = "following-div">
-                  <p className = "follow-count">{following}</p>
+                  <p className = "follow-count">{followStatus.following}</p>
                   <p className = "follow-count-title">Following</p>
               </div>
           </div>
@@ -144,9 +147,12 @@ function Profile(){
 
         <div className = "stories-div">
             <div className = "post-div-list">
-            <Post content = "the quick brown fox jumps over the lazy dog and the dog got angy so the dog chased the brown fox. But the brown fox is quicker than the dog so the dog didn't catched the brown fox" hasphoto = {true}></Post>
-            <Post content = "What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry Lorem Ipsum has been the industry's standard dummy text ever since the 1500s when an unknown printer took a galley of type and scrambled it to make a type specimen book it has?"></Post>
-            <Post content = "the quick brown fox jumps over the lazy dog and the dog got angy so the dog chased the brown fox. But the brown fox is quicker than the dog so the dog didn't catched the brown fox"></Post>
+            {myStories.length > 0? myStories.map((story, id) => (
+                <>
+                <Post content = {story} id = {id}/>
+                <div className = "span"></div>
+                </>
+            )):''}
             </div>
         </div>
         </>

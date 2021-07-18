@@ -11,7 +11,6 @@ const FriendItem = ({id, username})=> {
     useEffect(() => {
         getUserInfo(username).then((result)=>{
             setUserInfo(result)
-            console.log(result)
             const picture_url = my_api + "/photos/"+result.photo
             let picture = new Image()
             picture.onload = () => {
