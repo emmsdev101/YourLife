@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-uploads/user/**
+# uploads/user/**
 .env
 /.pnp
 .pnp.js
