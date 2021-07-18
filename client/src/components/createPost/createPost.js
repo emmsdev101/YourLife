@@ -2,9 +2,11 @@ import { useRef } from "react"
 import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library"
 import imageCompression from './../../logic/imageCompression'
 import './style.css'
-function CreatePost({showMe, addStory, postStory, uploadPhoto}){
+function CreatePost({showMe, addStory}){
     const {useState, useContext,useEffect, Cookies} = useReactHooks()
-    const {GlobalUserContext, GlobalUserActionsContext} = useCustomHooks()
+    const {GlobalUserContext, GlobalUserActionsContext,useFeed} = useCustomHooks()
+
+    const {uploadDataUrl,postStory, uploadingProgress} = useFeed() 
     const{FaCamera,FaArrowLeft, FaImages,FaVideo} = useIcons()
     const {getUrlImage} = imageCompression()
     const cookie = new Cookies()
@@ -30,7 +32,7 @@ function CreatePost({showMe, addStory, postStory, uploadPhoto}){
     const handleSubmit = async() => {
         try{
             if(imgFiles.length > 0){
-                const uploads =  await uploadPhoto(imgFiles)
+                const uploads =  await uploadDataUrl(imgFiles)
                 const newPost = await postStory(user_context, uploads, content) 
                 addStory(newPost)
                 showMe()
@@ -62,9 +64,21 @@ function CreatePost({showMe, addStory, postStory, uploadPhoto}){
             setImgFiles(imgFiles => [...imgFiles, data])
         }
     }
+    const UploadingView = () => {
+        return(
+            <div className = "upload-menu">
+                <div className = "uploading-view">
+                <h3>Uploading</h3>
+                <progress id="uploading-dp" value={uploadingProgress} max="100"> </progress>
+                <h3>{uploadingProgress}%</h3>
+            </div>
+            </div>
+        )
+    }
     return(
         <>
         <div className = "createPost">
+        {uploadingProgress > 0 && uploadingProgress < 100? <UploadingView/>:''}
             <div className = "createPost-header">
                 <button className = 'back-btn' onClick = {showMe}> <FaArrowLeft className = 'back-icon'/></button>
                 <h4 className = 'header-title'>Create a story</h4>
@@ -76,7 +90,6 @@ function CreatePost({showMe, addStory, postStory, uploadPhoto}){
                     <textarea id = 'post-input' className = 'post-input' rows = "10" placeholder = 'Whats new?'
                         value = {content} onChange = {handleInput}></textarea>
                     <div className = 'photo-list'>
-                        
                     {imgFiles.length > 0? imgFiles.map((url, id)=>(
                         <img alt = "pictures" key = {id} src = {url} className = "photos"/>
                     )):''}

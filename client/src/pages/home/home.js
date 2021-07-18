@@ -10,7 +10,7 @@ function Home(){
     
     const username = new Cookies().get('username')
     const [createPost, setCreatePost] = useState(false);
-    const {uploadDataUrl,postStory, uploadingProgress, feedStories, addFeed, loading} = useFeed()
+    const {feedStories, addFeed, loading} = useFeed()
     const history = useHistory()
     const set_user_context = useContext(GlobalUserActionsContext)
     useEffect(() => {
@@ -29,19 +29,11 @@ function Home(){
             <div className = "loader-div"><div className="loader"></div></div>
         )
     }
-    const Uploading = ()=>{
-        return(
-            <div className = "upload_progress">
-            <p id = "progress_label">{uploadingProgress < 100 ? "Uploading" :"Done!!!" }</p>
-                <progress id="uploading" value={uploadingProgress} max="100"> </progress>
-         </div>
-        )
-    }
+    
     return(
         <React.Fragment>
-        {createPost? <CreatePost showMe = {createStory} addStory = {addFeed} postStory = {postStory} uploadPhoto = {uploadDataUrl}/>: 
+        {createPost? <CreatePost showMe = {createStory} addStory = {addFeed}/>: 
       <div className = "home-body">
-          {uploadingProgress > 0 && uploadingProgress < 100? <Uploading/>:''}
           <div className = "home-title">
               <div className = "primary-button">
                 <button onClick = {createStory}> <FaPlusCircle className = "primary-button-icon"></FaPlusCircle>Share a story</button>

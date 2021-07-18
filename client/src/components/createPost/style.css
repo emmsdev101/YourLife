@@ -95,6 +95,31 @@ hr{
 .hide{
     display: none;
 }
+
+#uploading-dp{
+    height: 40px;
+    width: 90%;
+}
+.uploading-view{
+    width: calc(100% - 30px);
+    background-color: white;
+    border-radius: 10px;
+    height: auto;
+    box-shadow: 0 1px 10px;
+}
+.upload-menu{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+    background-color: #ffffff67;
+  }
 @media only screen and (max-width: 768px){
     .createPost{
         width: 100%;
