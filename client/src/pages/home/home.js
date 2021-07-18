@@ -2,10 +2,11 @@ import './homeStyle.css'
 import Post from '../../components/post/post'
 import CreatePost from '../../components/createPost/createPost'
 import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library";
+import React from 'react';
 function Home(){
     const {useState, useContext, useHistory,useEffect, Cookies} = useReactHooks()
     const {useFeed, GlobalUserActionsContext} = useCustomHooks()
-    const {FaBars, FaBell, FaPlusCircle, FaEnvelope, FaHome, FaUsers} = useIcons()
+    const { FaPlusCircle} = useIcons()
     
     const username = new Cookies().get('username')
     const [createPost, setCreatePost] = useState(false);
@@ -22,11 +23,10 @@ function Home(){
         }else{
             setCreatePost(true)
         }
-        
     }
     const Loader = ()=> {
         return(
-            <div className = "loader-div"><div class="loader"></div></div>
+            <div className = "loader-div"><div className="loader"></div></div>
         )
     }
     const Uploading = ()=>{
@@ -38,7 +38,7 @@ function Home(){
         )
     }
     return(
-        <>
+        <React.Fragment>
         {createPost? <CreatePost showMe = {createStory} addStory = {addFeed} postStory = {postStory} uploadPhoto = {uploadDataUrl}/>: 
       <div className = "home-body">
           {uploadingProgress > 0 && uploadingProgress < 100? <Uploading/>:''}
@@ -50,16 +50,12 @@ function Home(){
         {feedStories.length < 1? <Loader/>:''}
           <div className = "post-list-div">
              {feedStories.map((story, id)=>(
-                 <>
-                 <Post content = {story} id = {id}/>
-                 <div className = "span"></div>
-                 </>
+                 <Post content = {story} key = {id}/>
              ))}
           </div>
       </div>
         }
-        
-</>
+        </React.Fragment>
     )
 }
 export default Home

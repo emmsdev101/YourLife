@@ -29,7 +29,6 @@ function App() {
   const [active, setActive] = useState('/home')
 
   useEffect(() => {
-    console.log(user_context.username)
     set_user_context(username).then((res)=>{
       setRender(true)
     },()=> {
@@ -47,6 +46,7 @@ function App() {
   if(render){
     return (
       <Switch>
+        <React.Fragment>
         {isLogged() === true?
           <div className="App">
             <header className="home-header">
@@ -75,6 +75,7 @@ function App() {
             <Route path = "/"><Login/></Route>
             </Suspense>
       }
+      </React.Fragment>
       </Switch>
     
     );

@@ -26,6 +26,6 @@ import { useReactHooks } from "../../logic/library"
                 if(loaded)return (<img src = {src} id = {id} className = 'quad content-photo'></img>) 
                 else return (<div id = {id} className = 'quad content-loading'></div>) 
             }
-        }
+        }else return (null)
     }
 export default PostImage

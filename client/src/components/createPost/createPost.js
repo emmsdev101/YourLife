@@ -13,7 +13,8 @@ function CreatePost({showMe, addStory, postStory, uploadPhoto}){
     const [imgFiles, setImgFiles] = useState([])
 
     const user_context = useContext(GlobalUserContext);
-    const set_user_context = useContext(GlobalUserActionsContext)    
+    const set_user_context = useContext(GlobalUserActionsContext)
+
     let picker
     useEffect(() => {
         function fetchUser(){
@@ -47,7 +48,6 @@ function CreatePost({showMe, addStory, postStory, uploadPhoto}){
             await getUrlImage(file, addImage)
         }
         function addImage(data){
-            console.log(data)
             setImgFiles(imgFiles => [...imgFiles, data])
         }
     }
@@ -67,7 +67,7 @@ function CreatePost({showMe, addStory, postStory, uploadPhoto}){
                     <div className = 'photo-list'>
                         
                     {imgFiles.length > 0? imgFiles.map((url, id)=>(
-                        <img id = {id} src = {url} className = "photos"/>
+                        <img alt = "pictures" key = {id} src = {url} className = "photos"/>
                     )):''}
                     </div>
                     <input type = "file" accept = "image/*" className = "hide" id = "image-picker" onChange = {pickImage} multiple/>

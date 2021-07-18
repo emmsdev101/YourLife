@@ -15,10 +15,9 @@ function Notification(){
               <button className = "search-button"><FaSearch className = "search-icon"></FaSearch></button>
           </div>
           <div className = "people-list-div">
-                <NotificationItem unread = {true}></NotificationItem>
-                <NotificationItem></NotificationItem>
-                <NotificationItem  unread = {true}></NotificationItem>
-                <NotificationItem></NotificationItem>
+              <h3>Comming soon....</h3>
+              
+          
           </div>
       </div>    )
 }

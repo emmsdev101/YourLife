@@ -1,8 +1,9 @@
 import './style.css'
 import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
 import PostImage from '../postImage/postImage'
+import React from 'react'
 
-function Post({content, id}){
+function Post({content}){
     const {useState, useRef,useEffect} = useReactHooks()
     const {useFeed, usePeople} = useCustomHooks()
     const {FaComment, FaEllipsisH, FaThumbsUp, FaUserCircle } = useIcons()
@@ -12,49 +13,38 @@ function Post({content, id}){
     const [photos, setPhotos] = useState([])
     const [render, setRender] = useState(false)
     const [userDetails, setUserDetails] = useState(null)
-    const isMounted = useRef(true)
+    const [isMounted, setIsMounted] = useState(true);
     const profile_photo_url = userDetails !== null?my_api + "/photos/"+userDetails.photo:''
 
     useEffect(() => {
         const getUserDetails = async()=>{
             const fetchResult = await getUserInfo(content.owner)
-            if(isMounted.current){
+            if(isMounted) {
                 setUserDetails(fetchResult)
+            }
                 let pp = new Image()
                 pp.onload = ()=> {
-                    setRender(true)
+                    if(isMounted)setRender(true)
                 }
                 pp.src = my_api + "/photos/"+fetchResult.photo
-            }
         }
         getUserDetails()
-        setPhotos([])
+        if(isMounted) setPhotos([])
         const images =  fetchImages(content._id)
         images.then((items)=>{
-            if(isMounted.current){
-                setPhotos(items)
-
-            }
+            if(isMounted)setPhotos(items)
         }, (reasion)=>{
             console.log(reasion)
-        return()=>{
-            isMounted.current = false
-        }
         })
+        return () => {
+            setIsMounted(false)
+        };
     }, [content]);
-    useEffect(() => {
-        for (var i = 0; i < photos.length; i++) {
-            var tempImage = new Image();
-            tempImage.addEventListener("load", trackProgress, true);
-            tempImage.src = photos[i].path;
-        }
-    }, [photos]);
-    function trackProgress(){
-        console.log("Image loaded")
-    }
-    if(userDetails !== null){
+
+    if(photos.length > 0 && userDetails !== null){
         return(
-            <div className = "post-div" id = {id}>
+            <React.Fragment>
+            <div className = "post-div">
                 <div className = "post-heading">
                     {render?<img className = "profile-photo" src = {profile_photo_url} alt = "profile picture"/>
                     : <FaUserCircle className = "alt-dp"/>}
@@ -71,9 +61,9 @@ function Post({content, id}){
                         </p>
                         <div className = 'images-section'>
                             {photos !== undefined? photos.map((photo, id)=>(
-                                <PostImage photosQuant = {photos.length} photo = {photo} id = {id} src = {my_api+"/photos/"+photo.path}/>
+                                <PostImage photosQuant = {photos.length} photo = {photo} key = {id} id = {id} src = {my_api+"/photos/"+photo.path}/>
                             )
-                            ):''}
+                            ):null}
                             {photos !== undefined && photos.length > 4 ? <button className = 'more-btn'>{photos.length - 4} more</button>:''}
                         </div>
                         
@@ -89,7 +79,9 @@ function Post({content, id}){
                     <button className = "like-button"><FaComment className = "like-icon"></FaComment>Comment</button>
                 </div>
             </div>
+             <div className = "span"></div>
+             </React.Fragment>
         )
-    }else return(<></>)
+    }else return(null)
 }
 export default Post

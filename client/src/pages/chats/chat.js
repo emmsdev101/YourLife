@@ -42,8 +42,9 @@ const Inbox = ()=> {
             </div>
     </div>
       <div className = "chat-body">
+          <h3>Comming soon...</h3>
 
-        <InboxItem unread = {true}></InboxItem>
+        {/* <InboxItem unread = {true}></InboxItem>
         <InboxItem></InboxItem>
         <InboxItem unread = {true}></InboxItem>
         <InboxItem unread = {true}></InboxItem>
@@ -54,7 +55,7 @@ const Inbox = ()=> {
         <InboxItem unread = {true}></InboxItem>
         <InboxItem unread = {true}></InboxItem>
         <InboxItem unread = {true}></InboxItem>
-        <InboxItem unread = {true}></InboxItem>
+        <InboxItem unread = {true}></InboxItem> */}
       </div>
         </>
         

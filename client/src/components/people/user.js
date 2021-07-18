@@ -14,28 +14,33 @@ function User({data, id}){
     const follow_btn = useRef(null)
     const unfollow_btn = useRef(null)
 
+    const [isMounted, setIsMounted] = useState(true);
+
     useEffect(() => {
         let preload = new Image()
         preload.onload = () => {
-            setDpLoad(true)
+            if(isMounted)setDpLoad(true)
         }
         checkFollow()
         preload.src = profilePhoto
+        return ()=> {
+            setIsMounted(false)
+        }
     }, []);
 
     async function checkFollow() {
         if(await isFollowing(data.username)){
-            setFollow(true)
+            if(isMounted)setFollow(true)
         }else{
-            setFollow(false)
+            if(isMounted)setFollow(false)
         }
     }
     const followUser = async() => {
         if(followed){
             follow_btn.current.disabled = false
-            follow(data.username)          
+            if(isMounted)follow(data.username)          
         }else{
-            follow(data.username)
+            if(isMounted)follow(data.username)
             follow_btn.current.disabled = true
         }
         setFollow(!followed)

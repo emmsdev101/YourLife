@@ -3,10 +3,9 @@ import imageCompression from '../../logic/imageCompression'
 import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
 
 function ChangeDp({setUpload, setProfilePhotoUrl,profile_photo_url}){
-    const {useState, useContext, useRef, useEffect} = useReactHooks()
+    const {useState, useContext, useRef} = useReactHooks()
     const {FaUserCircle} = useIcons()
     const {useFeed,usePeople,GlobalUserContext,GlobalUserActionsContext} = useCustomHooks()
-    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
     let uploadPicker = useRef(null)
     const {uploadDp, uploadingProgress} = useFeed()
     const {updateDp} = usePeople()
@@ -28,13 +27,11 @@ function ChangeDp({setUpload, setProfilePhotoUrl,profile_photo_url}){
     const uploadProfilePic = async() => {
         const uploadResult = await uploadDp(pickedPhoto)
         if(uploadResult){
-            console.log("uploaded")
             const updateResult = await updateDp(uploadResult, user_context.username)
             if(updateResult){
                 set_user_context(user_context.username)
                // setProfilePhotoUrl(my_api + "/photos/"+uploadResult)
                 setUpload(false)
-                console.log("updated")
             }else{
                 console.log("there is error while updating profile")
             }
@@ -48,7 +45,7 @@ function ChangeDp({setUpload, setProfilePhotoUrl,profile_photo_url}){
             <>
             <div className = "upload-menu-body">
             <h3 className = "upload-menu-title">Change Profile Photo</h3>
-                {pickedPhoto !== null || user_context.photo !== undefined? <img className = "profilepic-preview" src = {pickedPhoto !== null?pickedPhoto:profile_photo_url}/>:
+                {pickedPhoto !== null || user_context.photo !== undefined? <img className = "profilepic-preview" alt = "profile" src = {pickedPhoto !== null?pickedPhoto:profile_photo_url}/>:
                 <div className = "temp-profilepic-preview"><FaUserCircle className = "temp-avatar-prev"/></div>}
                 <div className = "upload-menu-header">
                     {pickedPhoto !== null?

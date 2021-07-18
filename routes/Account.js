@@ -104,8 +104,6 @@ router.get('/status', async(req, res, next)=> {
         if(user){
             const followers = await Following.countDocuments({following:user.username})
             const following = await Following.countDocuments({follower:user.username})
-            console.log(followers)
-            console.log(following)
             res.send({followers, following})
         }else{
             res.sendStatus(404)

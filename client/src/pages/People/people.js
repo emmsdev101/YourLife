@@ -2,14 +2,12 @@ import './style.css'
 import User from '../../components/people/user'
 import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library';
 function People(){
-    const {FaBars, FaBell, FaEnvelope, FaHome, FaSearch, FaUsers} = useIcons()
+    const {FaSearch} = useIcons()
     const {useHistory} = useReactHooks()
     const {usePeople} = useCustomHooks()
     const history = useHistory()
     const {people} = usePeople()
-    function switchPage(page){
-        history.push(page)
-    }
+
     return(
       <div className = "people-body">
           <div className = "people-header">
@@ -19,7 +17,7 @@ function People(){
           <hr></hr>
           <div className = "people-list-div">
              {people.map((user,id)=>(
-                 <User  data = {user} id = {id}/>
+                 <User  data = {user} key = {id} id = {id}/>
              ))}
           </div>
       </div>

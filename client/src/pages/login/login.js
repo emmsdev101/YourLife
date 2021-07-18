@@ -50,9 +50,9 @@ function Login(){
                 <h2>Login</h2>
             </div>  
             <div className = "signup-body">
-                <label for = "fname-input"> Username:</label>
+                <label htmlFor = "fname-input"> Username:</label>
                 <input type = "username" className = "signup-input" id = "username-input" value = {username} onChange = {usernameChage}/>
-                <label for = "fname-input"> Password:</label>
+                <label htmlFor = "fname-input"> Password:</label>
                 <input type = "password" className = "signup-input" id = "password-input" value = {password} onChange = {passwordChage}/>
                 <button className = "signup-submit" onClick = {signIn}>Submit</button>
                 <center>or</center>

@@ -127,10 +127,15 @@ router.get('/fetch-all', async(req, res)=> {
     })
 })
 router.get('/fetch-photos', async(req, res)=> {
-    ImageModel.find({owner:req.query.id}, function(err, doc){
-        if(err)return console.log(err)
-        res.send(doc)
-    })
+    try{
+        const images = await ImageModel.find({owner:req.query.id}, null, {limit:6})
+        res.send(images)
+    }catch(err){
+        console.log(err)
+        res.sendStatus(500)
+    }
+    
+
 })
 
 module.exports = router

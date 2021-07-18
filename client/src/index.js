@@ -5,15 +5,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import  {BrowserRouter}  from 'react-router-dom'
 import  UserContext from './logic/userContext';
+import Main from './Main';
 
 ReactDOM.render(
   <React.StrictMode>
-     <BrowserRouter>
-     <UserContext>
-       <App/>
-     </UserContext>
-     </BrowserRouter>
-   
+     <Main/>
   </React.StrictMode>,
   document.getElementById('root')
 );

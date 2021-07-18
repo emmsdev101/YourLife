@@ -4,6 +4,7 @@ import ChangeDp from './../../components/changeDp/changeDp'
 import Post from '../../components/post/post'
 import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
 import  FriendItem  from "./friend";
+import { useRef } from 'react';
 function Profile(){
     const {Cookies, useHistory, useContext, useState, useEffect} = useReactHooks()
     const {GlobalUserActionsContext, GlobalUserContext, usePeople, useFeed} = useCustomHooks()
@@ -29,31 +30,43 @@ function Profile(){
 
     const gender = user_context.gender
     const age = user_context.age
+    
+    let isMounted = useRef(true)
 
     useEffect(() => {
         if(user_context.username === undefined){
-            console.log("initializing")
-            console.log(owner)
             set_user_context(owner)
         }
-        async function setupPhotos (){
-            const fetchResult = await fetchPhotos(user_context.username)
-            setPhotos(fetchResult)
-        }
         async function fetchProfileData() {
-            setFollows(await getFollowing())
-            setFollowStatus(await getFollowStatus())
-            setMyStories(await getMyStory())
+            const following = await getFollowing()
+            const followStat = await getFollowStatus()
+            const mystories = await getMyStory()
+            const fetchResult = await fetchPhotos(user_context.username)
+
+            if(isMounted.current){
+                setPhotos(fetchResult)
+                setFollows(following)
+                setFollowStatus(followStat)
+                setMyStories(mystories)
+            }
         }
-        setupPhotos()
         fetchProfileData()
+        return(()=>{
+            isMounted.current = false
+        })
     }, []);
     useEffect(() => {
         let pp = new Image()
         pp.onload =()=>{
-            setProfilePhotoUrl(my_api + "/photos/"+user_context.photo)
+            if(isMounted.current){
+                setProfilePhotoUrl(my_api + "/photos/"+user_context.photo)
+            }
         }
         pp.src = my_api + "/photos/"+user_context.photo
+
+        return(()=>{
+            isMounted.current = false
+        })
     }, [user_context]);
 
     function back(){
@@ -122,7 +135,7 @@ function Profile(){
             <h4>Photos</h4>
             <div className = "photo-list-div">
                 { photos.map((image, id)=>(
-                    <PhtoItem image = {image.path} id = {id}/>
+                    <PhtoItem image = {image.path} key = {id} id = {id}/>
                 ))}
             </div>
             <div className = "generic-button-div">
@@ -133,7 +146,7 @@ function Profile(){
             <h4>Following</h4>
             <div className = "friends-list-div">
                 {follows.map((user, id)=>(
-                    <FriendItem username = {user.following} id = {id}/>
+                    <FriendItem username = {user.following} key ={id} id = {id}/>
                 ))}
             </div>
             <div className = "generic-button-div">
@@ -148,10 +161,8 @@ function Profile(){
         <div className = "stories-div">
             <div className = "post-div-list">
             {myStories.length > 0? myStories.map((story, id) => (
-                <>
-                <Post content = {story} id = {id}/>
-                <div className = "span"></div>
-                </>
+                <Post content = {story} key = {id} id = {id}/>
+
             )):''}
             </div>
         </div>

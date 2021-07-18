@@ -38,7 +38,6 @@ router.post('/create', auth, async(req, res, next)=>{
                     })
                     photo.save(function(err, saved_photo){
                         if(err)return console.log(err)
-                        console.log('Photo saved in: '+saved_photo.path)
                     })
                 });
                 res.send(post)
@@ -72,8 +71,6 @@ router.delete('/story', auth, async(req, res) => {
     Story.findOneAndDelete({_id: req.body.post_id}, function(err, doc){
         if(err){console.log(err);res.sendStatus(444)}
         if(!doc) res.sendStatus(444)
-        
-        
     })
 })
 // DELETING ALL STORIES 
