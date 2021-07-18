@@ -9,7 +9,7 @@ function Home(){
     
     const username = new Cookies().get('username')
     const [createPost, setCreatePost] = useState(false);
-    const {postStory,uploadPhoto, uploadingProgress, feedStories, addFeed} = useFeed()
+    const {uploadDataUrl,postStory, uploadingProgress, feedStories, addFeed} = useFeed()
     const history = useHistory()
     const set_user_context = useContext(GlobalUserActionsContext)
     useEffect(() => {
@@ -39,7 +39,7 @@ function Home(){
     }
     return(
         <>
-        {createPost? <CreatePost showMe = {createStory} addStory = {addFeed} postStory = {postStory} uploadPhoto = {uploadPhoto}/>: 
+        {createPost? <CreatePost showMe = {createStory} addStory = {addFeed} postStory = {postStory} uploadPhoto = {uploadDataUrl}/>: 
       <div className = "home-body">
           {uploadingProgress > 0 && uploadingProgress < 100? <Uploading/>:''}
           <div className = "home-title">

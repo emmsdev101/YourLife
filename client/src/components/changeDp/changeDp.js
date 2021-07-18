@@ -1,4 +1,5 @@
 
+import imageCompression from '../../logic/imageCompression'
 import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
 
 function ChangeDp({setUpload, setProfilePhotoUrl,profile_photo_url}){
@@ -9,31 +10,23 @@ function ChangeDp({setUpload, setProfilePhotoUrl,profile_photo_url}){
     let uploadPicker = useRef(null)
     const {uploadDp, uploadingProgress} = useFeed()
     const {updateDp} = usePeople()
+    const {getUrlImage} = imageCompression()
     const [pickedPhoto, setPickedPhoto] = useState(null)
     const user_context = useContext(GlobalUserContext);
     const set_user_context = useContext(GlobalUserActionsContext)
 
     const uploadProfile = () => {
-        // let upload_picker
-        // upload_picker = document.getElementById("image-picker")
-        // upload_picker.click()
         uploadPicker.current?.click()
     }
     const closeUpload = ()=> {
         setUpload(false)
     }
-    const pick = (e) => {
-        const picked = e.target.files
-        setPickedPhoto(picked)
-    }
-    const prevImage = (pic) => {
-        return URL.createObjectURL(pic[0])
+    const pick = async(e) => {
+        const picked = e.target.files[0]
+        await getUrlImage(picked, setPickedPhoto)
     }
     const uploadProfilePic = async() => {
-        console.log("uploading")
-        const formData = new FormData()
-        formData.append('profile', pickedPhoto[0])
-        const uploadResult = await uploadDp(formData)
+        const uploadResult = await uploadDp(pickedPhoto)
         if(uploadResult){
             console.log("uploaded")
             const updateResult = await updateDp(uploadResult, user_context.username)
@@ -55,7 +48,7 @@ function ChangeDp({setUpload, setProfilePhotoUrl,profile_photo_url}){
             <>
             <div className = "upload-menu-body">
             <h3 className = "upload-menu-title">Change Profile Photo</h3>
-                {pickedPhoto !== null || user_context.photo !== undefined? <img className = "profilepic-preview" src = {pickedPhoto !== null?prevImage(pickedPhoto):profile_photo_url}/>:
+                {pickedPhoto !== null || user_context.photo !== undefined? <img className = "profilepic-preview" src = {pickedPhoto !== null?pickedPhoto:profile_photo_url}/>:
                 <div className = "temp-profilepic-preview"><FaUserCircle className = "temp-avatar-prev"/></div>}
                 <div className = "upload-menu-header">
                     {pickedPhoto !== null?

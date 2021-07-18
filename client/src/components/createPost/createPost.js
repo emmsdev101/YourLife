@@ -1,18 +1,19 @@
+import { useRef } from "react"
 import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library"
+import imageCompression from './../../logic/imageCompression'
 import './style.css'
 function CreatePost({showMe, addStory, postStory, uploadPhoto}){
     const {useState, useContext,useEffect, Cookies} = useReactHooks()
     const {GlobalUserContext, GlobalUserActionsContext} = useCustomHooks()
     const{FaCamera,FaArrowLeft, FaImages,FaVideo} = useIcons()
+    const {getUrlImage} = imageCompression()
     const cookie = new Cookies()
     const owner = cookie.get('username')
-
-    const [photos, setPhots] = useState([])
     const [content, setContent] = useState('')
+    const [imgFiles, setImgFiles] = useState([])
 
     const user_context = useContext(GlobalUserContext);
-    const set_user_context = useContext(GlobalUserActionsContext)
-    
+    const set_user_context = useContext(GlobalUserActionsContext)    
     let picker
     useEffect(() => {
         function fetchUser(){
@@ -25,40 +26,31 @@ function CreatePost({showMe, addStory, postStory, uploadPhoto}){
     const handleInput = (e) =>{
         setContent(e.target.value)
     }
-
     const handleSubmit = async() => {
         showMe()
-        if(photos.length > 0){
-            const formData = new FormData()
-            photos.forEach(photo => {
-                formData.append('image',photo)
-            });
-
-            const uploads =  await  uploadPhoto(formData)
-            const new_feed = await postStory(user_context,uploads,content)
-            addStory(new_feed)
-        }else{
-            const new_feed = await postStory(user_context,[],content)
-            addStory(new_feed)
+        try{
+            const uploads =  await uploadPhoto(imgFiles)
+            const newPost = await postStory(user_context, uploads, content) 
+            addStory(newPost)
+        }catch(err){
+            console.log(err)
         }
-         
     }
     const openPicker = () =>{
         picker = document.getElementById('image-picker')
         picker.click()
     }
-    const pickImage = (e) => {
-        const images =  e.target.files
-        const list_img = []
-        for (var i = 0 ; i < images.length ; i++){
-            list_img.push(images[i])
+    const pickImage = async(e) => {
+        const files =  e.target.files
+        for (let index = 0; index < files.length; index++) {
+            const file = files[index];
+            await getUrlImage(file, addImage)
         }
-        setPhots(list_img)
+        function addImage(data){
+            console.log(data)
+            setImgFiles(imgFiles => [...imgFiles, data])
+        }
     }
-    const getUrlImage = (pic) =>{
-        const image_url = URL.createObjectURL(pic)
-        return image_url
-      }
     return(
         <>
         <div className = "createPost">
@@ -74,8 +66,8 @@ function CreatePost({showMe, addStory, postStory, uploadPhoto}){
                         value = {content} onChange = {handleInput}></textarea>
                     <div className = 'photo-list'>
                         
-                    {photos.length > 0? photos.map((pic, picid)=>(
-                        <img id = {picid} src = {getUrlImage(pic)}  className = 'photos'></img>
+                    {imgFiles.length > 0? imgFiles.map((url, id)=>(
+                        <img id = {id} src = {url} className = "photos"/>
                     )):''}
                     </div>
                     <input type = "file" accept = "image/*" className = "hide" id = "image-picker" onChange = {pickImage} multiple/>

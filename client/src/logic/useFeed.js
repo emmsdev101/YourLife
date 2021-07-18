@@ -61,13 +61,13 @@ function useFeed (){
             console.log(errors)
         }
     }
-    const uploadDp = async (formData) => {
+    const uploadDp = async (file) => {
         try {
             const uploadImage = await axios({
                 method:'post',
                 withCredentials:true,
                 url:my_api + "/upload/change-profile",
-                data:formData,
+                data:{file:file},
                 onUploadProgress: uploadProgress
             })
             if(uploadImage.status === 200){
@@ -96,8 +96,25 @@ function useFeed (){
             console.log(posting.status)
         }
     }
+    const uploadDataUrl = async(files) => {
+        try {
+            const uploadImage = await axios({
+                method:'post',
+                withCredentials:true,
+                url:my_api + "/upload/upload",
+                data:{files:files},
+                onUploadProgress: uploadProgress
+            })
+            if(uploadImage.status === 200){
+                return uploadImage.data
+            }
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+    }
     
-    return {feedStories, fetchImages, postStory,uploadPhoto, uploadingProgress, addFeed, uploadDp}
+    return {feedStories, fetchImages, postStory,uploadPhoto, uploadingProgress, addFeed, uploadDp, uploadDataUrl}
 
 }
 export default useFeed

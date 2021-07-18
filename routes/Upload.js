@@ -25,6 +25,37 @@ const storage = multer.diskStorage({
 })
 const uploads = multer({storage:storage})
 
+const saveImage = async(req, res, baseImage)=> {
+    try{
+        //path of folder where you want to save the image.
+        const dir = './uploads/user/'
+        const localPath = req.session.user;
+        const img_dir = dir+localPath
+        //Find extension of file
+        const ext = baseImage.substring(baseImage.indexOf("/")+1, baseImage.indexOf(";base64"));
+        const fileType = baseImage.substring("data:".length,baseImage.indexOf("/"));
+        //Forming regex to extract base64 data of file.
+        const regex = new RegExp(`^data:${fileType}\/${ext};base64,`, 'gi');
+        //Extract base64 data.
+        const base64Data = baseImage.replace(regex, "");
+        const rand = Math.ceil(Math.random()*1000);
+        //Random photo name with timeStamp so it will not overide previous images.
+        const filename = `Photo_${Date.now()}_${rand}.${ext}`;
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+        }
+        if (!fs.existsSync(img_dir)) {
+            fs.mkdirSync(img_dir);
+        }
+        fs.writeFileSync(img_dir+'/'+filename, base64Data, 'base64');
+        return localPath+'/'+filename;
+    }
+    catch(err){
+        console.log(err)
+        res.sendStatus(444)
+    }
+    
+}
 const auth = (req, res, next) => {
     if(req.session.user){
         next()
@@ -32,6 +63,22 @@ const auth = (req, res, next) => {
         res.sendStatus(401)
     }
 }
+router.post('/upload', auth, async(req, res)=> {
+    try{
+
+    const files = req.body.files
+    const paths = []
+    for (let index = 0; index < files.length; index++) {
+        const file = files[index];
+        const savedImage = await saveImage(req, res,file)
+        paths.push(savedImage)
+    }
+    res.send(paths)
+   }catch(err){
+            console.log(err)
+            res.sendStatus(444)
+        } 
+})
 router.post('/', uploads.array('image'), async (req, res, next)=> {
     const files = req.files
     const paths = []
@@ -40,10 +87,17 @@ router.post('/', uploads.array('image'), async (req, res, next)=> {
     });
     res.send(paths)
 })
-router.post('/change-profile', uploads.single('profile'), async (req, res, next)=> {
-    const file = req.file
-    const path = req.session.user+'/'+file.filename
-    res.send(path)
+router.post('/change-profile', auth, async (req, res, next)=> {
+    try{
+        const file = req.body.file
+        console.log(file)
+        const path = await saveImage(req, res, file)
+        console.log(path)
+        res.send(path)
+    }catch(err){
+        console.log(err)
+        res.sendStatus(444)
+    }
 })
 router.get('/', auth, (req, res) => {
     const uploadsDirectory = path.join('uploads')
