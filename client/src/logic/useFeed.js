@@ -112,6 +112,24 @@ function useFeed (){
             return false
         }
     }
+    const getAStory = async(post_id) => {
+        try{
+            const story = await axios({
+                method:'get',
+                withCredentials: true,
+                url: my_api+'/post/view',
+                params: {post_id}
+            })
+            if(story.status === 200){
+                return story.data
+                setLoading(false)
+            }else{
+                console.log(story.status)
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }
     const getMyStory = async() => {
         setLoading(true)
         try{
@@ -130,8 +148,7 @@ function useFeed (){
             console.log(err)
         }
     }
-    
-    return {feedStories,fetchFeeds, fetchImages, postStory,uploadPhoto, uploadingProgress, addFeed, uploadDp, uploadDataUrl,getMyStory,loading}
+    return {feedStories,fetchFeeds, fetchImages, postStory,uploadPhoto, uploadingProgress, addFeed, uploadDp, uploadDataUrl,getMyStory,loading, getAStory}
 
 }
 export default useFeed

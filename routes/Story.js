@@ -85,6 +85,19 @@ router.get('/my-posts', auth, async(req, res, next) => {
         res.sendStatus(444)
     }
 })
+router.get('/view', auth, async(req, res, next) => {
+    try{
+        const post_id = req.query.post_id
+        if(post_id){
+            const story = await Story.findOne({_id:post_id})
+            res.send(story)
+        }
+    }catch(err){
+        console.log(err)
+        res.sendStatus(444)
+    }
+
+})
 router.get('/all-feeds', auth, async(req, res, next)=>{
     try{
         const feeds = await Story.find().sort({date:-1})

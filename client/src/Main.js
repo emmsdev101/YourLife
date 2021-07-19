@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
+import PostContext from './logic/postContext';
 import UserContext from './logic/userContext';
 
 const Main = () => {
@@ -8,7 +9,9 @@ const Main = () => {
     <div>
         <BrowserRouter>
             <UserContext>
-                <App/>
+                <PostContext>
+                    <App/>
+                </PostContext>
             </UserContext>
         </BrowserRouter>
     </div>
