@@ -4,7 +4,8 @@ import ChangeDp from './../../components/changeDp/changeDp'
 import Post from '../../components/post/post'
 import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
 import  FriendItem  from "./friend";
-import { useRef } from 'react';
+import React, { useRef } from 'react';
+import CreatePost from '../../components/createPost/createPost';
 function Profile(){
     const {Cookies, useHistory, useContext, useState, useEffect} = useReactHooks()
     const {GlobalUserActionsContext, GlobalUserContext, usePeople, useFeed} = useCustomHooks()
@@ -20,13 +21,14 @@ function Profile(){
     const [photos, setPhotos] = useState([]);
     const [upload, setUpload] = useState(false)
     const {fetchPhotos, getFollowing, getFollowStatus} = usePeople()
-    const {getMyStory} = useFeed()
+    const {feedStories, addFeed, getMyStory} = useFeed()
     
     const fullname = user_context.firstname + ' ' +user_context.lastname
     const [profile_photo_url, setProfilePhotoUrl] = useState()
     const [follows, setFollows] = useState([])
     const [followStatus, setFollowStatus] = useState({})
-    const [myStories, setMyStories] = useState([])
+
+    const [createPost, setCreatePost] = useState(false);
 
     const gender = user_context.gender
     const age = user_context.age
@@ -40,14 +42,12 @@ function Profile(){
         async function fetchProfileData() {
             const following = await getFollowing()
             const followStat = await getFollowStatus()
-            const mystories = await getMyStory()
             const fetchResult = await fetchPhotos(user_context.username)
-
             if(isMounted.current){
+                getMyStory()
                 setPhotos(fetchResult)
                 setFollows(following)
                 setFollowStatus(followStat)
-                setMyStories(mystories)
             }
         }
         fetchProfileData()
@@ -74,6 +74,13 @@ function Profile(){
     }
     const uploadEnable = ()=> {
         setUpload(true)
+    }
+    const createStory = ()=>{
+        if(createPost){
+            setCreatePost(false)
+        }else{
+            setCreatePost(true)
+        }
     }
     const PhtoItem =({image, id})=>{
         return(
@@ -102,9 +109,11 @@ function Profile(){
               </div>
         )
     }
-    
-    return(
-        <>
+    if(createPost)return(
+        <CreatePost showMe = {createStory} addStory = {addFeed}/>
+    )
+    else return(
+        <React.Fragment>
         {upload? <ChangeDp setUpload = {setUpload} setProfilePhotoUrl = {setProfilePhotoUrl} profile_photo_url = {profile_photo_url}/>:''}
       <div className = "profile-header-div">
           <div className = "row1-profile-header">
@@ -155,18 +164,24 @@ function Profile(){
         </div>
         <h2 className = "section-title">  Stories</h2>
         {isOwn?  <div className = "primary-button">
-            <button> <FaPlusCircle className = "primary-button-icon"></FaPlusCircle>Share a story</button>
+            <button onClick = {createStory}> <FaPlusCircle className = "primary-button-icon" ></FaPlusCircle>Share a story</button>
         </div>:''}
 
         <div className = "stories-div">
             <div className = "post-div-list">
-            {myStories.length > 0? myStories.map((story, id) => (
+            {feedStories === null ?<div className = "loader-div"><div className="loader"></div></div>:''}
+            
+            {feedStories !== null && feedStories.length === 0?<>
+                <h2>You have no story</h2>
+                <h3>Share something in your life</h3>
+            </>:''}
+            {feedStories !== null? feedStories.map((story, id) => (
                 <Post content = {story} key = {id} id = {id}/>
 
             )):''}
             </div>
         </div>
-        </>
+        </React.Fragment>
     )
     
 }

@@ -3,7 +3,8 @@ import imageCompression from '../../logic/imageCompression'
 import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
 
 function ChangeDp({setUpload, setProfilePhotoUrl,profile_photo_url}){
-    const {useState, useContext, useRef} = useReactHooks()
+    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
+    const {useState, useContext, useRef, useEffect} = useReactHooks()
     const {FaUserCircle} = useIcons()
     const {useFeed,usePeople,GlobalUserContext,GlobalUserActionsContext} = useCustomHooks()
     let uploadPicker = useRef(null)
@@ -11,8 +12,17 @@ function ChangeDp({setUpload, setProfilePhotoUrl,profile_photo_url}){
     const {updateDp} = usePeople()
     const {getUrlImage} = imageCompression()
     const [pickedPhoto, setPickedPhoto] = useState(null)
+    const [profilePicLoaded, setProfilePicLoaded] = useState(false)
     const user_context = useContext(GlobalUserContext);
     const set_user_context = useContext(GlobalUserActionsContext)
+
+    useEffect(() => {
+        let dp = new Image()
+        dp.onload = () => {
+            setProfilePicLoaded(true)
+        }
+        dp.src = profile_photo_url
+    }, []);
 
     const uploadProfile = () => {
         uploadPicker.current?.click()
@@ -30,7 +40,7 @@ function ChangeDp({setUpload, setProfilePhotoUrl,profile_photo_url}){
             const updateResult = await updateDp(uploadResult, user_context.username)
             if(updateResult){
                 set_user_context(user_context.username)
-               // setProfilePhotoUrl(my_api + "/photos/"+uploadResult)
+                setProfilePhotoUrl(my_api + "/photos/"+uploadResult)
                 setUpload(false)
             }else{
                 console.log("there is error while updating profile")
@@ -45,7 +55,7 @@ function ChangeDp({setUpload, setProfilePhotoUrl,profile_photo_url}){
             <>
             <div className = "upload-menu-body">
             <h3 className = "upload-menu-title">Change Profile Photo</h3>
-                {pickedPhoto !== null || user_context.photo !== undefined? <img className = "profilepic-preview" alt = "profile" src = {pickedPhoto !== null?pickedPhoto:profile_photo_url}/>:
+                {pickedPhoto !== null || profilePicLoaded ? <img className = "profilepic-preview" alt = "profile" src = {pickedPhoto !== null?pickedPhoto:profile_photo_url}/>:
                 <div className = "temp-profilepic-preview"><FaUserCircle className = "temp-avatar-prev"/></div>}
                 <div className = "upload-menu-header">
                     {pickedPhoto !== null?

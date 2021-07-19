@@ -6,13 +6,10 @@ function useFeed (){
     const POST_API = my_api + '/post/create'
     const UPLOAD_API = my_api + '/upload'
     
-    const [feedStories, setFeedStories] = useState([])
+    const [feedStories, setFeedStories] = useState(null)
     const [uploadingProgress, setUploadingProgress] = useState(0)
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchFeeds()
-    }, []);
     const fetchFeeds = async()=> {
         const get_feeds = await axios({
             method:'get',
@@ -116,6 +113,7 @@ function useFeed (){
         }
     }
     const getMyStory = async() => {
+        setLoading(true)
         try{
             const get_feeds = await axios({
                 method:'get',
@@ -123,7 +121,8 @@ function useFeed (){
                 url: my_api+'/post/my-posts'
             })
             if(get_feeds.status === 200){
-                return get_feeds.data
+                setFeedStories(get_feeds.data)
+                setLoading(false)
             }else{
                 console.log(get_feeds.status)
             }
@@ -132,7 +131,7 @@ function useFeed (){
         }
     }
     
-    return {feedStories, fetchImages, postStory,uploadPhoto, uploadingProgress, addFeed, uploadDp, uploadDataUrl,getMyStory,loading}
+    return {feedStories,fetchFeeds, fetchImages, postStory,uploadPhoto, uploadingProgress, addFeed, uploadDp, uploadDataUrl,getMyStory,loading}
 
 }
 export default useFeed
