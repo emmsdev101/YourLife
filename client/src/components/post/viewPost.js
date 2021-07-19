@@ -4,13 +4,14 @@ import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library";
 import { useParams } from "react-router-dom";
 import usePeople from "../../logic/usePeople";
 import PostImage from "../postImage/postImage";
+import { FaArrowLeft } from "react-icons/fa";
 
 const my_api =
   process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
 
 const ViewPost = ({ postData, back }) => {
   const { FaUserCircle, FaThumbsUp, FaComment } = useIcons();
-  const { useEffect, useState } = useReactHooks();
+  const { useEffect, useState,useHistory } = useReactHooks();
   const { useFeed } = useCustomHooks();
   const { fetchImages, getAStory } = useFeed();
   const { getUserInfo } = usePeople();
@@ -20,8 +21,11 @@ const ViewPost = ({ postData, back }) => {
   const [profileDetails, setProfileDetails] = useState(null);
   const [profilePhoto, setProfilePhoto] = useState(null);
 
+  const history = useHistory()
+
   const { id } = useParams();
   useEffect(() => {
+    back(false)
     const fetchPost = async () => {
       const fetchedStory = await getAStory(id);
       if (fetchedStory) {
@@ -38,6 +42,9 @@ const ViewPost = ({ postData, back }) => {
       }
     };
     fetchPost();
+    return () => {
+      back(true)
+    }
   }, []);
   function preloadProfilePhoto(subUrl) {
     const photoUrl = my_api + "/photos/" + subUrl;
@@ -47,8 +54,17 @@ const ViewPost = ({ postData, back }) => {
     };
     image.src = photoUrl;
   }
+  const close = () => {
+    history.goBack()
+  }
   return (
     <div className="view-post">
+      <header className="post-header">
+        <div className = "back" onClick = {close}>
+          <FaArrowLeft/>
+        </div>
+        <h3 className = "post-title">{profileDetails !== null? profileDetails.firstname:''}</h3>
+      </header>
       <div className="view-post-heading">
         {profilePhoto !== null ? (
           <img

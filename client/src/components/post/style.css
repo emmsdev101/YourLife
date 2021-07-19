@@ -75,13 +75,18 @@
     align-items: center;
     justify-content: center;
     width: 50%;
-    color: rgb(34, 34, 34);
-    
+    color: rgb(34, 34, 34); 
 }
 .like-icon{
     width: 20px;
     height: 20px;
     margin-right: 6px;
+}
+.liked-icon{
+    width: 20px;
+    height: 20px;
+    margin-right: 6px;
+    color: #EF5DA8;
 }
 .comment-status{
     display: flex;

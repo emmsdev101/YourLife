@@ -10,18 +10,28 @@ function Post({ content }) {
   const { FaComment, FaEllipsisH, FaThumbsUp, FaUserCircle } = useIcons();
   const my_api =
     process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
-  const { fetchImages } = useFeed();
+  const { fetchImages, requestLike, postLiked } = useFeed();
   const { getUserInfo } = usePeople();
   const [photos, setPhotos] = useState([]);
   const [render, setRender] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
   const [isMounted, setIsMounted] = useState(true);
+  const [likes, setLikes] = useState(content.likes)
+ 
+  const [liked, setLiked] = useState(false)
+
   const profile_photo_url =
     userDetails !== null ? my_api + "/photos/" + userDetails.photo : "";
   const history = useHistory();
 
   const setPostToView = useContext(GlobalPostAction);
   useEffect(() => {
+
+    const checkLiked = async() => {
+      const is_liked = await postLiked(content._id)
+      setLiked(is_liked)
+    }
+
     const getUserDetails = async () => {
       const fetchResult = await getUserInfo(content.owner);
       if (isMounted) {
@@ -33,7 +43,9 @@ function Post({ content }) {
       };
       pp.src = my_api + "/photos/" + fetchResult.photo;
     };
+    checkLiked()
     getUserDetails();
+
     if (isMounted) setPhotos([]);
     const images = fetchImages(content._id);
     images.then(
@@ -51,6 +63,15 @@ function Post({ content }) {
   const viewPost = () => {
     history.push("/viewpost/" + content._id);
   };
+  const likePost = () => {
+    setLiked(!liked)
+    requestLike(content._id)
+    if(liked){
+      setLikes(likes-1)
+    }else{
+      setLikes(likes+1)
+    }
+  }
   if (
     ((content.photo_only && photos.length > 0) ||
       content.photo_only === false) &&
@@ -103,7 +124,7 @@ function Post({ content }) {
 
               <div className="content-footer">
                 <div className="comment-status">
-                  <p className="comment-count">{content.likes}</p>
+                  <p className="comment-count">{likes}</p>
                   <p className="status-title">Likes</p>
                 </div>
                 <div className="comment-status">
@@ -115,8 +136,8 @@ function Post({ content }) {
             </div>
           </div>
           <div className="post-footer">
-            <button className="like-button">
-              <FaThumbsUp className="like-icon"></FaThumbsUp>Like
+            <button className="like-button" onClick = {likePost}>
+              <FaThumbsUp className={liked? "liked-icon":"like-icon"} ></FaThumbsUp>{liked?"Liked":"Like"}
             </button>
             <button className="like-button">
               <FaComment className="like-icon"></FaComment>Comment

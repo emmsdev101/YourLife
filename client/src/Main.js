@@ -6,7 +6,7 @@ import UserContext from './logic/userContext';
 
 const Main = () => {
     return (
-    <div>
+        <React.Fragment>
         <BrowserRouter>
             <UserContext>
                 <PostContext>
@@ -14,7 +14,7 @@ const Main = () => {
                 </PostContext>
             </UserContext>
         </BrowserRouter>
-    </div>
+        </React.Fragment>
     );
 }
 

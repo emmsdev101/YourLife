@@ -148,7 +148,44 @@ function useFeed (){
             console.log(err)
         }
     }
-    return {feedStories,fetchFeeds, fetchImages, postStory,uploadPhoto, uploadingProgress, addFeed, uploadDp, uploadDataUrl,getMyStory,loading, getAStory}
+    const requestLike = async(post_id) => {
+        try{
+            const req_like = await axios({
+                method:'post',
+                withCredentials: true,
+                url: my_api+'/post/like-post',
+                data:{post_id:post_id}
+            })
+            if(req_like.status === 200){
+                return true
+            }else{
+                console.log(req_like.status)
+            }
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+    const postLiked = async(post_id) => {
+        try{
+            const req_like = await axios({
+                method:'get',
+                withCredentials: true,
+                url: my_api+'/post/post-liked',
+                params:{post_id:post_id}
+            })
+            if(req_like.status === 200){
+                return req_like.data
+            }else{
+                console.log(req_like.status)
+            }
+        }
+        catch(err){
+            console.log(err)
+    }
+    }
+
+    return {feedStories,fetchFeeds, fetchImages, postStory,uploadPhoto, uploadingProgress, addFeed, uploadDp, uploadDataUrl,getMyStory,loading, getAStory, requestLike, postLiked}
 
 }
 export default useFeed
