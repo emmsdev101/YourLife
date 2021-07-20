@@ -44,6 +44,17 @@ const Comment = ({document}) => {
             </div>
         </div>
     );
-    else return (null)
+    else return (
+        <div className = {style.tempComment}>
+            <div className = {style.tempProfile}>
+            </div>
+            <div className = {style.tempCommentBody}>
+            <div className = {style.commentHeader}>
+            </div>
+            <div className = {style.commentContent}>
+            </div>
+            </div>
+        </div>
+    )
 }
 export default Comment;

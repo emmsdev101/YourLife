@@ -1,6 +1,7 @@
 .comment{
     height: auto;
     width: auto;
+    min-width: 300px;
     max-width: 100%;
     display: flex;
     flex-direction: row;
@@ -40,7 +41,8 @@
     text-align: left;
     font-size: medium;
     letter-spacing: .1px;
-    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 .profilePhoto{
     width: inherit; 
@@ -52,4 +54,25 @@
     width: inherit;
     height: inherit;
     color: rgb(192, 192, 192);
+}
+.tempComment{
+    width: 90%;
+    height: 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    margin: 10px;
+}
+.tempProfile{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 5px;
+    background-color: rgb(192, 192, 192);
+}
+.tempCommentBody{
+    background-color: rgb(213, 212, 212);
+    border-radius: 15px;
+    padding: 10px;
+    width: 300px;
 }

@@ -13,10 +13,13 @@ const ViewComment = ({ story, postId }) => {
     const [likes, setLikes] = useState(story.likes)
     const [numComments, setNumComments] = useState(story.comments)
     const [liked, setLiked] = useState(null)
+    const [page, setPage] = useState(1)
+    const [loading, setLoading] = useState(false)
+    const [posting, setPosting] = useState(false)
 
     useEffect(() => {
         const fetchComments = async()=>{
-            const fechted_comments = await getComments(postId)
+            const fechted_comments = await getComments(postId, 1, numComments)
             setComments(fechted_comments)
 
             const is_liked = await postLiked(postId)
@@ -28,9 +31,25 @@ const ViewComment = ({ story, postId }) => {
       setContent(e.target.value)
   }
   const postComment = async() => {
+    setPosting(true)
     const new_comment = await addComment(postId, content)
-    setComments((olds) => [...olds, new_comment])
-    setNumComments(numComments + 1)
+    if(new_comment){
+        setComments((olds) => [...olds, new_comment])
+        setNumComments(numComments + 1)
+        setContent('')
+        setPosting(false)
+    }
+  }
+  const loadMoreComments = async() => {
+    setLoading(true)
+    const nextPage = page + 1
+    setPage(nextPage)
+    const fechted_comments = await getComments(postId, nextPage, numComments)
+    if(fechted_comments){
+        setComments(comments => [...fechted_comments, ...comments])
+        setLoading(false)
+    }
+    
   }
   const addLike = () => {
     if(liked !== null){
@@ -61,6 +80,10 @@ const ViewComment = ({ story, postId }) => {
       </div>
       <hr></hr>
       <div className = {style.commentList}>
+      {comments !== null && comments.length < numComments? 
+           <div className = {style.loadMore}>
+              {loading?<div className = {style.loader}></div>:<p onClick = {loadMoreComments}>Load more</p>}
+          </div>:''}
           {comments !== null? 
             comments.map((doc, id) => (
                 <Comment document = {doc} key = {id}/>
@@ -73,7 +96,7 @@ const ViewComment = ({ story, postId }) => {
               value = {content}
               onChange = {inputContent}
               />
-              <button className = {style.submitComment} onClick = {postComment}>Post</button>
+              <button className = {posting?style.posting:style.submitComment} onClick = {postComment}>Post</button>
           </div>
       </div>
     </div>

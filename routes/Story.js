@@ -21,6 +21,7 @@ const admin = (req, res, next) => {
     next();
   } else res.sendStatus(401);
 };
+
 router.post("/create", auth, async (req, res, next) => {
   try {
     const img_paths = req.body.imagePath;
@@ -246,9 +247,15 @@ router.get('/post-liked', auth, async(req, res)=>{
     }
 })
 router.get('/post-comments', auth, async(req, res)=> {
+    const page = parseInt(req.query.page)
+    const size = parseInt(req.query.size)
+    const limit = 10
+    const start = size - limit
+    const to_skip  = (page - 1) * limit
+    const skip = start - to_skip < 0? 0 : start - to_skip
     try{
         const post_id = req.query.post_id
-        const comments = await Comment.find({post_id:post_id},null,{limit:10})
+        const comments = await Comment.find({post_id:post_id},null,{limit:limit, skip:skip})
         if(comments){
             res.send(comments)
         }else{

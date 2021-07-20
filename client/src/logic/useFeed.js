@@ -198,21 +198,25 @@ function useFeed() {
       });
       if (comment.status === 200) {
           return comment.data
+      }else {
+          console.log(comment)
+          return false
       }
     } catch (err) {
-      console.log(err);
+        console.log(err);
+        return false
+      
     }
   };
-  const getComments = async (post_id) => {
+  const getComments = async (post_id, page, size) => {
     try {
         const comments = await axios({
           method: "get",
           withCredentials: true,
           url: my_api + "/post/post-comments",
-          params: { post_id: post_id },
+          params: { post_id: post_id, page:page, size:size },
         });
         if (comments.status === 200) {
-            console.log(comments.data)
           return comments.data;
         } else {
           console.log(comments.status);
