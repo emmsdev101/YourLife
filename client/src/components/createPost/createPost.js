@@ -17,6 +17,8 @@ function CreatePost({showMe, addStory}){
     const user_context = useContext(GlobalUserContext);
     const set_user_context = useContext(GlobalUserActionsContext)
 
+    const [posting, setPosting] = useState(false)
+
     let picker
     useEffect(() => {
         function fetchUser(){
@@ -32,21 +34,26 @@ function CreatePost({showMe, addStory}){
     const handleSubmit = async() => {
         try{
             if(imgFiles.length > 0){
+                setPosting(true)
                 const uploads =  await uploadDataUrl(imgFiles)
                 const newPost = await postStory(user_context, uploads, content) 
                 addStory(newPost)
+                setPosting(false)
                 showMe()
             }
             else{
                 if(content !== ""){
+                    setPosting(true)
                     const newPost = await postStory(user_context, null, content) 
                     addStory(newPost)
+                    setPosting(false)
                     showMe()
                 }else{
                     alert("Please dont post empty")
                 }
             }
         }catch(err){
+            setPosting(false)
             console.log(err)
         }
     }
@@ -78,7 +85,7 @@ function CreatePost({showMe, addStory}){
     return(
         <>
         <div className = "createPost">
-        {uploadingProgress > 0 && uploadingProgress < 100? <UploadingView/>:''}
+        {posting? <UploadingView/>:''}
             <div className = "createPost-header">
                 <button className = 'back-btn' onClick = {showMe}> <FaArrowLeft className = 'back-icon'/></button>
                 <h4 className = 'header-title'>Create a story</h4>

@@ -1,5 +1,4 @@
 import React, {useState, createContext} from 'react'
-import usePeople from './usePeople'
 export const GlobalPostContext = createContext()
 export const GlobalPostAction = createContext()  
 

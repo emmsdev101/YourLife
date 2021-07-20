@@ -1,0 +1,55 @@
+.comment{
+    height: auto;
+    width: auto;
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    margin: 10px;
+}
+.commentProfile{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+.commentBody{
+    background-color: rgb(232, 232, 232);
+    border-radius: 15px;
+    padding: 10px;
+    width: auto;
+    max-width: calc(100% - 60px);
+}
+
+.commentHeader{
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.commentOwner{
+    font-weight: 700;
+    font-size: medium;
+}
+.commentTime{
+    font-size: small;
+}
+.commentContent{
+    text-align: left;
+    font-size: medium;
+    letter-spacing: .1px;
+    padding: 10px;
+}
+.profilePhoto{
+    width: inherit; 
+    height: inherit;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.tempProfilePhoto{
+    width: inherit;
+    height: inherit;
+    color: rgb(192, 192, 192);
+}

@@ -3,13 +3,13 @@ import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library";
 import PostImage from "../postImage/postImage";
 import React, { useContext } from "react";
 import { GlobalPostAction } from "../../logic/postContext";
+import { GlobalCommentAction } from "../../logic/commentContext";
 
 function Post({ content }) {
   const { useState, useHistory, useEffect } = useReactHooks();
   const { useFeed, usePeople } = useCustomHooks();
   const { FaComment, FaEllipsisH, FaThumbsUp, FaUserCircle } = useIcons();
-  const my_api =
-    process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+  const my_api = process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
   const { fetchImages, requestLike, postLiked } = useFeed();
   const { getUserInfo } = usePeople();
   const [photos, setPhotos] = useState([]);
@@ -24,7 +24,8 @@ function Post({ content }) {
     userDetails !== null ? my_api + "/photos/" + userDetails.photo : "";
   const history = useHistory();
 
-  const setPostToView = useContext(GlobalPostAction);
+  const setPostToComment = useContext(GlobalCommentAction);
+
   useEffect(() => {
 
     const checkLiked = async() => {
@@ -72,6 +73,10 @@ function Post({ content }) {
       setLikes(likes+1)
     }
   }
+  const openComment = () => {
+    setPostToComment(content._id)
+  }
+
   if (
     ((content.photo_only && photos.length > 0) ||
       content.photo_only === false) &&
@@ -139,7 +144,7 @@ function Post({ content }) {
             <button className="like-button" onClick = {likePost}>
               <FaThumbsUp className={liked? "liked-icon":"like-icon"} ></FaThumbsUp>{liked?"Liked":"Like"}
             </button>
-            <button className="like-button">
+            <button className="like-button" onClick = {viewPost}>
               <FaComment className="like-icon"></FaComment>Comment
             </button>
           </div>

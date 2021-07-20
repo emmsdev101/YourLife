@@ -3,8 +3,8 @@ import { Route, BrowserRouter, Switch, useLocation } from "react-router-dom";
 import Cookies from "universal-cookie";
 
 import "./App.css";
-import ViewPost from "./components/post/viewPost";
 import "./generalStyle/generalStyle.css";
+import { GlobalCommentContext } from "./logic/commentContext";
 import { useCustomHooks, useIcons, useReactHooks } from "./logic/library";
 
 const Profile = lazy(() => import("./pages/profile/profile"));
@@ -15,6 +15,8 @@ const Chat = lazy(() => import("./pages/chats/chat"));
 const Menu = lazy(() => import("./pages/menu/menu"));
 const Signup = lazy(() => import("./pages/sign-up/signup"));
 const Login = lazy(() => import("./pages/login/login"));
+const ViewPost = lazy(() => import ("./components/post/viewPost"));
+
 
 function App() {
   const { FaHome, FaUsers, FaBell, FaEnvelope, FaBars } = useIcons();
@@ -30,6 +32,7 @@ function App() {
   const [renderHeader, setRenderHeader] = useState(true);
 
   const [active, setActive] = useState("");
+
 
   useEffect(() => {
     console.log(user_context.username);
@@ -127,7 +130,7 @@ function App() {
               />
             </Suspense>
           </div>
-        ) : (
+          ) : (
           <Suspense fallback={<div>Loading...</div>}>
             <Route exact path="/signup" component={Signup} />
             <Route exact path="/login" component={Login} />

@@ -1,16 +1,19 @@
-import React from "react";
+import React, { lazy, Suspense, useContext } from "react";
 import "./viewPost.css";
 import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library";
 import { useParams } from "react-router-dom";
 import usePeople from "../../logic/usePeople";
 import PostImage from "../postImage/postImage";
 import { FaArrowLeft } from "react-icons/fa";
+import { GlobalCommentAction, GlobalCommentContext } from "../../logic/commentContext";
+import ViewComment from "../viewComment/ViewComment";
 
 const my_api =
   process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
 
-const ViewPost = ({ postData, back }) => {
-  const { FaUserCircle, FaThumbsUp, FaComment } = useIcons();
+const ViewPost = ({ back }) => {
+
+  const { FaUserCircle} = useIcons();
   const { useEffect, useState,useHistory } = useReactHooks();
   const { useFeed } = useCustomHooks();
   const { fetchImages, getAStory } = useFeed();
@@ -57,6 +60,7 @@ const ViewPost = ({ postData, back }) => {
   const close = () => {
     history.goBack()
   }
+
   return (
     <div className="view-post">
       <header className="post-header">
@@ -101,28 +105,12 @@ const ViewPost = ({ postData, back }) => {
                 ))
               : null}
           </div>
-          <div className="content-footer">
-            <div className="comment-status">
-              <p className="comment-count">333</p>
-              <p className="status-title">Likes</p>
-            </div>
-            <div className="comment-status">
-              <p className="comment-count">221</p>
-              <p className="status-title">Comments</p>
-            </div>
-          </div>
           <hr></hr>
         </div>
       </div>
-      <div className="post-footer">
-        <button className="like-button">
-          <FaThumbsUp className="like-icon"></FaThumbsUp>Like
-        </button>
-        <button className="like-button">
-          <FaComment className="like-icon"></FaComment>Comment
-        </button>
-      </div>
+      {story !== null? <ViewComment postId = {id} story = {story}/>:''}
     </div>
+    
   );
 };
 
