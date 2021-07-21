@@ -4,7 +4,6 @@ import Cookies from "universal-cookie";
 
 import "./App.css";
 import "./generalStyle/generalStyle.css";
-import { GlobalCommentContext } from "./logic/commentContext";
 import { useCustomHooks, useIcons, useReactHooks } from "./logic/library";
 
 const Profile = lazy(() => import("./pages/profile/profile"));
@@ -26,30 +25,32 @@ function App() {
   const user_context = useContext(GlobalUserContext);
   const history = useHistory();
   const cookie = new Cookies();
-  const username = cookie.get("username");
   const currentLocation = useLocation();
   const [render, setRender] = useState(false);
   const [renderHeader, setRenderHeader] = useState(true);
-
   const [active, setActive] = useState("");
-
+  const username = cookie.get("username")
 
   useEffect(() => {
-    console.log(user_context.username);
-    set_user_context(username).then(
-      (res) => {
-        setRender(true);
-      },
-      () => {
-        setRender(true);
-      }
-    );
+    if(isLogged()){
+      set_user_context().then(
+        (res) => {
+          setRender(true);
+        },
+        () => {
+          setRender(true);
+        }
+      )
+    }else setRender(true);
     setActive(currentLocation.pathname);
   }, []);
-  const isLogged = () => {
-    if (user_context.username !== undefined) {
+  function isLogged () {
+    console.log(username)
+    if (username !== undefined) {
       return true;
-    } else return false;
+    } else {
+      return false;
+    }
   };
   function switchPage(page) {
     setActive(page);
@@ -108,7 +109,7 @@ function App() {
     return (
       <Switch>
         <React.Fragment>
-        {isLogged() === true ? (
+        {isLogged()? (
           <div className="App">
             {renderHeader ? <Header /> : ""}
             <Suspense fallback={<div>Loading...</div>}>

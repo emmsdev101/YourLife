@@ -7,8 +7,8 @@ function UserContext(props){
     const [user, setUser] = useState({})
     const {getUserInfo} = usePeople()
 
-    const setupUser = async(username) => {
-        const user_info = await getUserInfo(username)
+    const setupUser = async() => {
+        const user_info = await getUserInfo()
         if(user_info === null){
             return false;
         }else{

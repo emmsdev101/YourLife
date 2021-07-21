@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Cookies from "universal-cookie/es6";
+const cookie = new Cookies();
 function usePeople() {
   const my_api =
     process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
@@ -10,44 +12,73 @@ function usePeople() {
   }, []);
 
   const fetchPoeple = async () => {
-    const fetch_res = await axios({
-      method: "get",
-      withCredentials: true,
-      url: my_api + "/user/fetchAll",
-    });
-    if (fetch_res.status === 200) {
-      setPoeple(fetch_res.data);
+    try {
+      const fetch_res = await axios({
+        method: "get",
+        withCredentials: true,
+        url: my_api + "/user/fetchAll",
+      });
+      if (fetch_res.status === 200) {
+        setPoeple(fetch_res.data);
+      }
+    } catch (err) {
+      if (err.response) {
+        if (err.response.status === 401) {
+          alert("Your session has expired! Please login again");
+          cookie.remove("username");
+          return null;
+        }
+      }
     }
   };
-  const getUserInfo = async (username) => {
-    const userInfo = await axios({
-      method: "get",
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-      url: my_api + "/user/account",
-      params: {
-        id: username,
-      },
-    });
-    if (userInfo.status === 200) {
-      return userInfo.data;
-    } else {
-      console.log(userInfo.status);
-      return null;
+  const getUserInfo = async () => {
+    try {
+      const userInfo = await axios({
+        method: "get",
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+        url: my_api + "/user/account",
+      });
+      if (userInfo.status === 200) {
+        return userInfo.data;
+      } else {
+        console.log(userInfo.status);
+        return null;
+      }
+    } catch (err) {
+      if (err.response) {
+        if (err.response.status === 401) {
+          alert("Your session has expired! Please login again");
+          cookie.remove("username");
+          return null;
+        }
+      }
     }
   };
   const fetchPhotos = async (user_context) => {
-    const fetchResult = await axios({
-      method: "GET",
-      withCredentials: true,
-      url: my_api + "/photo/my-photos",
-      params: { id: user_context },
-    });
-    if (fetchResult.status === 200) {
-      return fetchResult.data;
-    } else {
-      console.log(fetchResult.status);
-      return null;
+    try {
+      const fetchResult = await axios({
+        method: "GET",
+        withCredentials: true,
+        url: my_api + "/photo/my-photos",
+        params: { id: user_context },
+      });
+      if (fetchResult.status === 200) {
+        return fetchResult.data;
+      } else if (fetchResult.status === 401) {
+        alert("Your session has expired! Please login again");
+      } else {
+        console.log(fetchResult.status);
+        return null;
+      }
+    } catch (err) {
+      if (err.response) {
+        if (err.response.status === 401) {
+          alert("Your session has expired! Please login again");
+          cookie.remove("username");
+          return null;
+        }
+      }
     }
   };
   const updateDp = async (image_path, username) => {
@@ -63,14 +94,20 @@ function usePeople() {
       });
       if (updateProfile.status === 200) {
         return true;
+      } else if (updateProfile.status === 401) {
+        alert("Your session has expired! Please login again");
       }
-    } catch (error) {
-      console.log(error);
-      return false;
+    } catch (err) {
+      if (err.response) {
+        if (err.response.status === 401) {
+          alert("Your session has expired! Please login again");
+          cookie.remove("username");
+          return null;
+        }
+      }
     }
   };
   const follow = async (username) => {
-    console.log(username);
     try {
       const follow_request = await axios({
         method: "post",
@@ -85,9 +122,17 @@ function usePeople() {
         console.log(follow_request.data);
         if (follow_request.data === true) console.log(follow_request.data);
         else return false;
+      } else if (follow_request.status === 401) {
+        alert("Your session has expired! Please login again");
       }
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      if (err.response) {
+        if (err.response.status === 401) {
+          alert("Your session has expired! Please login again");
+          cookie.remove("username");
+          return null;
+        }
+      }
     }
   };
   const isFollowing = async (username) => {
@@ -101,11 +146,19 @@ function usePeople() {
       });
       if (isFollowingReq.status === 200) {
         return isFollowingReq.data;
+      } else if (isFollowingReq.status === 401) {
+        alert("Your session has expired! Please login again");
       } else {
         console.log(isFollowingReq.status);
       }
     } catch (err) {
-      console.log(err);
+      if (err.response) {
+        if (err.response.status === 401) {
+          alert("Your session has expired! Please login again");
+          cookie.remove("username");
+          return null;
+        }
+      }
     }
   };
   const getFollowing = async () => {
@@ -118,9 +171,18 @@ function usePeople() {
       });
       if (followers.status === 200) {
         return followers.data;
+      } else if (followers.status === 401) {
+        alert("Your session has expired! Please login again");
+        return [];
       }
     } catch (err) {
-      console.log(err);
+      if (err.response) {
+        if (err.response.status === 401) {
+          alert("Your session has expired! Please login again");
+          cookie.remove("username");
+          return null;
+        }
+      }
     }
   };
   const getFollowStatus = async () => {
@@ -133,9 +195,17 @@ function usePeople() {
       });
       if (followStatus.status === 200) {
         return followStatus.data;
+      } else if (followStatus.status === 401) {
+        alert("Your session has expired! Please login again");
       }
     } catch (err) {
-      console.log(err);
+      if (err.response) {
+        if (err.response.status === 401) {
+          alert("Your session has expired! Please login again");
+          cookie.remove("username");
+          return null;
+        }
+      }
     }
   };
   return {

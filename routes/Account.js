@@ -34,10 +34,10 @@ router.get('/fetchAll', auth, async(req, res)=>{
     }
 })
 router.get('/account', auth, async(req, res, next)=>{
-    const id_param = req.query.id
+    const user_id = req.session.user
     try{
         User.findOne({
-            username: id_param
+            _id: user_id
         },{
             _id : 0,
             password:0
@@ -173,8 +173,14 @@ router.post("/login", async(req, res) => {
       
   })
   router.get("/logout", async(req, res) => {
-      req.session.destroy
-      res.sendStatus(200)
+      console.log("user " + req.session.user + " is logged out.")
+      req.session.destroy((err)=>{
+        if(err) {
+            consoole.log(err)
+            res.send(500)
+        }else res.sendStatus(200)
+      })
+      
 
   })
   //  ------------------- REGISTRATION ROUTE --------------------------- //
@@ -216,42 +222,95 @@ router.post("/register", (req, res) => {
 })
 // FOLLOWING
 router.post('/follow', auth, async(req, res)=>{
+
     const follow = async(follower) => {
         const follow = new Following({
             follower:follower,
             following:req.body.username
         })
-        follow.save(function(err, doc){
+        follow.save(function(err, followed){
             if(err){
                 console.log(err)
+                return res.sendStatus(444)
             }else{
-                res.send(true)
+                const followerReq = User.findOneAndUpdate({username:follower},
+                    {
+                        $inc: {
+                          following: +1,
+                        },
+                    },
+                    {useFindAndModify:false}
+                )
+                const followedReq = User.findOneAndUpdate({username:req.body.username},
+                    {
+                        $inc: {
+                          followers: +1,
+                        },
+                    },
+                    {useFindAndModify:false}
+                )
+                Promise.all([followerReq, followedReq]).then(
+                    (result)=>{
+                        res.send(true)
+                    }
+                )
             }
+            
         })
     }
     const unfollow = async(follower) => {
         Following.deleteOne({follower:follower, following:req.body.username},(err)=>{
             if(err){
                 console.log(err)
-                res.send(444)
+                return res.sendStatus(444)
             }else{
-                res.send(true)
+                const followerReq =  User.findOneAndUpdate(
+                    {
+                        username:follower,
+                        following: { $gt: 0 }
+                    },
+                    {
+                        $inc: {
+                          following: -1,
+                        },
+                    },
+                    {useFindAndModify:false}
+                )
+                const followedReq =  User.findOneAndUpdate(
+                    {
+                        username:req.body.username,
+                        followers: { $gt: 0 }
+                    },
+                    {
+                        $inc: {
+                          followers: -1,
+                        },
+                    },
+                    {useFindAndModify:false}
+                )
+                Promise.all([followerReq, followedReq]).then(
+                    (result)=>{
+                        res.send(true)
+                    }
+                )
             }
         })
     }
     try{
-        const user_follower = await User.findOne({_id:req.session.user})
-        if(user_follower){
-            const following = await Following.findOne({follower:user_follower.username,following:req.body.username})
-            if(following){
-                unfollow(user_follower.username)
-            }else{
-                follow(user_follower.username)
-            }
-            
-        }else{
-            res.sendStatus(404)
-        }
+        User.findOne({_id:req.session.user}, (err, user_follower)=> {
+            if(err)return res.sendStatus(444)
+            if(!user_follower) return res.sendStatus(403)
+            Following.findOne({follower:user_follower.username,following:req.body.username}, (err, following)=>{
+                if(err)return res.sendStatus(444)
+                if(!following){
+                    follow(user_follower.username)
+                }else{
+                    unfollow(user_follower.username)
+                }
+
+            })
+        })
+        
     }catch(err){
         console.log(err)
     }

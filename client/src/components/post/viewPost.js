@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import usePeople from "../../logic/usePeople";
 import PostImage from "../postImage/postImage";
 import { FaArrowLeft } from "react-icons/fa";
-import { GlobalCommentAction, GlobalCommentContext } from "../../logic/commentContext";
 import ViewComment from "../viewComment/ViewComment";
 
 const my_api =
@@ -21,7 +20,6 @@ const ViewPost = ({ back }) => {
 
   const [story, setStory] = useState(null);
   const [photos, setPhotos] = useState(null);
-  const [profileDetails, setProfileDetails] = useState(null);
   const [profilePhoto, setProfilePhoto] = useState(null);
 
   const history = useHistory()
@@ -32,17 +30,10 @@ const ViewPost = ({ back }) => {
     const fetchPost = async () => {
       const fetchedStory = await getAStory(id);
       if (fetchedStory) {
-        setStory(fetchedStory);
-        const fetchedProfile = await getUserInfo(fetchedStory.owner);
-        if (fetchedProfile) {
-          setProfileDetails(fetchedProfile);
-          preloadProfilePhoto(fetchedProfile.photo);
-        }
+          setStory(fetchedStory)
+          preloadProfilePhoto(fetchedStory.photo);
       }
-      const fetchedImages = await fetchImages(id);
-      if (fetchedImages) {
-        setPhotos(fetchedImages);
-      }
+        setPhotos(fetchedStory.images);
     };
     fetchPost();
     return () => {
@@ -67,7 +58,7 @@ const ViewPost = ({ back }) => {
         <div className = "back" onClick = {close}>
           <FaArrowLeft/>
         </div>
-        <h3 className = "post-title">{profileDetails !== null? profileDetails.firstname:''}</h3>
+        <h3 className = "post-title">{story !== null? story.firstname:"Loading..."}</h3>
       </header>
       <div className="view-post-heading">
         {profilePhoto !== null ? (
@@ -81,9 +72,9 @@ const ViewPost = ({ back }) => {
         )}
         <div className="view-post-heading-details">
           <h4>
-            {profileDetails !== null
-              ? profileDetails.firstname + " " + profileDetails.lastname
-              : ""}
+            {story !== null
+              ? story.firstname + " " + story.lastname
+              : "loading..."}
           </h4>
           <p>13 minutes ago</p>
         </div>

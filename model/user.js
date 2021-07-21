@@ -32,7 +32,7 @@ const UserSchema = new mongoose.Schema({
 		type:Number,
 		default: 0
 	},
-	followiing:{
+	following:{
 		type: Number,
 		default: 0
 	},

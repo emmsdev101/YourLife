@@ -129,7 +129,6 @@ router.get("/my-posts", auth, async (req, res, next) => {
           limit: 10,
         }
       ).sort({ date: -1 })
-
       if (Array.isArray(stories)) {
         const feedsObjectList = [];
         for (let index = 0; index < stories.length; index++) {
@@ -161,17 +160,53 @@ router.get("/my-posts", auth, async (req, res, next) => {
   }
 });
 router.get("/view", auth, async (req, res, next) => {
-  try {
-    const post_id = req.query.post_id;
-    if (post_id) {
-      const story = await Story.findOne({ _id: post_id });
-      res.send(story);
-    }
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(444);
-  }
+    try {
+        const post_id = req.query.id;
+        if (post_id) {
+          Story.findOne({ _id: post_id },(err, story)=>{
+              if(err)return res.sendStatus(444)
+              if(!story)return res.sendStatus(403)
+              User.findOne({username:story.owner}, (err, user)=>{
+                  if(err)return res.sendStatus(444)
+                  if(!user)return res.sendStatus(403)
+                  ImageModel.find({post_id:story._id},(err, images)=>{
+                      if(err)return res.sendStatus(444)
+                      if(!images) return res.sendStatus(403)
+                      const storyObject = {
+                          username:user.username,
+                          firstname:user.firstname,
+                          lastname:user.lastname,
+                          photo:user.photo,
+                          content:story.content,
+                          images:images,
+                          likes:story.likes,
+                          comments:story.comments
+                      }
+                      res.send(storyObject)
+                  })
+              })
+          });
+          
+        }
+      } catch (err) {
+        console.log(err);
+        res.sendStatus(500);
+      }
 });
+
+// -----------  TESTS --------------
+router.get("/view-all", admin, async (req, res, next) => {
+    try {
+        const story = await Story.findOne();
+        res.send(story);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(444);
+    }
+  });
+router.get("/view-test", admin, async (req, res, next) => {
+    
+  });
 router.get("/all-feeds", auth, async (req, res, next) => {
   try {
     const feeds = await Story.find().sort({ date: -1 });

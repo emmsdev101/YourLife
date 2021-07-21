@@ -119,12 +119,12 @@ function Profile(){
       <div className = "profile-header-div">
           <div className = "row1-profile-header">
               <div className = "follower-div">
-                  <p className = "follow-count">{followStatus.followers}</p>
+                  <p className = "follow-count">{user_context.followers}</p>
                   <p className = "follow-count-title">Followers</p>
               </div>
               {profile_photo_url !== undefined? <Avatar/>:<TempAvatar/>}
               <div className = "following-div">
-                  <p className = "follow-count">{followStatus.following}</p>
+                  <p className = "follow-count">{user_context.following}</p>
                   <p className = "follow-count-title">Following</p>
               </div>
           </div>
