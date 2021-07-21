@@ -9,6 +9,7 @@
     "axios": "^0.21.1",
     "dotenv": "^10.0.0",
     "express-session": "^1.17.2",
+    "gzipper": "^5.0.0",
     "mkcert": "^1.4.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

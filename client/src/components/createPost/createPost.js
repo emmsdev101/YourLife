@@ -6,7 +6,7 @@ function CreatePost({showMe, addStory}){
     const {useState, useContext,useEffect, Cookies} = useReactHooks()
     const {GlobalUserContext, GlobalUserActionsContext,useFeed} = useCustomHooks()
 
-    const {uploadDataUrl,postStory, uploadingProgress} = useFeed() 
+    const {postStory, uploadingProgress} = useFeed() 
     const{FaCamera,FaArrowLeft, FaImages,FaVideo} = useIcons()
     const {getUrlImage} = imageCompression()
     const cookie = new Cookies()
@@ -35,8 +35,7 @@ function CreatePost({showMe, addStory}){
         try{
             if(imgFiles.length > 0){
                 setPosting(true)
-                const uploads =  await uploadDataUrl(imgFiles)
-                const newPost = await postStory(user_context, uploads, content) 
+                const newPost = await postStory( content, imgFiles) 
                 addStory(newPost)
                 setPosting(false)
                 showMe()
@@ -44,7 +43,7 @@ function CreatePost({showMe, addStory}){
             else{
                 if(content !== ""){
                     setPosting(true)
-                    const newPost = await postStory(user_context, null, content) 
+                    const newPost = await postStory(content, null) 
                     addStory(newPost)
                     setPosting(false)
                     showMe()

@@ -42,6 +42,12 @@ h3{
     height: auto;
     width: 100%;
 }
+.reversedList{
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+}
 .commentWrite{
     display: flex;
     flex-direction: row;

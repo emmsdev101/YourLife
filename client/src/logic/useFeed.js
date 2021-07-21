@@ -18,15 +18,16 @@ function useFeed() {
       url: my_api + "/post/all-feeds",
     });
     if (get_feeds.status === 200) {
-      setFeedStories(get_feeds.data);
-      setLoading(false);
+        console.log(get_feeds.data)
+        setFeedStories(get_feeds.data);
+        setLoading(false);
     }
   };
   const fetchImages = async (feed_item) => {
     const fetched_images = await axios({
       method: "get",
       withCredentials: true,
-      url: my_api + "/upload/post/",
+      url: my_api + "/photo/post-photos",
       params: { id: feed_item },
     });
     if (fetched_images.status === 200) {
@@ -45,30 +46,13 @@ function useFeed() {
     );
     setUploadingProgress(percentCompleted);
   };
-  const uploadPhoto = async (formData) => {
-    try {
-      const upload = await axios({
-        method: "post",
-        withCredentials: true,
-        headers: { "Content-Type": "multipart/form-data" },
-        url: UPLOAD_API,
-        data: formData,
-        onUploadProgress: uploadProgress,
-      });
-      if (upload.status === 200) {
-        return upload.data;
-      }
-      return false;
-    } catch (errors) {
-      console.log(errors);
-    }
-  };
+
   const uploadDp = async (file) => {
     try {
       const uploadImage = await axios({
         method: "post",
         withCredentials: true,
-        url: my_api + "/upload/change-profile",
+        url: my_api + "/user/change-profile",
         data: { file: file },
         onUploadProgress: uploadProgress,
       });
@@ -79,42 +63,25 @@ function useFeed() {
       return false;
     }
   };
-  const postStory = async (user_context, paths, content) => {
-    const fullname = user_context.firstname + " " + user_context.lastname;
+  const postStory = async (content,files) => {
     const posting = await axios({
       method: "post",
       withCredentials: true,
       url: POST_API,
       data: {
-        owner: user_context.username,
-        fullname: fullname,
         content: content,
-        imagePath: paths,
+        files: files,
       },
+      onUploadProgress: uploadProgress
     });
     if (posting.status === 200) {
+        console.log(posting.data)
       return posting.data;
     } else {
       console.log(posting.status);
     }
   };
-  const uploadDataUrl = async (files) => {
-    try {
-      const uploadImage = await axios({
-        method: "post",
-        withCredentials: true,
-        url: my_api + "/upload/upload",
-        data: { files: files },
-        onUploadProgress: uploadProgress,
-      });
-      if (uploadImage.status === 200) {
-        return uploadImage.data;
-      }
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  };
+
   const getAStory = async (post_id) => {
     try {
       const story = await axios({
@@ -156,7 +123,7 @@ function useFeed() {
       const req_like = await axios({
         method: "post",
         withCredentials: true,
-        url: my_api + "/post/like-post",
+        url: my_api + "/post/like/like-post",
         data: { post_id: post_id },
       });
       if (req_like.status === 200) {
@@ -173,7 +140,7 @@ function useFeed() {
       const req_like = await axios({
         method: "get",
         withCredentials: true,
-        url: my_api + "/post/post-liked",
+        url: my_api + "/post/like/post-liked",
         params: { post_id: post_id },
       });
       if (req_like.status === 200) {
@@ -190,7 +157,7 @@ function useFeed() {
       const comment = await axios({
         method: "post",
         withCredentials: true,
-        url: my_api + "/post/add-comment",
+        url: my_api + "/post/comment/add-comment",
         data: {
              post_id: post_id,
              content:content
@@ -213,10 +180,11 @@ function useFeed() {
         const comments = await axios({
           method: "get",
           withCredentials: true,
-          url: my_api + "/post/post-comments",
+          url: my_api + "/post/comment/fetch-comments",
           params: { post_id: post_id, page:page, size:size },
         });
         if (comments.status === 200) {
+            console.log(comments.data)
           return comments.data;
         } else {
           console.log(comments.status);
@@ -230,11 +198,9 @@ function useFeed() {
     fetchFeeds,
     fetchImages,
     postStory,
-    uploadPhoto,
     uploadingProgress,
     addFeed,
     uploadDp,
-    uploadDataUrl,
     getMyStory,
     loading,
     getAStory,

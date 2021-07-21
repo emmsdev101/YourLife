@@ -1,7 +1,9 @@
+import { useEffect } from "react"
 import { useReactHooks } from "../../logic/library"
     function PostImage ({photosQuant,src, id, view}){
         const {useState} = useReactHooks()
         const [loaded, setLoaded] = useState(false)
+        
         let temp_img = new Image()
         temp_img.onload = () => {
             setLoaded(true)

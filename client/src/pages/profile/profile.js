@@ -18,7 +18,7 @@ function Profile(){
     const user_context = useContext(GlobalUserContext);
     const set_user_context = useContext(GlobalUserActionsContext)
 
-    const [photos, setPhotos] = useState([]);
+    const [photos, setPhotos] = useState(null);
     const [upload, setUpload] = useState(false)
     const {fetchPhotos, getFollowing, getFollowStatus} = usePeople()
     const {feedStories, addFeed, getMyStory} = useFeed()
@@ -48,6 +48,7 @@ function Profile(){
                 setPhotos(fetchResult)
                 setFollows(following)
                 setFollowStatus(followStat)
+                console.log(fetchResult)
             }
         }
         fetchProfileData()
@@ -143,9 +144,9 @@ function Profile(){
         <div className = "photos-div">
             <h4>Photos</h4>
             <div className = "photo-list-div">
-                { photos.map((image, id)=>(
+                {photos !== null? photos.map((image, id)=>(
                     <PhtoItem image = {image.path} key = {id} id = {id}/>
-                ))}
+                )):''}
             </div>
             <div className = "generic-button-div">
             <button> See more</button>
@@ -177,7 +178,6 @@ function Profile(){
             </>:''}
             {feedStories !== null? feedStories.map((story, id) => (
                 <Post content = {story} key = {id} id = {id}/>
-
             )):''}
             </div>
         </div>

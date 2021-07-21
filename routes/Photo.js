@@ -1,0 +1,36 @@
+const router = require("express").Router();
+
+const Story = require("./../model/story");
+const User = require("./../model/user");
+const ImageModel = require('../model/photo')
+
+const auth = (req, res, next) => {
+    if (req.session.user) {
+      next();
+    } else {
+      res.sendStatus(401);
+    }
+  };
+
+router.get('/post-photos', auth, async(req, res)=>{
+    try{
+        const fetch_res = await ImageModel.find({
+            post_id: req.query.id
+        })
+        res.send(fetch_res)
+    }catch(err){
+        res.sendStatus(500)
+    }
+})
+router.get('/my-photos', async(req, res)=> {
+    try{
+        const images = await ImageModel.find({owner:req.query.id}, null, {limit:6})
+        res.send(images)
+    }catch(err){
+        console.log(err)
+        res.sendStatus(500)
+    }
+    
+
+})
+module.exports = router

@@ -10,7 +10,7 @@ function Home(){
     
     const username = new Cookies().get('username')
     const [createPost, setCreatePost] = useState(false);
-    const {feedStories, addFeed, fetchFeeds} = useFeed()
+    const {feedStories, addFeed, fetchFeeds, loading} = useFeed()
     const history = useHistory()
     const set_user_context = useContext(GlobalUserActionsContext)
     useEffect(() => {
@@ -30,7 +30,6 @@ function Home(){
             <div className = "loader-div"><div className="loader"></div></div>
         )
     }
-    
     return(
         <React.Fragment>
         {createPost? <CreatePost showMe = {createStory} addStory = {addFeed}/>: 
@@ -40,9 +39,9 @@ function Home(){
                 <button onClick = {createStory}> <FaPlusCircle className = "primary-button-icon"></FaPlusCircle>Share a story</button>
             </div>
         </div>
-        {feedStories === null? <Loader/>:''}
+        {loading? <Loader/>:''}
           <div className = "post-list-div">
-              {feedStories !== null && feedStories.length === 0? <><h3>No stories yet </h3><h3>Follow poeple so see their stories</h3></>:''}
+              {!loading  && feedStories.length === 0? <><h3>No stories yet </h3><h3>Follow poeple so see their stories</h3></>:''}
              {feedStories !== null? feedStories.map((story, id)=>(
                  <Post content = {story} key = {id}/>
              )):''}

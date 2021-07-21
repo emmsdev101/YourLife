@@ -16,6 +16,7 @@ const ViewComment = ({ story, postId }) => {
     const [page, setPage] = useState(1)
     const [loading, setLoading] = useState(false)
     const [posting, setPosting] = useState(false)
+    const [realTimeComments, setRealTimeComments] = useState([])
 
     useEffect(() => {
         const fetchComments = async()=>{
@@ -34,7 +35,7 @@ const ViewComment = ({ story, postId }) => {
     setPosting(true)
     const new_comment = await addComment(postId, content)
     if(new_comment){
-        setComments((olds) => [...olds, new_comment])
+        setRealTimeComments((olds) => [...olds, new_comment])
         setNumComments(numComments + 1)
         setContent('')
         setPosting(false)
@@ -46,10 +47,9 @@ const ViewComment = ({ story, postId }) => {
     setPage(nextPage)
     const fechted_comments = await getComments(postId, nextPage, numComments)
     if(fechted_comments){
-        setComments(comments => [...fechted_comments, ...comments])
+        setComments(comments => [...comments, ...fechted_comments])
         setLoading(false)
     }
-    
   }
   const addLike = () => {
     if(liked !== null){
@@ -80,15 +80,22 @@ const ViewComment = ({ story, postId }) => {
       </div>
       <hr></hr>
       <div className = {style.commentList}>
-      {comments !== null && comments.length < numComments? 
+      {comments !== null && comments.length + realTimeComments.length < numComments? 
            <div className = {style.loadMore}>
               {loading?<div className = {style.loader}></div>:<p onClick = {loadMoreComments}>Load more</p>}
           </div>:''}
+          <div className = {style.reversedList}>
           {comments !== null? 
             comments.map((doc, id) => (
                 <Comment document = {doc} key = {id}/>
             ))
           :''}
+          </div>
+          {realTimeComments.map((doc, id) => (
+                <Comment document = {doc} key = {id}/>
+            ))
+          }
+          
           <hr></hr>
           <div className = {style.commentWrite}>
               <textarea className = {style.commentInput}

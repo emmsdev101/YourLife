@@ -1,13 +1,19 @@
-const Story = require("./../model/story");
-const Photo = require("./../model/photo");
-const User = require("./../model/user");
-const Liked = require("./../model/liked");
-
 const bcrypt = require("bcrypt");
 const router = require("express").Router();
 const fs = require("fs");
-const following = require("../model/following");
-const Comment = require('../model/comment')
+
+const Story = require("./../model/story");
+const User = require("./../model/user");
+const ImageModel = require("../model/photo");
+const Liked = require("./../model/liked");
+
+const Comment = require("./Comment");
+const Like = require("./Like");
+
+router.use("/comment", Comment);
+router.use("/like", Like);
+
+const saveImage = require("../helper/Upload");
 
 const auth = (req, res, next) => {
   if (req.session.user) {
@@ -24,248 +30,181 @@ const admin = (req, res, next) => {
 
 router.post("/create", auth, async (req, res, next) => {
   try {
-    const img_paths = req.body.imagePath;
+    const files = req.body.files;
     const content = req.body.content;
-    const owner = req.body.owner;
-
-    const data = new Story({
-      owner: owner,
-      content: content,
-      photo_only: content !== "" && content !== undefined ? false : true,
-      likes: 0,
-      comments: 0,
-    });
-
-    if (img_paths !== null) {
-      data.save(function (err, post) {
-        if (err) return console.log(err);
-
-        img_paths.forEach((path) => {
-          const photo = new Photo({
-            owner: post.owner,
-            post_id: post._id,
-            path: path,
-          });
-          photo.save(function (err, saved_photo) {
-            if (err) return console.log(err);
-          });
-        });
-        res.send(post);
-      });
-    } else {
-      if (content !== undefined && content !== "") {
-        data.save(function (err, post) {
-          if (err) {
-            console.log(err);
-            res.sendStatus(444);
-          }
-          if (post) {
-            res.send(post);
-          } else {
-            res.sendStatus(444);
-          }
-        });
-      } else {
-        console.log(content);
-        res.sendStatus(403);
-      }
-    }
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(444);
-  }
-});
-router.post("/like-post", auth, async (req, res) => {
-  try {
-    const post_id = req.body.post_id;
     const user = await User.findOne({ _id: req.session.user });
-    const likes = await Liked.findOne({
-      post_id: post_id,
-      liked_by: user.username,
-    });
-    if (!likes) {
-      const newLike = new Liked({
-        post_id: post_id,
-        liked_by: user.username,
+    if (user) {
+      const owner = user.username;
+      const data = new Story({
+        owner: owner,
+        content: content,
+        photo_only: content !== "" && content !== undefined ? false : true,
+        likes: 0,
+        comments: 0,
       });
-      const likeSaved = await newLike.save();
-      if (likeSaved) {
-        Story.findOneAndUpdate(
-            {
-              _id: post_id
-            },
-            {
-              $inc: {
-                likes: +1,
-              },
-            },
-            {useFindAndModify:false},
-            (err, doc) => {
-              if (err) {
-                console.log(err);
-                res.sendStatus(444);
+
+      if (Array.isArray(files)) {
+        const post = await data.save();
+
+        if (post) {
+            const savedImages = []
+          for (let index = 0; index < files.length; index++) {
+            const file = files[index];
+
+            const savedImage = await saveImage(req, res, file);
+
+            if (savedImage) {
+              const photo = new ImageModel({
+                owner: post.owner,
+                post_id: post._id,
+                path: savedImage,
+              });
+              const saved = await photo.save();
+
+              if (!saved) {
+                res.sendStatus(500);
+                return console.log(saved);
               }
-              if (!doc) {
-                console.log(err);
-                res.sendStatus(404);
-              }else res.send(true)
+              savedImages.push(saved)
             }
-          );
-      }else{
-        res.send(null);
+          }
+          const posted = {
+            username:user.username,
+            firstname: user.firstname,
+            lastname:user.lastname,
+            photo:user.photo,
+            content:data.content,
+            likes:data.likes,
+            comments:data.comments,
+            photos:savedImages,
+            liked:false,
+            _id:data._id
+        }
+          res.send(posted)
+        } else {
+          console.log(post);
+          res.sendStatus(500);
+        }
+      } else {
+        if (content !== undefined && content !== "") {
+          const post = await data.save();
+          if (post) {
+            const posted = {
+                username:user.username,
+                firstname: user.firstname,
+                lastname:user.lastname,
+                photo:user.photo,
+                content:post.content,
+                likes:post.likes,
+                comments:post.comments,
+                photos:[],
+                liked:false,
+                _id:post._id
+            }
+            res.send(posted);
+          } else {
+            console.log(post);
+            res.sendStatus(500);
+          }
+        }
       }
     } else {
-      Liked.deleteOne({ _id: likes._id }, null, (err) => {
-        if (err) {
-          console.log(err);
-          res.sendStatus(444);
-        }
-        Story.findOneAndUpdate(
-          {
-            _id: post_id,
-            likes: { $gt: 0 },
-          },
-          {
-            $inc: {
-              likes: -1
-            },
-          },
-          {useFindAndModify:false},
-          (err, doc) => {
-            if (err) {
-              console.log(err);
-              res.sendStatus(444);
-            }
-            if (!doc) {
-              console.log(err);
-              res.sendStatus(404);
-            }else res.send(true)
-          }
-        );
-      });
+      console.log(owner);
+      res.sendStatus(404);
     }
   } catch (err) {
     console.log(err);
     res.sendStatus(444);
   }
 });
-router.post("/add-comment", auth, async(req, res)=> {
-    try{
-        const postId = req.body.post_id
-        const content = req.body.content
-        const user = await User.findOne({_id:req.session.user})
-        if(user){
-            const newComment = new Comment({
-                post_id: postId,
-                comment_by: user.username,
-                content:content
-            })
-            const savedComment = await newComment.save()
-            if(savedComment){
-                Story.findOneAndUpdate(
-                    {
-                      _id: postId
-                    },
-                    {
-                      $inc: {
-                        comments: +1,
-                      },
-                    },
-                    {useFindAndModify:false},
-                    (err, doc) => {
-                      if (err) {
-                        console.log(err);
-                        res.sendStatus(444);
-                      }
-                      if (!doc) {
-                        console.log(err);
-                        res.sendStatus(404);
-                      } else res.send(savedComment)
-                    }
-                  );
-
-            }else{
-                res.send(false)
-            }
-        }else res.sendStatus(401)
-    }catch(err){
-        console.log(err)
-        res.sendStatus(500)
-    }
-})
 // --------- END OF POST ROUTE   ------------
 router.get("/my-posts", auth, async (req, res, next) => {
-    try {
-      const user = await User.findOne({ _id: req.session.user });
-      if (user) {
-        const stories = await Story.find({ owner: user.username }, null, {
+  try {
+    const user = await User.findOne({ _id: req.session.user });
+    if (user) {
+      const stories = await Story.find(
+        { owner: user.username },
+        null,
+        {
           limit: 10,
-        }).sort({ date: -1 });
-        res.send(stories);
-      }
-    } catch (err) {
-      console.log(err);
-      res.sendStatus(444);
-    }
-  });
-  router.get("/view", auth, async (req, res, next) => {
-    try {
-      const post_id = req.query.post_id;
-      if (post_id) {
-        const story = await Story.findOne({ _id: post_id });
-        res.send(story);
-      }
-    } catch (err) {
-      console.log(err);
-      res.sendStatus(444);
-    }
-  });
-  router.get("/all-feeds", auth, async (req, res, next) => {
-    try {
-      const feeds = await Story.find().sort({ date: -1 });
-      res.send(feeds);
-    } catch (error) {
-      console.log(error);
-    }
-  });
-router.get('/post-liked', auth, async(req, res)=>{
-    try{
-        const post_id = req.query.post_id
-        const user = await User.findOne({_id:req.session.user})
-        if(user){
-            const post_liked = await Liked.findOne({
-                post_id:post_id,
-                liked_by:user.username
-            })
-            if(post_liked){
-                res.send(true)
-            }else res.send(false)
         }
-    }catch(err){
-        console.log(err)
-        res.sendStatus(444)
-    }
-})
-router.get('/post-comments', auth, async(req, res)=> {
-    const page = parseInt(req.query.page)
-    const size = parseInt(req.query.size)
-    const limit = 10
-    const start = size - limit
-    const to_skip  = (page - 1) * limit
-    const skip = start - to_skip < 0? 0 : start - to_skip
-    try{
-        const post_id = req.query.post_id
-        const comments = await Comment.find({post_id:post_id},null,{limit:limit, skip:skip})
-        if(comments){
-            res.send(comments)
-        }else{
-            res.send([])
+      ).sort({ date: -1 })
+
+      if (Array.isArray(stories)) {
+        const feedsObjectList = [];
+        for (let index = 0; index < stories.length; index++) {
+          const feed = stories[index];
+          const photos = await ImageModel.find({ post_id: feed._id });
+          const liked = await Liked.findOne({
+            post_id: feed._id,
+            liked_by: user.username,
+          });
+          feedsObjectList.push({
+            username: user.username,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            photo: user.photo,
+            content: feed.content,
+            likes: feed.likes,
+            comments: feed.comments,
+            photos: photos,
+            liked: liked ? true : false,
+            _id: feed._id,
+          });
         }
-    }catch(err){
-        console.log(err)
-        res.sendStatus(500)
+        res.send(feedsObjectList);
+      }
     }
-})
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(444);
+  }
+});
+router.get("/view", auth, async (req, res, next) => {
+  try {
+    const post_id = req.query.post_id;
+    if (post_id) {
+      const story = await Story.findOne({ _id: post_id });
+      res.send(story);
+    }
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(444);
+  }
+});
+router.get("/all-feeds", auth, async (req, res, next) => {
+  try {
+    const feeds = await Story.find().sort({ date: -1 });
+    if (Array.isArray(feeds)) {
+      const feedsObjectList = [];
+      for (let index = 0; index < feeds.length; index++) {
+        const feed = feeds[index];
+        const feedOwner = await User.findOne({ username: feed.owner });
+        const photos = await ImageModel.find({ post_id: feed._id });
+        const liked = await Liked.findOne({
+          post_id: feed._id,
+          liked_by: feedOwner.username,
+        });
+        feedsObjectList.push({
+          username: feedOwner.username,
+          firstname: feedOwner.firstname,
+          lastname: feedOwner.lastname,
+          photo: feedOwner.photo,
+          content: feed.content,
+          likes: feed.likes,
+          comments: feed.comments,
+          photos: photos,
+          liked: liked ? true : false,
+          _id: feed._id,
+        });
+      }
+      res.send(feedsObjectList);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 // ------- DELETE ROUTE -----------
 router.delete("/story", auth, async (req, res) => {
   Story.findOneAndDelete({ _id: req.body.post_id }, function (err, doc) {
@@ -285,7 +224,7 @@ router.delete("/all", admin, (req, res, next) => {
       return res.sendStatus(444);
     }
     console.log("Story deleted from database");
-    Photo.deleteMany({}, function (photo_err, photo_del) {
+    ImageModel.deleteMany({}, function (photo_err, photo_del) {
       if (photo_err) {
         console.log(photo_err);
         return res.sendStatus(444);

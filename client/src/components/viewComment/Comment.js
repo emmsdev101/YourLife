@@ -1,3 +1,4 @@
+import userEvent from '@testing-library/user-event';
 import React, { useState, useEffect } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import usePeople from '../../logic/usePeople';
@@ -5,56 +6,43 @@ import style from './comment.module.css'
 const Comment = ({document}) => {
     const my_api = process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
 
-    const [userInfo, setUserInfo] = useState(null)
-    const [profilePhoto, setProfilePhoto] = useState(null)
-    const {getUserInfo} = usePeople()
-    useEffect(() => {
-        const fetchUser = async () => {
-            const fetched_user = await getUserInfo(document.comment_by)
-          if(fetched_user){
-            setUserInfo(fetched_user)
+    const [dpLoaded, setDpLoaded] = useState(false)
 
-            const profile_photo_url = my_api + "/photos/" + fetched_user.photo
+    const fullname = document.firstname + ' ' + document.lastname
+    const profile_photo_url =  my_api + "/photos/" + document.photo
+    const content = document.comment_content
+    
+    useEffect(() => {
+        const preloadPicture = async () => {
             let temp_image = new Image()
             temp_image.onload = () => {
-                setProfilePhoto(profile_photo_url)
+                setDpLoaded(true)
             }
             temp_image.src = profile_photo_url
-          }
         }
-        fetchUser()
-    
+        preloadPicture()
+        return () => {
+            setDpLoaded(false)
+        }
     }, []);
-    if(userInfo !== null) return (
+    return (
         <div className = {style.comment}>
             <div className = {style.commentProfile}>
-                {profilePhoto !== null? 
-                <img src = {profilePhoto} className = {style.profilePhoto}/>:
+                {dpLoaded? 
+                <img src = {profile_photo_url} className = {style.profilePhoto}/>:
                 <FaUserCircle className = {style.tempProfilePhoto}/>
                 }
             </div>
             <div className = {style.commentBody}>
             <div className = {style.commentHeader}>
-                <p className = {style.commentOwner}>{userInfo.firstname + " " + userInfo.lastname}</p>
+                <p className = {style.commentOwner}>{fullname}</p>
                 <p className = {style.commentTime}>1h</p>
             </div>
             <div className = {style.commentContent}>
-                {document.content}
+                {content}
             </div>
             </div>
         </div>
     );
-    else return (
-        <div className = {style.tempComment}>
-            <div className = {style.tempProfile}>
-            </div>
-            <div className = {style.tempCommentBody}>
-            <div className = {style.commentHeader}>
-            </div>
-            <div className = {style.commentContent}>
-            </div>
-            </div>
-        </div>
-    )
 }
 export default Comment;

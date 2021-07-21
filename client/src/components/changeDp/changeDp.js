@@ -37,14 +37,9 @@ function ChangeDp({setUpload, setProfilePhotoUrl,profile_photo_url}){
     const uploadProfilePic = async() => {
         const uploadResult = await uploadDp(pickedPhoto)
         if(uploadResult){
-            const updateResult = await updateDp(uploadResult, user_context.username)
-            if(updateResult){
                 set_user_context(user_context.username)
                 setProfilePhotoUrl(my_api + "/photos/"+uploadResult)
                 setUpload(false)
-            }else{
-                console.log("there is error while updating profile")
-            }
         }else{
             console.log("Error while uploading photo")
         }
