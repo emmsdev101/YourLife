@@ -234,8 +234,9 @@
   margin-right: 5px;
 }
 .stories-div{
-  height: 100vh;
+  height: auto;
   width: 100%;
+  padding-bottom: 50px;
 }
 .section-title{
   text-align: center;
@@ -246,7 +247,6 @@
   height: auto;
   margin-top: 20px;
   padding-top: 20px ;
-  background-color: rgb(189, 189, 189);
 }
 .profile-action{
   display: flex;

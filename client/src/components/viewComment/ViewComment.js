@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { FaComment, FaThumbsUp } from "react-icons/fa";
 import { GlobalCommentAction } from "../../logic/commentContext";
 import useFeed from "../../logic/useFeed";
+import Loader from "../Loader/Loader";
 import Comment from "./Comment";
 import style from "./view-comment.module.css";
 
@@ -89,7 +90,10 @@ const ViewComment = ({ story, postId }) => {
             comments.map((doc, id) => (
                 <Comment document = {doc} key = {id}/>
             ))
-          :''}
+          :<div>
+            <h3>Loading comments...</h3>
+            <Loader/>
+            </div>}
           </div>
           {realTimeComments.map((doc, id) => (
                 <Comment document = {doc} key = {id}/>

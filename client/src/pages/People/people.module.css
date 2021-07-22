@@ -1,0 +1,43 @@
+.people{
+    width: 100%;
+    height: auto;
+    background-color: rgb(255, 255, 255);
+
+}
+.headingTitle{
+    margin-left: 10px;
+}
+.headingTool{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    height: 80px;
+    border-bottom: 1px solid grey;
+}
+.searchButton{
+    padding: 5px;
+    border-radius: 19px;
+    height: 38px;
+    width: 38px;
+    border: none;
+    outline: none;
+    background-color: rgb(233, 233, 233);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+
+}
+.searchIcon{
+    height: 23px;
+    width: 23px;
+}
+.peopleList{
+}
+.divider{
+    margin-left: 10px;
+    margin-right: 10px;
+    color: grey;
+}

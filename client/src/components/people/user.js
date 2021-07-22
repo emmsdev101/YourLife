@@ -1,60 +1,24 @@
-import {useCustomHooks, useIcons, useReactHooks} from '../../logic/library';
-import './style.css'
+import { FaUserCircle } from 'react-icons/fa';
+import style from './user.module.css'
+import useUser from './useUser';
 function User({data, id}){
-    const {useState, useEffect, useRef} = useReactHooks()
-    const {usePeople } = useCustomHooks()
-    const {FaUserCircle} = useIcons()
-    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
-    const profilePhoto = my_api + "/photos/"+data.photo;
-
-    const {follow, isFollowing} = usePeople()
-    const [dpLoad, setDpLoad] = useState(false);
-    const [followed, setFollow] = useState(null)
-
-    const follow_btn = useRef(null)
-    const unfollow_btn = useRef(null)
-
-    const [isMounted, setIsMounted] = useState(true);
-
-    useEffect(() => {
-        let preload = new Image()
-        preload.onload = () => {
-            if(isMounted)setDpLoad(true)
-        }
-        checkFollow()
-        preload.src = profilePhoto
-        return ()=> {
-            setIsMounted(false)
-        }
-    }, []);
-
-    async function checkFollow() {
-        if(await isFollowing(data.username)){
-            if(isMounted)setFollow(true)
-        }else{
-            if(isMounted)setFollow(false)
-        }
-    }
-    const followUser = async() => {
-        if(followed){
-            follow_btn.current.disabled = false
-            if(isMounted)follow(data.username)          
-        }else{
-            if(isMounted)follow(data.username)
-            follow_btn.current.disabled = true
-        }
-        setFollow(!followed)
-    }
-
+    const {followed,
+        dpLoad,
+        profilePhoto,
+        followUser,
+        unfollow_btn,
+        follow_btn
+    } = useUser(data, id)
+    
     if(followed !== null) return(
-        <div className = "user-div" id = {id}>
-            {dpLoad? <img className = "user-picture" src = {profilePhoto}></img>:
-            <FaUserCircle className = "user-picture"/>}
-            <div className = "user-detail">
-                <p className = "user-name">{data.firstname + ' ' + data.lastname}</p>
-                <p className = "user-status">Followers {data.followers}</p>
-                <button disabled = {followed} ref = {follow_btn} className = {!followed?"user-follow":"user-unfollow"} onClick = {followUser}>{followed?"Following":"Follow"}</button>
-                {followed?<button ref = {unfollow_btn} onClick = {followUser} className = "user-remove">Unfollow</button>:''}
+        <div className = {style.userDiv} id = {id}>
+            {dpLoad? <img className = {style.userPicture} src = {profilePhoto}></img>:
+            <FaUserCircle className = {style.userPicture}/>}
+            <div className = {style.userDetails}>
+                <p className = {style.username}>{data.firstname + ' ' + data.lastname}</p>
+                <p className = {style.userStatus}>Followers {data.followers}</p>
+                <button disabled = {followed} ref = {follow_btn} className = {!followed?style.followUser:style.followingUser} onClick = {followUser}>{followed?"Following":"Follow"}</button>
+                {followed?<button ref = {unfollow_btn} onClick = {followUser} className = {style.userRemove}>Unfollow</button>:''}
             </div>
         </div>
     )

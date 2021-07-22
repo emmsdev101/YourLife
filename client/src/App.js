@@ -1,10 +1,9 @@
 import React, { Suspense, lazy, useState, useRef } from "react";
-import { Route, BrowserRouter, Switch, useLocation } from "react-router-dom";
-import Cookies from "universal-cookie";
-
-import "./App.css";
+import { Route, Switch } from "react-router-dom";
+import style from "./app.module.css";
+import Header from "./components/header/Header";
 import "./generalStyle/generalStyle.css";
-import { useCustomHooks, useIcons, useReactHooks } from "./logic/library";
+import useApp from "./useApp";
 
 const Profile = lazy(() => import("./pages/profile/profile"));
 const Home = lazy(() => import("./pages/home/home"));
@@ -14,103 +13,22 @@ const Chat = lazy(() => import("./pages/chats/chat"));
 const Menu = lazy(() => import("./pages/menu/menu"));
 const Signup = lazy(() => import("./pages/sign-up/signup"));
 const Login = lazy(() => import("./pages/login/login"));
-const ViewPost = lazy(() => import ("./components/post/viewPost"));
-
 
 function App() {
-  const { FaHome, FaUsers, FaBell, FaEnvelope, FaBars } = useIcons();
-  const { useHistory, useState, useContext, useEffect } = useReactHooks();
-  const { GlobalUserContext, GlobalUserActionsContext } = useCustomHooks();
-  const set_user_context = useContext(GlobalUserActionsContext);
-  const user_context = useContext(GlobalUserContext);
-  const history = useHistory();
-  const cookie = new Cookies();
-  const currentLocation = useLocation();
-  const [render, setRender] = useState(false);
-  const [renderHeader, setRenderHeader] = useState(true);
-  const [active, setActive] = useState("");
-  const username = cookie.get("username")
-
-  useEffect(() => {
-    if(isLogged()){
-      set_user_context().then(
-        (res) => {
-          setRender(true);
-        },
-        () => {
-          setRender(true);
-        }
-      )
-    }else setRender(true);
-    setActive(currentLocation.pathname);
-  }, []);
-  function isLogged () {
-    console.log(username)
-    if (username !== undefined) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-  function switchPage(page) {
-    setActive(page);
-    history.push(page);
-  }
-  const Header = () => {
-    return (
-      <header className="home-header">
-        <div
-          className={
-            active === "/home" || active === "/" ? "active" : "inactive"
-          }
-          onClick={() => {
-            switchPage("/home");
-          }}
-        >
-          {" "}
-          <FaHome className="nav-icon"></FaHome>
-        </div>
-        <div
-          className={active === "/people" ? "active" : "inactive"}
-          onClick={() => {
-            switchPage("/people");
-          }}
-        >
-          <FaUsers className="nav-icon"></FaUsers>
-        </div>
-        <div
-          className={active === "/notification" ? "active" : "inactive"}
-          onClick={() => {
-            switchPage("/notification");
-          }}
-        >
-          <FaBell className="nav-icon"></FaBell>
-        </div>
-        <div
-          className={active === "/chat" ? "active" : "inactive"}
-          onClick={() => {
-            switchPage("/chat");
-          }}
-        >
-          <FaEnvelope className="nav-icon"></FaEnvelope>
-        </div>
-        <div
-          className={active === "/menu" ? "active" : "inactive"}
-          onClick={() => {
-            switchPage("/menu");
-          }}
-        >
-          <FaBars className="nav-icon"></FaBars>
-        </div>
-      </header>
-    );
-  };
-  if (render) {
-    return (
-      <Switch>
-        <React.Fragment>
-        {isLogged()? (
-          <div className="App">
+  const {
+    renderHeader,
+    setRenderHeader,
+    isLogged,
+    stories,
+    addFeed,
+    fetchStory,
+    loading,
+  } = useApp();
+  return (
+    <Switch>
+      <React.Fragment>
+        {isLogged() ? (
+          <div className={style.App}>
             {renderHeader ? <Header /> : ""}
             <Suspense fallback={<div>Loading...</div>}>
               <Route exact path="/menu" component={Menu} />
@@ -118,31 +36,81 @@ function App() {
               <Route exact path="/notification" component={Notification} />
               <Route exact path="/chat" component={Chat} />
               <Route exact path="/profile" component={Profile} />
-              <Route exact path="/login" component={Home} />
-              <Route exact path="/signup" component={Home} />
-              <Route exact path="/home" component={Home} />
-              <Route exact path="/" component={Home} />
-            </Suspense>
-            <Suspense fallback={<div>Please Wait...</div>}>
+
               <Route
                 exact
-                path="/viewpost/:id"
-                render={(props) => (<ViewPost {...props} back={setRenderHeader} />)}
+                path="/login"
+                render={(props) => (
+                  <Home
+                    {...props}
+                    feedStories={stories}
+                    addFeed={addFeed}
+                    fetchFeeds={fetchStory}
+                    loading={loading}
+                    setRenderHeader={setRenderHeader}
+                  />
+                )}
+              />
+              <Route
+                exact
+                path="/signup"
+                render={(props) => (
+                  <Home
+                    {...props}
+                    feedStories={stories}
+                    addFeed={addFeed}
+                    fetchFeeds={fetchStory}
+                    loading={loading}
+                    setRenderHeader={setRenderHeader}
+                  />
+                )}
+              />
+              <Route
+                exact
+                path="/home"
+                render={(props) => (
+                  <Home
+                    {...props}
+                    feedStories={stories}
+                    addFeed={addFeed}
+                    fetchFeeds={fetchStory}
+                    loading={loading}
+                    setRenderHeader={setRenderHeader}
+                  />
+                )}
+              />
+              <Route
+                exact
+                path="/"
+                render={(props) => (
+                  <Home
+                    {...props}
+                    feedStories={stories}
+                    addFeed={addFeed}
+                    fetchFeeds={fetchStory}
+                    loading={loading}
+                    setRenderHeader={setRenderHeader}
+                  />
+                )}
               />
             </Suspense>
           </div>
-          ) : (
+        ) : (
           <Suspense fallback={<div>Loading...</div>}>
-            <Route exact path="/signup" component={Signup} />
+            <Route exact path="/menu" component={Login} />
+            <Route exact path="/people" component={Login} />
+            <Route exact path="/notification" component={Login} />
+            <Route exact path="/chat" component={Login} />
+            <Route exact path="/profile" component={Login} />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/signup" component={Signup} />
+            <Route exact path="/home" component={Login} />
             <Route exact path="/" component={Login} />
           </Suspense>
         )}
-        </React.Fragment>
-      </Switch>
-      
-    );
-  } else return <></>;
+      </React.Fragment>
+    </Switch>
+  );
 }
 
 export default App;

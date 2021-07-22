@@ -5,12 +5,7 @@ const cookie = new Cookies();
 function usePeople() {
   const my_api =
     process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
-  const [people, setPoeple] = useState([]);
-
-  useEffect(() => {
-    fetchPoeple();
-  }, []);
-
+  
   const fetchPoeple = async () => {
     try {
       const fetch_res = await axios({
@@ -19,13 +14,14 @@ function usePeople() {
         url: my_api + "/user/fetchAll",
       });
       if (fetch_res.status === 200) {
-        setPoeple(fetch_res.data);
+          return fetch_res.data
       }
     } catch (err) {
       if (err.response) {
         if (err.response.status === 401) {
           alert("Your session has expired! Please login again");
           cookie.remove("username");
+          window.location.replace("/login")
           return null;
         }
       }
@@ -50,6 +46,7 @@ function usePeople() {
         if (err.response.status === 401) {
           alert("Your session has expired! Please login again");
           cookie.remove("username");
+          window.location.replace("/login")
           return null;
         }
       }
@@ -76,6 +73,7 @@ function usePeople() {
         if (err.response.status === 401) {
           alert("Your session has expired! Please login again");
           cookie.remove("username");
+          window.location.replace("/login")
           return null;
         }
       }
@@ -102,6 +100,7 @@ function usePeople() {
         if (err.response.status === 401) {
           alert("Your session has expired! Please login again");
           cookie.remove("username");
+          window.location.replace("/login")
           return null;
         }
       }
@@ -130,6 +129,7 @@ function usePeople() {
         if (err.response.status === 401) {
           alert("Your session has expired! Please login again");
           cookie.remove("username");
+          window.location.replace("/login")
           return null;
         }
       }
@@ -146,16 +146,13 @@ function usePeople() {
       });
       if (isFollowingReq.status === 200) {
         return isFollowingReq.data;
-      } else if (isFollowingReq.status === 401) {
-        alert("Your session has expired! Please login again");
-      } else {
-        console.log(isFollowingReq.status);
       }
     } catch (err) {
       if (err.response) {
         if (err.response.status === 401) {
           alert("Your session has expired! Please login again");
           cookie.remove("username");
+          window.location.replace("/login")
           return null;
         }
       }
@@ -170,16 +167,15 @@ function usePeople() {
         url: my_api + "/user/followers",
       });
       if (followers.status === 200) {
+        console.log(followers.data)
         return followers.data;
-      } else if (followers.status === 401) {
-        alert("Your session has expired! Please login again");
-        return [];
       }
     } catch (err) {
       if (err.response) {
         if (err.response.status === 401) {
           alert("Your session has expired! Please login again");
           cookie.remove("username");
+          window.location.replace("/login")
           return null;
         }
       }
@@ -203,13 +199,14 @@ function usePeople() {
         if (err.response.status === 401) {
           alert("Your session has expired! Please login again");
           cookie.remove("username");
+          window.location.replace("/login")
           return null;
         }
       }
     }
   };
   return {
-    people,
+    fetchPoeple,
     getUserInfo,
     fetchPhotos,
     updateDp,

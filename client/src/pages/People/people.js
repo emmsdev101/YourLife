@@ -1,25 +1,27 @@
-import './style.css'
+import style from './people.module.css'
 import User from '../../components/people/user'
-import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library';
+import { FaSearch } from 'react-icons/fa';
+import usePeople from '../../logic/usePeople';
+import usePeopleList from './usePeopleList';
+import Loader from '../../components/Loader/Loader';
 function People(){
-    const {FaSearch} = useIcons()
-    const {useHistory} = useReactHooks()
-    const {usePeople} = useCustomHooks()
-    const history = useHistory()
-    const {people} = usePeople()
-
+    const {people} = usePeopleList()
     return(
-      <div className = "people-body">
-          <div className = "people-header">
-              <h3>Follow more</h3>
-              <button className = "search-button"><FaSearch className = "search-icon"></FaSearch></button>
-          </div>
-          <hr></hr>
-          <div className = "people-list-div">
-             {people.map((user,id)=>(
-                 <User  data = {user} key = {id} id = {id}/>
-             ))}
-          </div>
+        <div className = {style.people}>
+                <div className = {style.headingTool}>
+                    <h3 className = {style.headingTitle}>Follow more</h3>
+                    <button className = {style.searchButton}><FaSearch className = {style.searchIcon}></FaSearch></button>
+                </div>
+            <div className = {style.peopleList}>
+                    {people !== null? people.map((user,id)=>(
+                        <User  data = {user} key = {id} id = {id}/>
+                    )):
+                    <div>
+                    <h3>Loading...</h3>
+                    <Loader/>
+                    </div>
+                    }
+            </div>
       </div>
     )
 }

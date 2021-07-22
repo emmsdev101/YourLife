@@ -1,54 +1,67 @@
-import './homeStyle.css'
-import Post from '../../components/post/post'
-import CreatePost from '../../components/createPost/createPost'
-import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library";
-import React from 'react';
-function Home(){
-    const {useState, useContext, useHistory,useEffect, Cookies} = useReactHooks()
-    const {useFeed, GlobalUserActionsContext} = useCustomHooks()
-    const { FaPlusCircle} = useIcons()
-    
-    const username = new Cookies().get('username')
-    const [createPost, setCreatePost] = useState(false);
-    const {feedStories, addFeed, fetchFeeds, loading} = useFeed()
-    const history = useHistory()
-    const set_user_context = useContext(GlobalUserActionsContext)
-    useEffect(() => {
-        set_user_context(username)
-        fetchFeeds()
-    }, []);
-    
-    const createStory = ()=>{
-        if(createPost){
-            setCreatePost(false)
-        }else{
-            setCreatePost(true)
-        }
-    }
-    const Loader = ()=> {
-        return(
-            <div className = "loader-div"><div className="loader"></div></div>
-        )
-    }
-    return(
+import style from "./home.module.css";
+import Post from "../../components/post/post";
+import CreatePost from "../../components/createPost/createPost";
+import React, { Suspense,lazy, useEffect } from "react";
+import useHome from "./useHome";
+import { FaArrowDown, FaArrowUp, FaPlusCircle } from "react-icons/fa";
+import Loader from "../../components/Loader/Loader";
+
+const ViewPost = lazy(() => import ("./../../components/post/viewPost"));
+
+function Home({ feedStories, addFeed, fetchFeeds, loading, setRenderHeader }) {
+  const { createPost, createStory, viewPost, view} = useHome(setRenderHeader);
+
+  if(view){
+   return (
+       <Suspense fallback = {loading}>
+            <ViewPost id = {view} back = {viewPost} setRenderHeader = {setRenderHeader}/>
+       </Suspense>
+   )
+  }else{
+    return (
         <React.Fragment>
-        {createPost? <CreatePost showMe = {createStory} addStory = {addFeed}/>: 
-      <div className = "home-body">
-          <div className = "home-title">
-              <div className = "primary-button">
-                <button onClick = {createStory}> <FaPlusCircle className = "primary-button-icon"></FaPlusCircle>Share a story</button>
+          {createPost ? (
+            <CreatePost showMe={createStory} addStory={addFeed} />
+          ) : (
+            <div className={style.homeBody}>
+              <div className={style.homeTitle}>
+                <div className={style.primaryButton}>
+                  <button onClick={createStory} className={style.button}>
+                    {" "}
+                    <FaPlusCircle
+                      className={style.primaryButtonIcon}
+                    ></FaPlusCircle>
+                    Share a story
+                  </button>
+                </div>
+                <div className = {style.refreshFeeds} onClick = {fetchFeeds}>
+                    Refresh
+                    <FaArrowDown className = {style.refreshIcon}/>
+                </div>
+              </div>
+              {loading ? (
+                <Loader />
+              ) : (
+                <div className={style.postList}>
+                  {feedStories && feedStories.length === 0 ? (
+                    <>
+                      <h3>No stories yet </h3>
+                      <h3>Follow poeple to see their stories</h3>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  {feedStories
+                    ? feedStories.map((story, id) => (
+                        <Post content={story} key={id} openPost = {viewPost}/>
+                      ))
+                    : ""}
+                </div>
+              )}
             </div>
-        </div>
-        {loading? <Loader/>:''}
-          <div className = "post-list-div">
-              {!loading  && feedStories.length === 0? <><h3>No stories yet </h3><h3>Follow poeple so see their stories</h3></>:''}
-             {feedStories !== null? feedStories.map((story, id)=>(
-                 <Post content = {story} key = {id}/>
-             )):''}
-          </div>
-      </div>
-        }
+          )}
         </React.Fragment>
-    )
+      );
+  }
 }
-export default Home
+export default Home;

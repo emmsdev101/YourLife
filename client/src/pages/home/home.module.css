@@ -1,0 +1,86 @@
+.active{
+    height: 59px;
+    border-bottom: 5px solid #5D5FEF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    color: #5D5FEF;
+}
+.inactive{
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+}
+.homeBody{
+    width: 100%;
+    height: calc(100vh - 60px);
+}
+.section-title{
+    margin: 10;
+    text-align: left;
+    margin-left: 10px;
+    color: rgb(26, 26, 26);
+}
+.postList{
+    width: 100%;
+    height: auto;
+    
+}
+.homeTitle{
+    padding:20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.refreshFeeds{
+    background-color: #EF5DA8;
+    width: 20%;
+    height: 50px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: whitesmoke;
+
+}
+.inactive:hover{
+    background-color: #ffffff3a;
+}
+.primaryButton{
+    width: 80%;
+    height: auto;
+}
+.primaryButtonIcon{
+    width: 20px;
+    height: 20px;
+    margin: 10px;
+}
+.primaryButton button{
+    
+    width: 98%;
+    height: 50px;
+    border-radius: 5px;
+    background-color: #5D5FEF;
+    border: none;
+    color: white;
+    outline: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+  
+  }
+
+#uploading{
+    width: 100%;
+}
+#progress_label{
+    font-weight: 700;
+    font-size: small;
+}

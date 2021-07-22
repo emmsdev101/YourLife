@@ -4,8 +4,14 @@ import ChangeDp from './../../components/changeDp/changeDp'
 import Post from '../../components/post/post'
 import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
 import  FriendItem  from "./friend";
-import React, { useRef } from 'react';
+import React, { Suspense, useRef,lazy } from 'react';
 import CreatePost from '../../components/createPost/createPost';
+
+import style from './profile.module.css'
+import Loader from '../../components/Loader/Loader';
+
+const ViewPost = lazy(() => import ("../../components/post/viewPost"));
+
 function Profile(){
     const {Cookies, useHistory, useContext, useState, useEffect} = useReactHooks()
     const {GlobalUserActionsContext, GlobalUserContext, usePeople, useFeed} = useCustomHooks()
@@ -21,7 +27,11 @@ function Profile(){
     const [photos, setPhotos] = useState(null);
     const [upload, setUpload] = useState(false)
     const {fetchPhotos, getFollowing, getFollowStatus} = usePeople()
-    const {feedStories, addFeed, getMyStory} = useFeed()
+    const {addFeed, getMyStory} = useFeed()
+
+    const [feedStories, setMyStories] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [viewPost, setViewPost] = useState(null)
     
     const fullname = user_context.firstname + ' ' +user_context.lastname
     const [profile_photo_url, setProfilePhotoUrl] = useState()
@@ -43,12 +53,15 @@ function Profile(){
             const following = await getFollowing()
             const followStat = await getFollowStatus()
             const fetchResult = await fetchPhotos(user_context.username)
+            const fetched_stories = await getMyStory()
             if(isMounted.current){
-                getMyStory()
                 setPhotos(fetchResult)
                 setFollows(following)
                 setFollowStatus(followStat)
-                console.log(fetchResult)
+                if(Array.isArray(fetched_stories)){
+                    setMyStories(fetched_stories)
+                    setLoading(false)
+                }
             }
         }
         fetchProfileData()
@@ -71,7 +84,7 @@ function Profile(){
     }, [user_context]);
 
     function back(){
-        history.push("/menu")
+        history.goBack()
     }
     const uploadEnable = ()=> {
         setUpload(true)
@@ -113,9 +126,21 @@ function Profile(){
     if(createPost)return(
         <CreatePost showMe = {createStory} addStory = {addFeed}/>
     )
+    else if(viewPost) return(
+        <Suspense fallback = {<div>Loading</div>}>
+                <ViewPost id = {viewPost} back = {setViewPost} setRenderHeader = {null} />
+        </Suspense>
+        
+    )
     else return(
         <React.Fragment>
         {upload? <ChangeDp setUpload = {setUpload} setProfilePhotoUrl = {setProfilePhotoUrl} profile_photo_url = {profile_photo_url}/>:''}
+      
+      <div className = {style.header}>
+          <div className = {style.back} onClick = {back}><FaArrowLeft className = {style.headerIcon}/></div>
+          <div className = {style.title}><h3>Your Profile</h3></div>
+          <div className = {style.menu}><FaBars className = {style.headerIcon}/></div>
+      </div>
       <div className = "profile-header-div">
           <div className = "row1-profile-header">
               <div className = "follower-div">
@@ -153,10 +178,10 @@ function Profile(){
         </div>
         </div>
         <div className = "friends-div">
-            <h4>Following</h4>
+            <h4>Followers</h4>
             <div className = "friends-list-div">
                 {follows.map((user, id)=>(
-                    <FriendItem username = {user.following} key ={id} id = {id}/>
+                    <FriendItem follower = {user} key ={id} id = {id}/>
                 ))}
             </div>
             <div className = "generic-button-div">
@@ -177,8 +202,11 @@ function Profile(){
                 <h3>Share something in your life</h3>
             </>:''}
             {feedStories !== null? feedStories.map((story, id) => (
-                <Post content = {story} key = {id} id = {id}/>
-            )):''}
+                <Post content = {story} key = {id} id = {id} openPost = {setViewPost} />
+            )):<div>
+                <h3>Loading...</h3>
+                <Loader/>
+                </div>}
             </div>
         </div>
         </React.Fragment>

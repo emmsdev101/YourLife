@@ -1,4 +1,4 @@
-.user-div{
+.userDiv{
     width: 100%;
     height: auto;
     display: flex;
@@ -6,7 +6,7 @@
     align-items: center;
     color: rgb(73, 73, 73);
 }
-.user-picture{
+.userPicture{
     height: 90px;
     width: 90px;
     margin: 10px;
@@ -14,22 +14,22 @@
     color: rgb(192, 192, 192);
     object-fit: cover;
 }
-.user-detail{
+.userDetails{
     margin: 5px;
     }
-.user-status{
+.userStatus{
     margin: 0;
     font-size: small;
     text-align: left;
 }
-.user-name{
+.username{
     margin: 0;
     text-align: left;
     font-size:21px;
     font-weight: 500;
     color: rgb(37, 37, 37);
 }
-.user-detail button{
+.button{
     outline: none;
     height: 40px;
     width: 110px;
@@ -37,18 +37,43 @@
     margin-right: 5px;
     margin-top: 5px;
 }
-.user-follow{
+.followUser{
     background-color: #5D5FEF;
     border: none;
     color: white;
+    outline: none;
+    height: 40px;
+    width: 110px;
+    border-radius: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    
 }
-.user-unfollow{
+.followingUser{
     background-color: transparent;
     border: 1px solid #696767;
     color: #5D5FEF;
+    outline: none;
+    height: 40px;
+    width: 110px;
+    border-radius: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
 }
-.user-remove{
+.userRemove{
     background-color: #EF5DA8;
     border: none;
     color: white;
+    outline: none;
+    height: 40px;
+    width: 110px;
+    border-radius: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    outline: none;
+    height: 40px;
+    width: 110px;
+    border-radius: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
 }

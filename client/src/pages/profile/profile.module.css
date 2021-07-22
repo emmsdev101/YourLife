@@ -1,0 +1,21 @@
+.header{
+    background-color: #EF5DA8;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    color: whitesmoke;
+}
+.back, .menu{
+    color: whitesmoke;
+    height: 100%;
+    width: 50px;
+    display: grid;
+    place-items: center;
+}
+
+.headerIcon{
+    width: 20px;
+    height: 20px;
+}

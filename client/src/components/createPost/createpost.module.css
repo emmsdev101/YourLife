@@ -10,7 +10,7 @@
 .createPost p{
     color: grey;
 }
-.createPost-header{
+.createPostHeader{
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -18,7 +18,10 @@
     height: 70px;
 
 }
-.back-btn{
+.createPostBody{
+
+}
+.backBtn{
     height: 100%;
     width: 60px;
     border: none;
@@ -27,15 +30,15 @@
     justify-content: center;
     background-color: transparent;
 }
-.back-icon{
+.backIcon{
     width: 20px;
     height: 20px;
 }
-.header-title{
+.headerTitle{
     margin-right: auto;
     margin-left: auto;
 }
-.post-btn{
+.postBtn{
     height: 50px;
     width: 70px;
     border-radius: 10px;
@@ -48,12 +51,12 @@
 hr{
     margin: 0;
 }
-.post-content-div{
+.postContentDiv{
     width: 100%;
     height: max-content;
     margin-bottom: 10px;
 }
-.post-input{
+.postInput{
     width: 100%;
     outline: none;
     padding: 10px;
@@ -61,7 +64,7 @@ hr{
     height: auto;
     font-size: larger;
 }
-.add-photos{
+.addPhotos{
     display: flex;
     align-items: center;
     justify-content: left;
@@ -71,13 +74,13 @@ hr{
     padding: 10px 10px;
     font-size: larger;
 }
-.photos-videos-icon{
+.utilityIcons{
     height: 30px;
     width: 30px;
     color: #EF5DA8;
     margin: 10px;
 }
-.photo-list{
+.photoList{
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -87,7 +90,7 @@ hr{
     height: auto;
     flex-wrap: wrap;
 }
-.photos{
+.photo{
     width:  calc(100% /3);
     height: calc(100vw /3);
     object-fit: cover;
@@ -95,31 +98,6 @@ hr{
 .hide{
     display: none;
 }
-
-#uploading-dp{
-    height: 40px;
-    width: 90%;
-}
-.uploading-view{
-    width: calc(100% - 30px);
-    background-color: white;
-    border-radius: 10px;
-    height: auto;
-    box-shadow: 0 1px 10px;
-}
-.upload-menu{
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 4;
-    background-color: #ffffff67;
-  }
 @media only screen and (max-width: 768px){
     .createPost{
         width: 100%;

@@ -209,7 +209,7 @@ router.get("/view-test", admin, async (req, res, next) => {
   });
 router.get("/all-feeds", auth, async (req, res, next) => {
   try {
-    const feeds = await Story.find().sort({ date: -1 });
+    const feeds = await Story.find({},{},{limit:10}).sort({ date: -1 });
     if (Array.isArray(feeds)) {
       const feedsObjectList = [];
       for (let index = 0; index < feeds.length; index++) {

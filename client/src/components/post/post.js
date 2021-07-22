@@ -5,7 +5,7 @@ import React, { useContext } from "react";
 import { GlobalPostAction } from "../../logic/postContext";
 import { GlobalCommentAction } from "../../logic/commentContext";
 
-function Post({ content }) {
+function Post({ content, openPost }) {
   const { useState, useHistory, useEffect } = useReactHooks();
   const { useFeed, usePeople } = useCustomHooks();
   const { FaComment, FaEllipsisH, FaThumbsUp, FaUserCircle } = useIcons();
@@ -54,7 +54,7 @@ function Post({ content }) {
   }, [content]);
 
   const viewPost = () => {
-    history.push("/viewpost/" + content._id);
+    openPost(content._id)
   };
 
   const likePost = () => {

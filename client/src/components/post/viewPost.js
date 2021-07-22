@@ -10,23 +10,20 @@ import ViewComment from "../viewComment/ViewComment";
 const my_api =
   process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
 
-const ViewPost = ({ back }) => {
+const ViewPost = ({ id, back, setRenderHeader }) => {
 
   const { FaUserCircle} = useIcons();
   const { useEffect, useState,useHistory } = useReactHooks();
   const { useFeed } = useCustomHooks();
-  const { fetchImages, getAStory } = useFeed();
-  const { getUserInfo } = usePeople();
+  const { getAStory } = useFeed();
 
   const [story, setStory] = useState(null);
   const [photos, setPhotos] = useState(null);
   const [profilePhoto, setProfilePhoto] = useState(null);
 
   const history = useHistory()
-
-  const { id } = useParams();
   useEffect(() => {
-    back(false)
+    if(setRenderHeader)setRenderHeader(false)
     const fetchPost = async () => {
       const fetchedStory = await getAStory(id);
       if (fetchedStory) {
@@ -37,7 +34,6 @@ const ViewPost = ({ back }) => {
     };
     fetchPost();
     return () => {
-      back(true)
     }
   }, []);
   function preloadProfilePhoto(subUrl) {
@@ -49,7 +45,7 @@ const ViewPost = ({ back }) => {
     image.src = photoUrl;
   }
   const close = () => {
-    history.goBack()
+    back(null)
   }
 
   return (

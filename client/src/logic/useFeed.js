@@ -5,7 +5,7 @@ const cookie = new Cookies()
 
 function useFeed() {
   const my_api =
-    process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+  process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
   const POST_API = my_api + "/post/create";
   const UPLOAD_API = my_api + "/upload";
 
@@ -21,15 +21,16 @@ function useFeed() {
             url: my_api + "/post/all-feeds",
           });
           if (get_feeds.status === 200) {
-              console.log(get_feeds.data)
-              setFeedStories(get_feeds.data);
-              setLoading(false);
+              if(Array.isArray(get_feeds.data)){
+                return get_feeds.data
+              }else return null
           }
       }catch(err){
           if(err.response){
             if(err.response.status === 401){
                 alert("Your session has expired! Please login again")
                   cookie.remove("username")
+                  window.location.replace("/login")
                 return null
             }
           }
@@ -54,7 +55,8 @@ function useFeed() {
             if(err.response){
               if(err.response.status === 401){
                   alert("Your session has expired! Please login again")
-                      cookie.remove("username")
+                  cookie.remove("username")
+                  window.location.replace("/login")
                   return null
               }
             }
@@ -63,7 +65,9 @@ function useFeed() {
     
   };
   const addFeed = (newFeedPar) => {
-    setFeedStories((feeds) => [newFeedPar, ...feeds]);
+    if(feedStories){
+      setFeedStories((feeds) => [newFeedPar, ...feeds]);
+    }
   };
   const uploadProgress = (progressEvent) => {
     var percentCompleted = Math.round(
@@ -89,6 +93,7 @@ function useFeed() {
           if(err.response.status === 401){
               alert("Your session has expired! Please login again")
               cookie.remove("username")
+              window.location.replace("/login")
               return null
           }
         }
@@ -109,15 +114,17 @@ function useFeed() {
           });
           if (posting.status === 200) {
               console.log(posting.data)
-            return posting.data;
+              return posting.data;
           } else {
             console.log(posting.status);
+            return null
           }
         }catch(err){
             if(err.response){
               if(err.response.status === 401){
                   alert("Your session has expired! Please login again")
-                      cookie.remove("username")
+                  cookie.remove("username")
+                  window.location.replace("/login")
                   return null
               }
             }
@@ -145,6 +152,7 @@ function useFeed() {
           if(err.response.status === 401){
               alert("Your session has expired! Please login again")
               cookie.remove("username")
+              window.location.replace("/login")
               return null
           }
         }
@@ -152,7 +160,6 @@ function useFeed() {
     }
   };
   const getMyStory = async () => {
-    setLoading(true);
     try {
       const get_feeds = await axios({
         method: "get",
@@ -160,17 +167,20 @@ function useFeed() {
         url: my_api + "/post/my-posts",
       });
       if (get_feeds.status === 200) {
-        setFeedStories(get_feeds.data);
-        setLoading(false);
+        return get_feeds.data
       } else {
         console.log(get_feeds.status);
+        return null
       }
     } catch(err){
+      if(err.response){
         if(err.response.status === 401){
             alert("Your session has expired! Please login again")
             cookie.remove("username")
+            window.location.replace("/login")
             return null
         }
+      }
       }
   };
   const requestLike = async (post_id) => {
@@ -191,6 +201,7 @@ function useFeed() {
           if(err.response.status === 401){
               alert("Your session has expired! Please login again")
               cookie.remove("username")
+              window.location.replace("/login")
               return null
           }
         }
@@ -215,6 +226,7 @@ function useFeed() {
           if(err.response.status === 401){
               alert("Your session has expired! Please login again")
               cookie.remove("username")
+              window.location.replace("/login")
               return null
           }
         }
@@ -243,6 +255,7 @@ function useFeed() {
           if(err.response.status === 401){
               alert("Your session has expired! Please login again")
               cookie.remove("username")
+              window.location.replace("/login")
               return null
           }
         }
@@ -267,6 +280,7 @@ function useFeed() {
           if(err.response.status === 401){
               alert("Your session has expired! Please login again")
               cookie.remove("username")
+              window.location.replace("/login")
               return null
           }
         }

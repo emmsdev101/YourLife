@@ -88,12 +88,27 @@ router.get('/isfollowing', auth, async(req, res)=> {
 })
 router.get('/followers', auth, async(req, res)=>{
     try{
-        const follower = await User.findOne({_id:req.session.user})
-        if(follower){
-            const followers = await Following.find({follower:follower.username},null,{limit:6})
-            res.send(followers)
+        const user = await User.findOne({_id:req.session.user})
+        if(user){
+            const followers = await Following.find({following:user.username},null,{limit:6})
+            if(Array.isArray(followers)){
+                let follwersObject = []
+                for (let index = 0; index < followers.length; index++) {
+                    const follower = followers[index];
+                    const get_profile = await User.findOne({username:follower.follower})
+                    if(get_profile){
+                        follwersObject.push({
+                            username:get_profile.username,
+                            firstname:get_profile.firstname,
+                            lastname:get_profile.lastname,
+                            photo:get_profile.photo
+                        })
+                    }
+                }
+                res.send(follwersObject)
+            }else res.sendStatus(304)     
         }else{
-            res.sendStatus(404)
+            res.sendStatus(304)
         }
     }catch(err){
         console.log(err)
