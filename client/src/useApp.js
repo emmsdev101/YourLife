@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import Cookies from "universal-cookie";
@@ -13,6 +13,7 @@ const useApp = () => {
     const [renderHeader, setRenderHeader] = useState(true)
     const [stories, setStories] = useState(null)
     const [loading, setLoading] = useState(true)
+    let refreshed = useRef(false)
    
 
     useEffect(() => {
@@ -38,11 +39,13 @@ const useApp = () => {
       const fetched_stories = await fetchFeeds()
       if(fetched_stories){
         if(Array.isArray(stories)){
-          setStories((feeds) => [...feeds, ...fetched_stories]);
+          if(refreshed.current)setStories(fetched_stories)
+          else setStories((feeds) => [...feeds, ...fetched_stories]);
         }else{
           setStories(fetched_stories)
         }
         setLoading(false)
+        refreshed.current = true
       }
     }
     const addFeed = (newFeedPar) => {

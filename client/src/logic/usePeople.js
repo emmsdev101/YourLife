@@ -167,7 +167,6 @@ function usePeople() {
         url: my_api + "/user/followers",
       });
       if (followers.status === 200) {
-        console.log(followers.data)
         return followers.data;
       }
     } catch (err) {
