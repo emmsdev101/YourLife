@@ -35,10 +35,4 @@ router.get('/my-photos', async(req, res)=> {
         res.sendStatus(500)
     }
 })
-router.delete('/all', admin, async(req, res)=> {
-    ImageModel.deleteMany({}, (err, deleted)=> {
-        if(err)res.send(err)
-        res.send(deleted)
-    })
-})
 module.exports = router
