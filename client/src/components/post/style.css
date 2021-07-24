@@ -35,13 +35,18 @@
     margin-right: auto;
     margin-left: 5px;
 }
+.postName{
+    font-weight: 600;
+}
+.postTime{
+    font-weight:200;
+    font-size: small;
+
+}
 .post-details h4, p{
     margin: 0;
 }
-.post-details p{
-    font-size: small;
-    color: rgb(102, 102, 102);
-}
+
 .post-menu{
     height: 50px;
     margin-right: 10px;
@@ -51,6 +56,10 @@
     height: auto;
     text-align: left;
     padding:10px ;
+    color: rgb(0, 0, 0);
+    font-style: normal;
+    font-weight: 400;
+    font-size: medium;
 }
 .content-footer{
     display: flex;
@@ -59,13 +68,18 @@
     justify-content: space-between;
     font-size: small;
     margin-top: 20px;
+    margin-bottom: 10px;
 }
 .post-footer{
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
-
+    border-top: 1px solid grey;
+    height: 35px;
+    padding-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 .like-button{
     border: none;
@@ -75,7 +89,20 @@
     align-items: center;
     justify-content: center;
     width: 50%;
-    color: rgb(34, 34, 34); 
+    color: rgb(0, 0, 0);  
+    font-weight: 400;
+    
+
+}
+.liked-button{
+    border: none;
+    background-color: transparent;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    color: #5D5FEF;
 }
 .like-icon{
     width: 20px;
@@ -86,15 +113,15 @@
     width: 20px;
     height: 20px;
     margin-right: 6px;
-    color: #EF5DA8;
 }
 .comment-status{
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    color: rgb(102, 102, 102);
-    font-size: small;
+    color: rgb(51, 51, 51);
+    font-size: 1.1em;
+    font-weight: 300;
 }
 .comment-count{
     margin-right: 2px;

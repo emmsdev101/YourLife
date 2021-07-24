@@ -1,7 +1,6 @@
 import React from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import style from "./photos.module.css";
-import testImage1 from "./../../res/images/test1.jpg";
 import usePhotos from "./usePhotos";
 import ViewPhoto from "./ViewPhoto";
 import PhotoItem from "./PhotoItem";

@@ -83,8 +83,8 @@ function Post({ content, openPost }) {
               <FaUserCircle className="alt-dp" />
             )}
             <div className="post-details">
-              <h4>{firstname + " " + lastname}</h4>
-              <p>13 minutes ago</p>
+              <p className = "postName">{firstname + " " + lastname}</p>
+              <p className = "postTime">13 minutes ago</p>
             </div>
             <div className="post-menu">
               {" "}
@@ -115,20 +115,28 @@ function Post({ content, openPost }) {
               </div>
               <div className="content-footer">
                 <div className="comment-status">
+                {likes > 0 ? 
+                <React.Fragment>
                   <p className="comment-count">{likes}</p>
-                  <p className="status-title">Likes</p>
-                </div>
+                <p className="status-title">{likes > 1? "Likes":"Like"}</p>
+                </React.Fragment>
+                
+                :''}
+              </div>
                 <div className="comment-status">
-                  <p className="comment-count">{comments}</p>
-                  <p className="status-title">Comments</p>
+                {comments>0?
+                <React.Fragment>
+                <p className="comment-count">{comments}</p>
+                <p className="status-title">{comments > 1? "Comments":"Comment"}</p>
+                </React.Fragment>
+                :''}
                 </div>
               </div>
-              <hr></hr>
             </div>
           </div>
           <div className="post-footer">
-            <button className="like-button" onClick = {likePost}>
-              <FaThumbsUp className={liked? "liked-icon":"like-icon"} ></FaThumbsUp>{liked?"Liked":"Like"}
+            <button className={liked? "liked-button":"like-button"} onClick = {likePost}>
+              <FaThumbsUp className= "liked-icon" ></FaThumbsUp>{liked?"Liked":"Like"}
             </button>
             <button className="like-button" onClick = {viewPost}>
               <FaComment className="like-icon"></FaComment>Comment
