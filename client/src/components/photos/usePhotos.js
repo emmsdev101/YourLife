@@ -3,7 +3,7 @@ import useFeed from "../../logic/useFeed";
 import usePeople from "../../logic/usePeople";
 import testImage1 from "./../../res/images/test1.jpg";
 const usePhotos = (back) => {
-   const {fetchPhotos} = usePeople()
+   const {fetchGalerry} = usePeople()
     const [view, setView] = useState(null)
    const [photos, sePhotos] = useState(null)
    const [loading, setLoading] = useState(true)
@@ -14,7 +14,7 @@ const usePhotos = (back) => {
    }, []);
 
    const reqeustPhotos = async() => {
-       const fetched_photos = await fetchPhotos()
+       const fetched_photos = await fetchGalerry()
        if(Array.isArray(fetched_photos)){
             sePhotos(fetched_photos)
             setLoading(false)

@@ -78,6 +78,32 @@ function usePeople() {
       }
     }
   };
+  const fetchGalerry = async() => {
+    try {
+      const fetchResult = await axios({
+        method: "GET",
+        withCredentials: true,
+        url: my_api + "/photo/my-gallery"
+      });
+      if (fetchResult.status === 200) {
+        return fetchResult.data;
+      } else if (fetchResult.status === 401) {
+        alert("Your session has expired! Please login again");
+      } else {
+        console.log(fetchResult.status);
+        return null;
+      }
+    } catch (err) {
+      if (err.response) {
+        if (err.response.status === 401) {
+          alert("Your session has expired! Please login again");
+          cookie.remove("username");
+          window.location.replace("/login")
+          return null;
+        }
+      }
+    }
+  }
   const updateDp = async (image_path, username) => {
     try {
       const updateProfile = await axios({
@@ -212,6 +238,7 @@ function usePeople() {
     isFollowing,
     getFollowing,
     getFollowStatus,
+    fetchGalerry
   };
 }
 export default usePeople;

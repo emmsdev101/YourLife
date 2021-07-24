@@ -35,4 +35,16 @@ router.get('/my-photos', async(req, res)=> {
         res.sendStatus(500)
     }
 })
+router.get('/my-gallery', async(req, res)=> {
+    try{
+        const user = await User.findOne({_id:req.session.user})
+        if(user){
+            const images = await ImageModel.find({owner:user.username}, null, {limit:30})
+            res.send(images)
+        }
+    }catch(err){
+        console.log(err)
+        res.sendStatus(500)
+    }
+})
 module.exports = router
