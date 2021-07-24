@@ -6,6 +6,8 @@ import usePeople from "../../logic/usePeople";
 import PostImage from "../postImage/postImage";
 import { FaArrowLeft } from "react-icons/fa";
 import ViewComment from "../viewComment/ViewComment";
+import PhotoItem from "../photos/PhotoItem";
+import ViewPhoto from "../photos/ViewPhoto";
 
 const my_api =
   process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
@@ -20,6 +22,7 @@ const ViewPost = ({ id, back, setRenderHeader }) => {
   const [story, setStory] = useState(null);
   const [photos, setPhotos] = useState(null);
   const [profilePhoto, setProfilePhoto] = useState(null);
+  const [view, setView] = useState(null)
 
   const history = useHistory()
   useEffect(() => {
@@ -47,7 +50,14 @@ const ViewPost = ({ id, back, setRenderHeader }) => {
   const close = () => {
     back(null)
   }
-
+  const openPhoto = (val) => {
+    console.log(photos[val])
+    setView(val)
+  }
+  const closePhoto = (val) => {
+    setView(val)
+  }
+  if(view !== null)return (<ViewPhoto photos = {photos} index = {view} back = {closePhoto}/>  )
   return (
     <div className="view-post">
       <header className="post-header">
@@ -80,7 +90,7 @@ const ViewPost = ({ id, back, setRenderHeader }) => {
           <p className="content">{story !== null ? story.content : ""}</p>
           <div className="images-section">
             {photos !== null
-              ? photos.map((photo, id) => (
+              ? photos.map((photo, idx) => (
                   <PostImage
                     photosQuant={photos.length}
                     photo={photo}
@@ -88,6 +98,8 @@ const ViewPost = ({ id, back, setRenderHeader }) => {
                     id={id}
                     src={my_api + "/photos/" + photo.path}
                     view = {true}
+                    openPhoto = {openPhoto}
+                    index = {idx}
                   />
                 ))
               : null}

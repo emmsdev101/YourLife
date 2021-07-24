@@ -1,0 +1,111 @@
+.photos{
+    width: 100%;
+    height: auto;
+    margin: 0;
+    background-color: rgb(247, 247, 247);
+}
+.header{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    height: 70px;
+    border-bottom: 1px solid rgb(214, 214, 214);
+}
+.back{
+    height: inherit;
+    width: 50px;
+    display: grid;
+    place-items: center;
+}
+.backIcon{
+    width: 25px;
+    height: 25px;
+    
+}
+.photosCount{
+    margin-right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100px;
+
+}
+.loader{
+    width: 100%;
+    height: calc(100vh - 80px);
+    display: grid;
+    place-items: center;
+}
+
+
+.photosList{
+    width: 100%;
+    min-height: calc(100vh - 70px);
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-column-gap: 2px;
+    row-gap: 2px;
+}
+.photoItem{
+    width: 100%;
+    object-fit: cover;
+    margin-left: 1px;
+    margin-right: 1px;
+    margin-bottom: 0;
+}
+.viewPhoto{
+    background-color: black;
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+}
+.viewHeader{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    height: 70px;
+    color: whitesmoke;
+}
+.viewBack{
+    height: inherit;
+    width: 50px;
+    display: grid;
+    place-items: center;
+}
+.viewbackIcon{
+    width: 25px;
+    height: 25px;
+}
+.viewMenu{
+    margin-left: auto;
+    margin-right: 10px;
+    font-size: larger;
+}
+.imageContainer{
+    width: 100%;
+    height: calc(100vh - 140px);
+    display: grid;
+    place-items: center;
+    margin: 0;
+}
+.image{
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+.viewNavigation{
+    position: relative;
+    bottom: 30px;
+    width: 100%;
+    color: whitesmoke;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.viewNavContainer{
+    font-size: larger;
+    width: 100px;
+}

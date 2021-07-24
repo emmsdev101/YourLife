@@ -1,16 +1,22 @@
 import { useEffect } from "react"
 import { useReactHooks } from "../../logic/library"
-    function PostImage ({photosQuant,src, id, view}){
+    function PostImage ({photosQuant,src, id, view, openPhoto, index }){
         const {useState} = useReactHooks()
         const [loaded, setLoaded] = useState(false)
         
-        let temp_img = new Image()
+        useEffect(() => {
+            let temp_img = new Image()
         temp_img.onload = () => {
             setLoaded(true)
         }
         temp_img.src = src
+        }, []);
+
+        const viewPhoto = () => {
+            openPhoto(index)
+        }
         if(view){
-             if(loaded)return(<img src = {src} id = {id} className = 'single content-photo'></img>)
+             if(loaded)return(<img src = {src} id = {id} className = 'single content-photo' onClick = {viewPhoto}></img>)
              else return(<div id = {id} className = 'single content-loading'></div>)
         }else{
             if(id < 4){

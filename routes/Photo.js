@@ -24,8 +24,11 @@ router.get('/post-photos', auth, async(req, res)=>{
 })
 router.get('/my-photos', async(req, res)=> {
     try{
-        const images = await ImageModel.find({owner:req.query.id}, null, {limit:6})
-        res.send(images)
+        const user = await User.findOne({_id:req.session.user})
+        if(user){
+            const images = await ImageModel.find({owner:user.username}, null, {limit:6})
+            res.send(images)
+        }
     }catch(err){
         console.log(err)
         res.sendStatus(500)

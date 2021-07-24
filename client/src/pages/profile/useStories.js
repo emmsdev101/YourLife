@@ -37,6 +37,7 @@ const useStories = () => {
           setCreatePost(true);
         }
       };
+      
       const addFeed = (newFeed) => {
         if(Array.isArray(feedStories)){
             setMyStories((feeds) => [newFeed, ...feeds])

@@ -57,8 +57,7 @@ function usePeople() {
       const fetchResult = await axios({
         method: "GET",
         withCredentials: true,
-        url: my_api + "/photo/my-photos",
-        params: { id: user_context },
+        url: my_api + "/photo/my-photos"
       });
       if (fetchResult.status === 200) {
         return fetchResult.data;

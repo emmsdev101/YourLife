@@ -21,6 +21,7 @@ import {
 import useProfile from "./useProfile";
 import useStories from "./useStories";
 import useChangePhoto from "./useChangePhoto";
+import Photos from "../../components/photos/Photos";
 
 const ViewPost = lazy(() => import("../../components/post/viewPost"));
 
@@ -35,6 +36,8 @@ function Profile() {
     follows,
     isOwn,
     back,
+    seePhotos,
+    openPhotos
   } = useProfile();
   const {
     createPost,
@@ -100,7 +103,7 @@ function Profile() {
         <ViewPost id={viewPost} back={setViewPost} setRenderHeader={null} />
       </Suspense>
     );
-  else
+    else if(openPhotos)return (<Photos back = {seePhotos}/>)
     return (
       <React.Fragment>
         {upload ? (
@@ -179,7 +182,7 @@ function Profile() {
           </div>
           {photos && photos.length > 0 ? (
             <div className="generic-button-div">
-              <button> See Photos</button>
+              <button onClick = {seePhotos}> See Photos</button>
             </div>
           ) : (
             ""
@@ -268,6 +271,7 @@ function Profile() {
         </div>
       </React.Fragment>
     );
+    
 }
 
 export default Profile;

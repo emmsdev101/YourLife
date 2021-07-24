@@ -22,6 +22,7 @@ const useProfile = () => {
 
   const [photos, setPhotos] = useState(null);
   const [follows, setFollows] = useState(null);
+  const [openPhotos, setOpenPhotos] = useState(false)
   const fullname = user_context.firstname + " " + user_context.lastname;
   const gender = user_context.gender;
   const followers = user_context.followers;
@@ -47,9 +48,13 @@ const useProfile = () => {
     };
   }, []);
 
-  function back() {
+  const back = () => {
     history.goBack();
   }
+  const seePhotos = () => {
+    setOpenPhotos(!openPhotos)
+  }
+
 
   return {
     following,
@@ -60,6 +65,8 @@ const useProfile = () => {
     photos,
     isOwn,
     back,
+    seePhotos,
+    openPhotos
   };
 };
 
