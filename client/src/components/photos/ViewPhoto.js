@@ -36,7 +36,7 @@ const ViewPhoto = ({photos, index, back}) => {
     <div className={style.viewPhoto}>
       <div className={style.viewHeader}>
         <div className={style.viewBack}>
-          <FaArrowLeft className={style.viewbackIcon} onClick = {close}/>
+          <FaArrowLeft className={style.backIcon} onClick = {close}/>
         </div>
         <h3>Photo title</h3>
         <div className = {style.viewMenu}>

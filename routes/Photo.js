@@ -2,7 +2,8 @@ const router = require("express").Router();
 
 const Story = require("./../model/story");
 const User = require("./../model/user");
-const ImageModel = require('../model/photo')
+const ImageModel = require('../model/photo');
+const photo = require("../model/photo");
 
 const auth = (req, res, next) => {
     if (req.session.user) {
@@ -33,7 +34,11 @@ router.get('/my-photos', async(req, res)=> {
         console.log(err)
         res.sendStatus(500)
     }
-    
-
+})
+router.delete('/all', admin, async(req, res)=> {
+    ImageModel.deleteMany({}, (err, deleted)=> {
+        if(err)res.send(err)
+        res.send(deleted)
+    })
 })
 module.exports = router

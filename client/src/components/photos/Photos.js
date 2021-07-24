@@ -9,7 +9,7 @@ import Loader from "../Loader/Loader";
 const Photos = ({ back }) => {
   const { view, viewPhoto, photos, close, loading } = usePhotos(back);
 
-  if (view) return <ViewPhoto photos={photos} index={view} back = {viewPhoto} />;
+  if (view!==null) return <ViewPhoto photos={photos} index={view} back = {viewPhoto} />;
   return (
     <div class={style.photos}>
       <div className={style.header}>
