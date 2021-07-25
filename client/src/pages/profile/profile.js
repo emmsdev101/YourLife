@@ -22,6 +22,8 @@ import useProfile from "./useProfile";
 import useStories from "./useStories";
 import useChangePhoto from "./useChangePhoto";
 import Photos from "../../components/photos/Photos";
+import FollowersList from "./followersList/FollowersList";
+import useProfileMenu from "./useProfileMenu";
 
 const ViewPost = lazy(() => import("../../components/post/viewPost"));
 
@@ -36,18 +38,8 @@ function Profile() {
     follows,
     isOwn,
     back,
-    seePhotos,
-    openPhotos
   } = useProfile();
-  const {
-    createPost,
-    createStory,
-    addFeed,
-    viewPost,
-    setViewPost,
-    feedStories,
-    loading
-  } = useStories();
+  const { addFeed, feedStories, loading } = useStories();
   const {
     uploadEnable,
     upload,
@@ -55,6 +47,16 @@ function Profile() {
     setUpload,
     setProfilePhotoUrl,
   } = useChangePhoto();
+  const {
+    viewFollowers,
+    toggleOpenFollowers,
+    createStory,
+    createPost,
+    seePhotos,
+    openPhotos,
+    viewPost,
+    setViewPost,
+  } = useProfileMenu();
 
   const PhtoItem = ({ image, id }) => {
     const my_api =
@@ -97,181 +99,176 @@ function Profile() {
     );
   };
   if (createPost) return <CreatePost showMe={createStory} addStory={addFeed} />;
+  else if (viewFollowers) return <FollowersList isOwn = {isOwn} back = {toggleOpenFollowers} numFollowers = {followers}/>;
   else if (viewPost)
     return (
       <Suspense fallback={<div>Loading</div>}>
         <ViewPost id={viewPost} back={setViewPost} setRenderHeader={null} />
       </Suspense>
     );
-    else if(openPhotos)return (<Photos back = {seePhotos}/>)
-    return (
-      <React.Fragment>
-        {upload ? (
-          <ChangeDp
-            setUpload={setUpload}
-            setProfilePhotoUrl={setProfilePhotoUrl}
-            profile_photo_url={profile_photo_url}
-          />
-        ) : (
-          ""
-        )}
+  else if (openPhotos) return <Photos back={seePhotos} />;
+  return (
+    <React.Fragment>
+      {upload ? (
+        <ChangeDp
+          setUpload={setUpload}
+          setProfilePhotoUrl={setProfilePhotoUrl}
+          profile_photo_url={profile_photo_url}
+        />
+      ) : (
+        ""
+      )}
 
-        <div className={style.header}>
-          <div className={style.back} onClick={back}>
-            <FaArrowLeft className={style.headerIcon} />
+      <div className={style.header}>
+        <div className={style.back} onClick={back}>
+          <FaArrowLeft className={style.headerIcon} />
+        </div>
+        <div className={style.title}>
+          <h3>Your Profile</h3>
+        </div>
+        <div className={style.menu}>
+          <FaBars className={style.headerIcon} />
+        </div>
+      </div>
+      <div className="profile-header-div">
+        <div className="row1-profile-header">
+          <div className="follower-div">
+            <p className="follow-count">{followers}</p>
+            <p className="follow-count-title">Followers</p>
           </div>
-          <div className={style.title}>
-            <h3>Your Profile</h3>
-          </div>
-          <div className={style.menu}>
-            <FaBars className={style.headerIcon} />
+          {profile_photo_url !== undefined ? <Avatar /> : <TempAvatar />}
+          <div className="following-div">
+            <p className="follow-count">{following}</p>
+            <p className="follow-count-title">Following</p>
           </div>
         </div>
-        <div className="profile-header-div">
-          <div className="row1-profile-header">
-            <div className="follower-div">
-              <p className="follow-count">{followers}</p>
-              <p className="follow-count-title">Followers</p>
-            </div>
-            {profile_photo_url !== undefined ? <Avatar /> : <TempAvatar />}
-            <div className="following-div">
-              <p className="follow-count">{following}</p>
-              <p className="follow-count-title">Following</p>
-            </div>
-          </div>
-          <div className="information-div">
-            <p className="fullname">{fullname}</p>
-            <p className="gender">{gender}</p>
-            <p className="age">{age}</p>
-          </div>
-          {!isOwn ? (
-            <div className="profile-action">
-              <button className="button-follow">
-                {" "}
-                <FaUserPlus className="follow-icon"></FaUserPlus> Follow
-              </button>
-              <button className="button-message">
-                {" "}
-                <FaEnvelope className="message-icon"></FaEnvelope> Message
-              </button>
-            </div>
-          ) : (
-            ""
-          )}
+        <div className="information-div">
+          <p className="fullname">{fullname}</p>
+          <p className="gender">{gender}</p>
+          <p className="age">{age}</p>
         </div>
-        {isOwn ? (
-          <div className="editprofile-div">
-            <button>
+        {!isOwn ? (
+          <div className="profile-action">
+            <button className="button-follow">
               {" "}
-              <FaPen className="edit-icon"></FaPen> Edit Profile
+              <FaUserPlus className="follow-icon"></FaUserPlus> Follow
+            </button>
+            <button className="button-message">
+              {" "}
+              <FaEnvelope className="message-icon"></FaEnvelope> Message
             </button>
           </div>
         ) : (
           ""
         )}
-        <div className="photos-div">
-          <h4>Photos</h4>
-          <div className="photo-list-div">
-            {photos ? (
-              photos.map((image, id) => (
-                <PhtoItem image={image.path} key={id} id={id} />
-              ))
-            ) : (
-              <Loader />
-            )}
-          </div>
-          {photos && photos.length > 0 ? (
-            <div className="generic-button-div">
-              <button onClick = {seePhotos}> See Photos</button>
-            </div>
+      </div>
+      {isOwn ? (
+        <div className="editprofile-div">
+          <button>
+            {" "}
+            <FaPen className="edit-icon"></FaPen> Edit Profile
+          </button>
+        </div>
+      ) : (
+        ""
+      )}
+      <div className="photos-div">
+        <h4>Photos</h4>
+        <div className="photo-list-div">
+          {photos ? (
+            photos.map((image, id) => (
+              <PhtoItem image={image.path} key={id} id={id} />
+            ))
           ) : (
-            ""
-          )}
-          {photos && photos.length === 0 ? (
-            <center>
-              <h4>No photos</h4>
-            </center>
-          ) : (
-            ""
+            <Loader />
           )}
         </div>
-        <div className="friends-div">
-          <h4>Followers</h4>
-          <div className="friends-list-div">
-            {follows ? (
-              follows.map((user, id) => (
-                <FriendItem follower={user} key={id} id={id} />
-              ))
-            ) : (
-              <Loader />
-            )}
-          </div>
-          {follows && follows.length > 0 ? (
-            <div className="generic-button-div">
-              <button> See Followers</button>
-            </div>
-          ) : (
-            ""
-          )}
-          {follows && follows.length === 0 ? (
-            <center>
-              <h4>No followers</h4>
-            </center>
-          ) : (
-            ""
-          )}
-        </div>
-        <h2 className="section-title"> Stories</h2>
-        {isOwn ? (
-          <div className="primary-button">
-            <button onClick={createStory}>
-              {" "}
-              <FaPlusCircle className="primary-button-icon"></FaPlusCircle>Share
-              a story
-            </button>
+        {photos && photos.length > 0 ? (
+          <div className="generic-button-div">
+            <button onClick={seePhotos}> See Photos</button>
           </div>
         ) : (
           ""
         )}
-
-        <div className="stories-div">
-          <div className="post-div-list">
-            {!feedStories ? (
-              <div className="loader-div">
-                <div className="loader"></div>
-              </div>
-            ) : (
-              ""
-            )}
-            {loading ? (
-              <div>
-                <h3>Loading...</h3>
-                <Loader />
-              </div>
-            ) : feedStories ? (
-              feedStories.length === 0 ? (
-                <>
-                  <h2>You have no story</h2>
-                  <h3>Share something in your life</h3>
-                </>
-              ) : (
-                feedStories.map((story, id) => (
-                  <Post
-                    content={story}
-                    key={id}
-                    id={id}
-                    openPost={setViewPost}
-                  />
-                ))
-              )
-            ) : (
-              ""
-            )}
-          </div>
+        {photos && photos.length === 0 ? (
+          <center>
+            <h4>No photos</h4>
+          </center>
+        ) : (
+          ""
+        )}
+      </div>
+      <div className="friends-div">
+        <h4>Followers</h4>
+        <div className="friends-list-div">
+          {follows ? (
+            follows.map((user, id) => (
+              <FriendItem follower={user} key={id} id={id} />
+            ))
+          ) : (
+            <Loader />
+          )}
         </div>
-      </React.Fragment>
-    );
-    
+        {follows && follows.length > 0 ? (
+          <div className="generic-button-div">
+            <button onClick={toggleOpenFollowers}> See Followers</button>
+          </div>
+        ) : (
+          ""
+        )}
+        {follows && follows.length === 0 ? (
+          <center>
+            <h4>No followers</h4>
+          </center>
+        ) : (
+          ""
+        )}
+      </div>
+      <h2 className="section-title"> Stories</h2>
+      {isOwn ? (
+        <div className="primary-button">
+          <button onClick={createStory}>
+            {" "}
+            <FaPlusCircle className="primary-button-icon"></FaPlusCircle>Share a
+            story
+          </button>
+        </div>
+      ) : (
+        ""
+      )}
+
+      <div className="stories-div">
+        <div className="post-div-list">
+          {!feedStories ? (
+            <div className="loader-div">
+              <div className="loader"></div>
+            </div>
+          ) : (
+            ""
+          )}
+          {loading ? (
+            <div>
+              <h3>Loading...</h3>
+              <Loader />
+            </div>
+          ) : feedStories ? (
+            feedStories.length === 0 ? (
+              <>
+                <h2>You have no story</h2>
+                <h3>Share something in your life</h3>
+              </>
+            ) : (
+              feedStories.map((story, id) => (
+                <Post content={story} key={id} id={id} openPost={setViewPost} />
+              ))
+            )
+          ) : (
+            ""
+          )}
+        </div>
+      </div>
+    </React.Fragment>
+  );
 }
 
 export default Profile;

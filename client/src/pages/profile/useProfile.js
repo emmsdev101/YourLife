@@ -22,7 +22,6 @@ const useProfile = () => {
 
   const [photos, setPhotos] = useState(null);
   const [follows, setFollows] = useState(null);
-  const [openPhotos, setOpenPhotos] = useState(false)
   const fullname = user_context.firstname + " " + user_context.lastname;
   const gender = user_context.gender;
   const followers = user_context.followers;
@@ -35,7 +34,7 @@ const useProfile = () => {
       set_user_context(owner);
     }
     async function fetchProfileData() {
-      const following = await getFollowing();
+      const following = await getFollowing(6,1);
       const fetchResult = await fetchPhotos(user_context.username);
       if (isMounted.current) {
         setPhotos(fetchResult);
@@ -51,9 +50,6 @@ const useProfile = () => {
   const back = () => {
     history.goBack();
   }
-  const seePhotos = () => {
-    setOpenPhotos(!openPhotos)
-  }
 
 
   return {
@@ -65,8 +61,6 @@ const useProfile = () => {
     photos,
     isOwn,
     back,
-    seePhotos,
-    openPhotos
   };
 };
 

@@ -146,9 +146,7 @@ function usePeople() {
         console.log(follow_request.data);
         if (follow_request.data === true) console.log(follow_request.data);
         else return false;
-      } else if (follow_request.status === 401) {
-        alert("Your session has expired! Please login again");
-      }
+      } 
     } catch (err) {
       if (err.response) {
         if (err.response.status === 401) {
@@ -183,13 +181,14 @@ function usePeople() {
       }
     }
   };
-  const getFollowing = async () => {
+  const getFollowing = async (limit, page) => {
     try {
       const followers = await axios({
         method: "get",
         headers: { "Content-type": "application/json" },
         withCredentials: true,
         url: my_api + "/user/followers",
+        params : {limit:limit}
       });
       if (followers.status === 200) {
         return followers.data;

@@ -3,11 +3,8 @@ import useFeed from '../../logic/useFeed';
 
 const useStories = () => {
     const {getMyStory} = useFeed()  
-
     const [feedStories, setMyStories] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [viewPost, setViewPost] = useState(null);
-    const [createPost, setCreatePost] = useState(false);
 
     let isMounted = useRef(true)
 
@@ -30,13 +27,7 @@ const useStories = () => {
           isMounted.current = false;
         };
       }, []);
-      const createStory = () => {
-        if (createPost) {
-          setCreatePost(false);
-        } else {
-          setCreatePost(true);
-        }
-      };
+
       
       const addFeed = (newFeed) => {
         if(Array.isArray(feedStories)){
@@ -46,11 +37,7 @@ const useStories = () => {
         }
       }
       return {
-          createPost,
-          createStory,
           addFeed,
-          viewPost,
-          setViewPost,
           feedStories,
           loading
       }
