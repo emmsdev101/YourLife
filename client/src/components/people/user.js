@@ -1,7 +1,9 @@
 import { FaUserCircle } from 'react-icons/fa';
+import { useHistory } from 'react-router-dom';
 import style from './user.module.css'
 import useUser from './useUser';
 function User({data, id}){
+    const history = useHistory()
     const {followed,
         dpLoad,
         profilePhoto,
@@ -9,13 +11,17 @@ function User({data, id}){
         unfollow_btn,
         follow_btn
     } = useUser(data, id)
+
+    const viewProfile = ()=> {
+        history. push("/profile/"+data.username)
+    }
     
     if(followed !== null) return(
         <div className = {style.userDiv} id = {id}>
-            {dpLoad? <img className = {style.userPicture} src = {profilePhoto}></img>:
-            <FaUserCircle className = {style.userPicture}/>}
+            {dpLoad? <img className = {style.userPicture} src = {profilePhoto} onClick = {viewProfile}></img>:
+            <FaUserCircle className = {style.userPicture} onClick = {viewProfile}/>}
             <div className = {style.userDetails}>
-                <p className = {style.username}>{data.firstname + ' ' + data.lastname}</p>
+                <p className = {style.username} onClick = {viewProfile}>{data.firstname + ' ' + data.lastname}</p>
                 <p className = {style.userStatus}>Followers {data.followers}</p>
                 <button disabled = {followed} ref = {follow_btn} className = {!followed?style.followUser:style.followingUser} onClick = {followUser}>{followed?"Following":"Follow"}</button>
                 {followed?<button ref = {unfollow_btn} onClick = {followUser} className = {style.userRemove}>Unfollow</button>:''}

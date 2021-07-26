@@ -36,7 +36,6 @@ function App() {
               <Route exact path="/notification" component={Notification} />
               <Route exact path="/chat" component={Chat} />
               <Route exact path="/profile" component={Profile} />
-
               <Route
                 exact
                 path="/login"
@@ -93,6 +92,8 @@ function App() {
                   />
                 )}
               />
+              <Route exact path = "/profile/:username"
+              component = {Profile}/>
             </Suspense>
           </div>
         ) : (

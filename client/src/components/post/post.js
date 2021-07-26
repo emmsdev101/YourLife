@@ -69,6 +69,9 @@ function Post({ content, openPost }) {
   const openComment = () => {
     setPostToComment(content._id)
   }
+  const viewProfile = () => {
+    history.push("/profile/"+username)
+  }
     return (
       <React.Fragment>
         <div className="post-div">
@@ -78,12 +81,13 @@ function Post({ content, openPost }) {
                 className="profile-photo"
                 src={profile_photo_url}
                 alt="profile picture"
+                onClick = {viewProfile}
               />
             ) : (
-              <FaUserCircle className="alt-dp" />
+              <FaUserCircle className="alt-dp" onClick = {viewProfile}/>
             )}
             <div className="post-details">
-              <p className = "postName">{firstname + " " + lastname}</p>
+              <p className = "postName" onClick = {viewProfile}>{firstname + " " + lastname}</p>
               <p className = "postTime">13 minutes ago</p>
             </div>
             <div className="post-menu">

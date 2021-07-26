@@ -26,10 +26,15 @@ router.get('/post-photos', auth, async(req, res)=>{
     }
 })
 router.get('/my-photos', async(req, res)=> {
+    let username = req.query.username
+    let user
     try{
-        const user = await User.findOne({_id:req.session.user})
+        if(!username){
+            user = await User.findOne({_id:req.session.user})
+            username = user.username
+        }else user = username
         if(user){
-            const images = await ImageModel.find({owner:user.username}, null, {limit:6})
+            const images = await ImageModel.find({owner:username}, null, {limit:6})
             res.send(images)
         }
     }catch(err){
@@ -39,11 +44,14 @@ router.get('/my-photos', async(req, res)=> {
 })
 router.get('/my-gallery', async(req, res)=> {
     try{
-        const user = await User.findOne({_id:req.session.user})
-        if(user){
-            const images = await ImageModel.find({owner:user.username}, null, {limit:30})
-            res.send(images)
+        const username = req.query.username
+        if(!username){
+            const user = await User.findOne({_id:req.session.user})
+            if(user)username = user.username
+            else return res.sendStatus(304)
         }
+            const images = await ImageModel.find({owner:username}, null, {limit:30})
+            res.send(images)
     }catch(err){
         console.log(err)
         res.sendStatus(500)

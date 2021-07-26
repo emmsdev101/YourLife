@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
+import { useHistory } from 'react-router-dom';
 import usePeople from '../../../logic/usePeople';
 
-const Follower = ({style, user}) => {
+const Follower = ({style, user, back}) => {
+    const history = useHistory()
     const my_api =
     process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
     const {follow} = usePeople()
@@ -24,12 +26,16 @@ const Follower = ({style, user}) => {
         follow(user.username)
         setFollowed(!follower)
     }
+    const viewProfile = () => {
+        history.push("/profile/"+user.username)
+        back()
+    }
     
     return (
         <div className = {style.follower}>
-            {profilePiture? <img className = {style.picture} src = {profilePiture}/>:
-            <FaUserCircle className = {style.picture}/>}
-            <p className = {style.followerName}>{fullname}</p>
+            {profilePiture? <img className = {style.picture} src = {profilePiture} onClick = {viewProfile}/>:
+            <FaUserCircle className = {style.picture} onClick = {viewProfile}/>}
+            <p className = {style.followerName} onClick = {viewProfile} >{fullname}</p>
             <button className = {follower? style.unfollowBtn:style.followBtn} onClick = {reqFollow}>{follower? "Unfollow":"Follow"}</button>
         </div>
     );

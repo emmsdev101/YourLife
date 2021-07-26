@@ -27,13 +27,15 @@ function usePeople() {
       }
     }
   };
-  const getUserInfo = async () => {
+  const getUserInfo = async (username) => {
     try {
+      const url = username? my_api + "/user/profile": my_api + "/user/account"
       const userInfo = await axios({
         method: "get",
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
-        url: my_api + "/user/account",
+        url: url,
+        params : {username}
       });
       if (userInfo.status === 200) {
         return userInfo.data;
@@ -52,12 +54,15 @@ function usePeople() {
       }
     }
   };
-  const fetchPhotos = async (user_context) => {
+  const fetchPhotos = async (user) => {
+    console.log(user)
+    const url = my_api + "/photo/my-photos"
     try {
       const fetchResult = await axios({
         method: "GET",
         withCredentials: true,
-        url: my_api + "/photo/my-photos"
+        url: url,
+        params: {username:user}
       });
       if (fetchResult.status === 200) {
         return fetchResult.data;
@@ -78,12 +83,13 @@ function usePeople() {
       }
     }
   };
-  const fetchGalerry = async() => {
+  const fetchGalerry = async(user) => {
     try {
       const fetchResult = await axios({
         method: "GET",
         withCredentials: true,
-        url: my_api + "/photo/my-gallery"
+        url: my_api + "/photo/my-gallery",
+        params: {username:user}
       });
       if (fetchResult.status === 200) {
         return fetchResult.data;
@@ -181,14 +187,14 @@ function usePeople() {
       }
     }
   };
-  const getFollowing = async (limit, page) => {
+  const getFollowing = async (limit, page, user) => {
     try {
       const followers = await axios({
         method: "get",
         headers: { "Content-type": "application/json" },
         withCredentials: true,
         url: my_api + "/user/followers",
-        params : {limit:limit}
+        params : {limit:limit, username:user}
       });
       if (followers.status === 200) {
         return followers.data;

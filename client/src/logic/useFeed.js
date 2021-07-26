@@ -159,12 +159,13 @@ function useFeed() {
       
     }
   };
-  const getMyStory = async () => {
+  const getMyStory = async (user) => {
     try {
       const get_feeds = await axios({
         method: "get",
         withCredentials: true,
         url: my_api + "/post/my-posts",
+        params: {username:user}
       });
       if (get_feeds.status === 200) {
         return get_feeds.data
@@ -224,9 +225,6 @@ function useFeed() {
     }catch(err){
         if(err.response){
           if(err.response.status === 401){
-              alert("Your session has expired! Please login again")
-              cookie.remove("username")
-              window.location.replace("/login")
               return null
           }
         }

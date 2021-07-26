@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import Cookies from "universal-cookie";
 import useFeed from "./logic/useFeed";
+import { GlobalUserActionsContext } from "./logic/userContext";
 
 const cookie = new Cookies()
 const username = cookie.get("username")
@@ -10,6 +11,7 @@ const username = cookie.get("username")
 const useApp = () => {
   const {fetchFeeds} = useFeed()
   const location = useLocation()
+  const setUserContext = useContext(GlobalUserActionsContext)
     const [renderHeader, setRenderHeader] = useState(true)
     const [stories, setStories] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -19,16 +21,17 @@ const useApp = () => {
     useEffect(() => {
       if(isLogged()){
         fetchStory()
+        setUserContext()
       }
     }, []);
     useEffect(()=>{
       console.log(renderHeader)
     },[renderHeader])
     useEffect(() => {
-        const curr_path = location.pathname
-        console.log(curr_path.substring(0, 9))
+        const curr_path = location.pathname.substring(1)
+        console.log(curr_path)
 
-        if(curr_path.substring(0, 9) === "/viewpost" || curr_path === "/profile" || curr_path === "/chat"){
+        if(curr_path  === "viewpost" || curr_path.substring(0, curr_path.indexOf('/')) === "profile" || curr_path === "profile" || curr_path === "chat"){
             setRenderHeader(false)
         }else{
             setRenderHeader(true)

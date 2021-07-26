@@ -6,7 +6,7 @@ const Following = require("./../model/following");
 
 const saveImage = require("./../helper/Upload");
 const user = require("./../model/user");
-const {uploadFile} = require('./../helper/s3')
+const { uploadFile } = require("./../helper/s3");
 // --- Authentication handler ------------- //
 
 const auth = (req, res, next) => {
@@ -21,7 +21,7 @@ const admin = (req, res, next) => {
     next();
   } else res.sendStatus(401);
 };
-const queryFollowers = async (username, limit, page) => {
+const queryFollowers = async (ownId, username, limit, page) => {
   try {
     const followers = await Following.find({ following: username }, null, {
       limit: limit,
@@ -30,21 +30,28 @@ const queryFollowers = async (username, limit, page) => {
       let follwersObject = [];
       for (let index = 0; index < followers.length; index++) {
         const follower = followers[index];
-        const get_profile = await User.findOne({ username: follower.follower });
+        const get_profile = await User.findOne(
+         { $and: [
+            { _id: {$ne: ownId} },
+            {  username: follower.follower },
+        ]
+         } );
         if (get_profile) {
-            let followed = false
-          const isfollowing = await Following.findOne({follower:username, following:get_profile.username})
-          if(isfollowing){
-            followed = true
-            console.log(isfollowing)
-        }
-          follwersObject.push({
-            username: get_profile.username,
-            firstname: get_profile.firstname,
-            lastname: get_profile.lastname,
-            photo: get_profile.photo,
-            followed:followed
-          });
+            let followed = false;
+            const isfollowing = await Following.findOne({
+              follower: username,
+              following: get_profile.username,
+            });
+            if (isfollowing) {
+              followed = true;
+            }
+            follwersObject.push({
+              username: get_profile.username,
+              firstname: get_profile.firstname,
+              lastname: get_profile.lastname,
+              photo: get_profile.photo,
+              followed: followed,
+            });
         }
       }
       return follwersObject;
@@ -58,7 +65,7 @@ const queryFollowers = async (username, limit, page) => {
 router.get("/fetchAll", auth, async (req, res) => {
   try {
     const users = await User.find(
-      {},
+      {_id: {$ne: req.session.user}},
       {
         password: 0,
       }
@@ -86,6 +93,20 @@ router.get("/account", auth, async (req, res, next) => {
         return res.send(doc);
       }
     );
+  } catch (err) {
+    console.log(err);
+    res.send(444);
+  }
+});
+router.get("/profile", auth, async (req, res) => {
+  try {
+    const username = req.query.username;
+    if (username) {
+      const profile = await User.findOne({ username: username });
+      if (profile) {
+        res.send(profile);
+      } else res.send(304);
+    } else res.send(304);
   } catch (err) {
     console.log(err);
     res.send(444);
@@ -127,10 +148,35 @@ router.get("/isfollowing", auth, async (req, res) => {
 });
 router.get("/followers", auth, async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit)
-    const user = await User.findOne({ _id: req.session.user });
-    if (user) {
-      const followers = await queryFollowers(user.username, limit, 1);
+    const limit = parseInt(req.query.limit);
+    let username = req.query.username;
+    if (!username) {
+      const user = await User.findOne({ _id: req.session.user });
+      if (user) username = user.username;
+      else return res.sendStatus(304);
+    }
+    const followers = await queryFollowers(
+      req.session.user,
+      username,
+      limit,
+      1
+    );
+    if (followers) {
+      res.send(followers);
+    } else {
+      res.send(304);
+    }
+  } catch (err) {
+    console.log(err);
+    res.send(444);
+  }
+});
+router.get("/accout-followers", auth, async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit);
+    const username = req.query.username;
+    if (username) {
+      const followers = await queryFollowers(req.session.user, username, limit, 1);
       if (followers) {
         res.send(followers);
       } else {
@@ -143,25 +189,6 @@ router.get("/followers", auth, async (req, res) => {
     console.log(err);
     res.send(444);
   }
-});
-router.get("/accout-followers", auth, async (req, res) => {
-    try {
-        const limit = parseInt(req.query.limit)
-        const username = req.query.username
-        if (username) {
-          const followers = await queryFollowers(username, limit, 1);
-          if (followers) {
-            res.send(followers);
-          } else {
-            res.send(304);
-          }
-        } else {
-          res.sendStatus(304);
-        }
-      } catch (err) {
-        console.log(err);
-        res.send(444);
-      }
 });
 router.get("/status", async (req, res, next) => {
   try {
@@ -223,7 +250,7 @@ router.post("/change-profile", auth, async (req, res, next) => {
     const file = req.body.file;
     const path = await saveImage(req, res, file);
     if (path) {
-      const uploaded = await uploadFile(path)
+      const uploaded = await uploadFile(path);
       const updatedProfile = await User.updateOne(
         { _id: req.session.user },
         { photo: uploaded.key }

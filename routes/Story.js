@@ -119,8 +119,13 @@ router.post("/create", auth, async (req, res, next) => {
 // --------- END OF POST ROUTE   ------------
 router.get("/my-posts", auth, async (req, res, next) => {
   try {
-    const user = await User.findOne({ _id: req.session.user });
-    if (user) {
+    let username = req.query.username
+    let user
+    if(!username){
+       user = await User.findOne({ _id: req.session.user});
+    }else{
+      user = await User.findOne({username:username})
+    }
       const stories = await Story.find(
         { owner: user.username },
         null,
@@ -152,7 +157,6 @@ router.get("/my-posts", auth, async (req, res, next) => {
         }
         res.send(feedsObjectList);
       }
-    }
   } catch (err) {
     console.log(err);
     res.sendStatus(444);

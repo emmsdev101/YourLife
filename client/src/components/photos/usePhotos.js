@@ -1,22 +1,32 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import Cookies from "universal-cookie/es6";
 import useFeed from "../../logic/useFeed";
 import usePeople from "../../logic/usePeople";
 import testImage1 from "./../../res/images/test1.jpg";
+
+const cookie = new Cookies();
 const usePhotos = (back) => {
    const {fetchGalerry} = usePeople()
+   const params = useParams()
+   const username = cookie.get("username")
+   const user = params.username
+   const isOwn = user === username || user === undefined
+
     const [view, setView] = useState(null)
-   const [photos, sePhotos] = useState(null)
+   const [photos, setPhotos] = useState(null)
    const [loading, setLoading] = useState(true)
 
    useEffect(() => {
+       setPhotos(null)
     reqeustPhotos()
-       
-   }, []);
+   }, [user]);
 
    const reqeustPhotos = async() => {
-       const fetched_photos = await fetchGalerry()
+    setLoading(true)
+       const fetched_photos = await fetchGalerry(isOwn?null:user)
        if(Array.isArray(fetched_photos)){
-            sePhotos(fetched_photos)
+            setPhotos(fetched_photos)
             setLoading(false)
        }
    }

@@ -5,7 +5,7 @@ import { GlobalUserContext } from '../../../logic/userContext';
 import Follower from './Follower';
 import style from './followersList.module.css'
 import useFollowersList from './useFollowersList';
-const FollowersList = ({isOwn, back, numFollowers}) => {
+const FollowersList = ({isOwn, back, numFollowers, fullname}) => {
     const user_context = useContext(GlobalUserContext)
     const {followers, loading} = useFollowersList(isOwn)
 
@@ -15,7 +15,7 @@ const FollowersList = ({isOwn, back, numFollowers}) => {
                 <div className = {style.back} onClick = {back}>
                     <FaArrowLeft className = {style.backIcon}/>
                 </div>
-                <p className = {style.name}>{user_context.firstname +" "+ user_context.lastname}</p>
+                <p className = {style.name}>{fullname}</p>
             </div>
             <p className = {style.searchLabel}>Search:</p>
             <div className = {style.search}>
@@ -30,7 +30,7 @@ const FollowersList = ({isOwn, back, numFollowers}) => {
             <div className = {style.list}>
                 {loading?<Loader/>:
                 followers? followers.map((user, id)=>(
-                    <Follower user = {user} key = {id} style = {style} isOwn ={isOwn}/>
+                    <Follower user = {user} key = {id} style = {style} isOwn ={isOwn} back = {back}/>
                 )) :''
                 }
             </div>

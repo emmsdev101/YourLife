@@ -37,6 +37,7 @@ function Profile() {
     fullname,
     follows,
     isOwn,
+    profilePhoto,
     back,
   } = useProfile();
   const { addFeed, feedStories, loading } = useStories();
@@ -73,7 +74,7 @@ function Profile() {
   const Avatar = () => {
     return (
       <div className="dp-div">
-        <img className="avatar" src={profile_photo_url}></img>
+        <img className="avatar" src={isOwn?profile_photo_url:profilePhoto}></img>
         {isOwn ? (
           <div className="camera-div" onClick={uploadEnable}>
             <FaCamera />
@@ -99,7 +100,7 @@ function Profile() {
     );
   };
   if (createPost) return <CreatePost showMe={createStory} addStory={addFeed} />;
-  else if (viewFollowers) return <FollowersList isOwn = {isOwn} back = {toggleOpenFollowers} numFollowers = {followers}/>;
+  else if (viewFollowers) return <FollowersList isOwn = {isOwn} back = {toggleOpenFollowers} numFollowers = {followers} fullname = {fullname}/>;
   else if (viewPost)
     return (
       <Suspense fallback={<div>Loading</div>}>
@@ -136,7 +137,10 @@ function Profile() {
             <p className="follow-count">{followers}</p>
             <p className="follow-count-title">Followers</p>
           </div>
-          {profile_photo_url !== undefined ? <Avatar /> : <TempAvatar />}
+          {isOwn?
+          profile_photo_url !== undefined ? <Avatar /> : <TempAvatar />:
+          profilePhoto !== null? <Avatar /> : <TempAvatar />
+          }
           <div className="following-div">
             <p className="follow-count">{following}</p>
             <p className="follow-count-title">Following</p>
@@ -253,10 +257,12 @@ function Profile() {
             </div>
           ) : feedStories ? (
             feedStories.length === 0 ? (
-              <>
+              isOwn?
+              <React.Fragment>
                 <h2>You have no story</h2>
                 <h3>Share something in your life</h3>
-              </>
+                </React.Fragment>
+                :""
             ) : (
               feedStories.map((story, id) => (
                 <Post content={story} key={id} id={id} openPost={setViewPost} />

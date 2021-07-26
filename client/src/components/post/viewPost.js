@@ -1,7 +1,6 @@
 import React, { lazy, Suspense, useContext } from "react";
 import "./viewPost.css";
 import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library";
-import { useParams } from "react-router-dom";
 import usePeople from "../../logic/usePeople";
 import PostImage from "../postImage/postImage";
 import { FaArrowLeft } from "react-icons/fa";

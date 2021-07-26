@@ -6,8 +6,6 @@ const useProfileMenu = () => {
   const [createPost, setCreatePost] = useState(false);
   const [openPhotos, setOpenPhotos] = useState(false)
 
-
-
   const seePhotos = () => {
     setOpenPhotos(!openPhotos)
   }
