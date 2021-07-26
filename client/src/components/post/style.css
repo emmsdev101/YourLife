@@ -56,10 +56,16 @@
     height: auto;
     text-align: left;
     padding:10px ;
+    margin-top: 10px;
     color: rgb(0, 0, 0);
     font-style: normal;
     font-weight: 400;
     font-size: medium;
+}
+.content{
+    width: inherit;
+    height: auto;
+    word-wrap:break-word;
 }
 .content-footer{
     display: flex;
@@ -67,7 +73,7 @@
     align-items: center;
     justify-content: space-between;
     font-size: small;
-    margin-top: 20px;
+    margin-top: 10px;
     margin-bottom: 10px;
 }
 .post-footer{

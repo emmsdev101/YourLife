@@ -27,7 +27,7 @@ const Comment = ({document}) => {
         }
     }, []);
     const viewProfile = () => {
-        history.push("/profle/"+document.username)
+        history.push("/profile/"+document.username)
     }
     return (
         <div className = {style.comment}>
@@ -40,12 +40,12 @@ const Comment = ({document}) => {
             <div className = {style.commentBody}>
             <div className = {style.commentHeader}>
                 <p className = {style.commentOwner} onClick = {viewProfile}>{fullname}</p>
-                <p className = {style.commentTime}>1h</p>
             </div>
-            <div className = {style.commentContent}>
+            <p className = {style.commentContent}>
                 {content}
+            </p>
             </div>
-            </div>
+            <p className = {style.commentTime}>1h</p>
         </div>
     );
 }

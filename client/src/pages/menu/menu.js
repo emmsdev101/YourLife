@@ -1,8 +1,5 @@
 import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
-
-import './../../generalStyle/generalStyle.css'
-import './menuStyle.css'
-import '../home/homeStyle.css'
+import style from './menu.module.css'
 function Menu(){
     const  {useContext, useHistory,useEffect, useState, Cookies, axios} = useReactHooks()
     const {GlobalUserContext} = useCustomHooks()
@@ -43,31 +40,32 @@ function Menu(){
         }
     }
     return(
-         <div className = "menu-div">
-            <h2 className = "menu-title">Menu</h2>
-           <div className ="menu-item"onClick = {()=>{switchPage('/profile')}}>
-           { profile_photo_url !== null?<img className = "menuitem-img" src = {profile_photo_url}></img>:<FaUserCircle className = "alt-dp"/>}
-               <strong><p className = "menuitem-title">See your profile</p></strong>
+         <div className = {style.menu}>
+           <div className ={style.profile} onClick = {()=>{switchPage('/profile')}}>
+           <p className ={style.menuItemTitle}>Your Profile</p>
+           { profile_photo_url !== null?<img className = {style.menuitemImg} src = {profile_photo_url}></img>:<FaUserCircle className = {style.altDp}/>}
+               <p className = {style.name}>{user_context.firstname}</p>
             </div>
-           <div className ="menu-item">
-               <FaCogs className = "item-icon"/>
-               <p className = "menuitem-title">Settings</p>
+            <p className = {style.title}>Menu</p>
+           <div className ={style.menuItem}>
+               <FaCogs className = {style.itemIcon}/>
+               <p className = {style.menuItemTitle}>Settings</p>
            </div>
-           <div className ="menu-item">
-               <FaQuestionCircle className = "item-icon"/>
-               <p className = "menuitem-title">Help</p>
+           <div className ={style.menuItem}>
+               <FaQuestionCircle className = {style.itemIcon}/>
+               <p className = {style.menuItemTitle}>Help</p>
            </div>
-           <div className ="menu-item">
-               <FaUserShield className = "item-icon"/>
-               <p className = "menuitem-title">Report</p>
+           <div className ={style.menuItem}>
+               <FaUserShield className = {style.itemIcon}/>
+               <p className = {style.menuItemTitle}>Report</p>
            </div>
-           <div className ="menu-item">
-               <FaHandshake className = "item-icon"/>
-               <p className = "menuitem-title">Support</p>
+           <div className ={style.menuItem}>
+               <FaHandshake className = {style.itemIcon}/>
+               <p className = {style.menuItemTitle}>Support</p>
            </div>
-           <div className ="menu-item" onClick = {logout}>
-               <FaSignOutAlt className = "item-icon"/>
-               <p className = "menuitem-title">Logout</p>
+           <div className ={style.menuItem} onClick = {logout}>
+               <FaSignOutAlt className = {style.itemIcon}/>
+               <p className = {style.menuItemTitle}>Logout</p>
            </div>
         </div>
     )

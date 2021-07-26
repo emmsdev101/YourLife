@@ -69,7 +69,7 @@ const ViewComment = ({ story, postId }) => {
       <div className={style.commentHeader}>
         <div className={style.commentHeading}>
           <div className={style.postStatus}>
-            {likes}
+            <p className  = {liked?style.liked:style.notLike}>{likes}</p>
             <FaThumbsUp className={liked?style.likedIcon:style.likeIcon} onClick = {addLike}/>
           </div>
           <h3>Comments</h3>
@@ -87,10 +87,14 @@ const ViewComment = ({ story, postId }) => {
           </div>:''}
           <div className = {style.reversedList}>
           {comments !== null? 
+            comments.length > 0?
             comments.map((doc, id) => (
-                <Comment document = {doc} key = {id}/>
-            ))
-          :<div>
+              <Comment document = {doc} key = {id}/>
+          )):<div className = {style.noComment}>
+            <h3>No comments on this post</h3>
+            <p>Be the first to comment</p>
+            </div>
+          :<div className = {style.loadingComments}>
             <h3>Loading comments...</h3>
             <Loader/>
             </div>}

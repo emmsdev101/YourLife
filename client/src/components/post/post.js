@@ -117,25 +117,22 @@ function Post({ content, openPost }) {
                   ""
                 )}
               </div>
+              {likes > 0 || comments > 0 ?
               <div className="content-footer">
                 <div className="comment-status">
-                {likes > 0 ? 
                 <React.Fragment>
                   <p className="comment-count">{likes}</p>
                 <p className="status-title">{likes > 1? "Likes":"Like"}</p>
                 </React.Fragment>
-                
-                :''}
               </div>
                 <div className="comment-status">
-                {comments>0?
                 <React.Fragment>
                 <p className="comment-count">{comments}</p>
                 <p className="status-title">{comments > 1? "Comments":"Comment"}</p>
                 </React.Fragment>
-                :''}
                 </div>
               </div>
+              :''}
             </div>
           </div>
           <div className="post-footer">

@@ -88,8 +88,11 @@ h3{
     color: whitesmoke;
     border-radius: 5px;
 }
-.likedIcon{
-    color:#EF5DA8 ;
+.likedIcon, .liked{
+    color:#5D5FEF ;
+}
+.notLike, .liked{
+    margin-left: 5px;
 }
 .loadMore{
     height: 80px;
@@ -106,6 +109,16 @@ h3{
     height: 30px;
     -webkit-animation: spin 2s linear infinite; /* Safari */
     animation: spin 2s linear infinite;
+  }
+  .noComment{
+      height: auto;
+      display: grid;
+      place-items: center;
+      padding: 40px;
+  }
+  .loadingComments{
+      padding: 50px;
+      height: 300px;
   }
   /* Safari */
 @-webkit-keyframes spin {
