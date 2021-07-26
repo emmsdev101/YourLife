@@ -21,10 +21,11 @@ function Menu(){
     }
     useEffect(() => {
        let temp_img = new Image()
+       const src = my_api+"/photo/"+user_context.photo
        temp_img.onload = () => {
-           setProfilePhotoUrl(my_api+"/photos/"+user_context.photo)
+           setProfilePhotoUrl(src)
        }
-       temp_img.src = my_api+"/photos/"+user_context.photo
+       temp_img.src = src
     }, []);
 
     const logout = async()=>{
