@@ -14,10 +14,10 @@ const useChangePhoto = () => {
         let pp = new Image();
         pp.onload = () => {
           if (isMounted.current) {
-            setProfilePhotoUrl(my_api + "/photos/" + user_context.photo);
+            setProfilePhotoUrl(my_api + "/photo/" + user_context.photo);
           }
         };
-        pp.src = my_api + "/photos/" + user_context.photo;
+        pp.src = my_api + "/photo/" + user_context.photo;
     
         return () => {
           isMounted.current = false;

@@ -40,7 +40,7 @@ function ChangeDp({ setUpload, setProfilePhotoUrl, profile_photo_url }) {
     const uploadResult = await uploadDp(pickedPhoto);
     if (uploadResult) {
       set_user_context(user_context.username);
-      setProfilePhotoUrl(my_api + "/photos/" + uploadResult);
+      setProfilePhotoUrl(my_api + "/photo/" + uploadResult);
       setUpload(false);
     } else {
       console.log("Error while uploading photo");

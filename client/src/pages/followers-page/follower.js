@@ -15,7 +15,6 @@ function Follower(){
       </header>
       <div className = "follower-body">
           <h4>300 Followers</h4>
-            
           <div className = "people-list-div">
              <User></User>
              <User></User>

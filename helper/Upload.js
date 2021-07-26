@@ -1,5 +1,6 @@
 const fs = require('fs')
 
+
 const saveImage = async(req, res, baseImage)=> {
     try{
         const dir = './uploads/user/'
@@ -22,7 +23,13 @@ const saveImage = async(req, res, baseImage)=> {
             fs.mkdirSync(img_dir);
         }
         fs.writeFileSync(img_dir+'/'+filename, base64Data, 'base64');
-        return localPath+'/'+filename;
+
+        const file = {
+            filename: filename,
+            path: img_dir+'/'+filename,
+            location:localPath+'/'+filename
+        }
+        return file;
     }
     catch(err){
         console.log(err)

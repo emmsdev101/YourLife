@@ -40,7 +40,7 @@ const ViewPost = ({ id, back, setRenderHeader }) => {
     }
   }, []);
   function preloadProfilePhoto(subUrl) {
-    const photoUrl = my_api + "/photos/" + subUrl;
+    const photoUrl = my_api + "/photo/" + subUrl;
     let image = new Image();
     image.onload = () => {
       setProfilePhoto(photoUrl);
@@ -96,7 +96,7 @@ const ViewPost = ({ id, back, setRenderHeader }) => {
                     photo={photo}
                     key={id}
                     id={id}
-                    src={my_api + "/photos/" + photo.path}
+                    src={my_api + "/photo/" + photo.path}
                     view = {true}
                     openPhoto = {openPhoto}
                     index = {idx}

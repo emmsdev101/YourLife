@@ -9,7 +9,7 @@ const ViewPhoto = ({photos, index, back}) => {
   const [photoIndex, setPhotoIndex] = useState(index)
 
   useEffect(() => {
-      const src =my_api + "/photos/" +  photos[photoIndex].path
+      const src =my_api + "/photo/" +  photos[photoIndex].path
     let image = new Image()
     image.onload = () => {
       setOnView(src)

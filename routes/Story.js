@@ -14,6 +14,7 @@ router.use("/comment", Comment);
 router.use("/like", Like);
 
 const saveImage = require("../helper/Upload");
+const {uploadFile} = require('../helper/s3')
 
 const auth = (req, res, next) => {
   if (req.session.user) {
@@ -50,17 +51,15 @@ router.post("/create", auth, async (req, res, next) => {
             const savedImages = []
           for (let index = 0; index < files.length; index++) {
             const file = files[index];
-
             const savedImage = await saveImage(req, res, file);
-
             if (savedImage) {
+              const uploadToBucket = await uploadFile(savedImage)
               const photo = new ImageModel({
                 owner: post.owner,
                 post_id: post._id,
-                path: savedImage,
+                path: uploadToBucket.key,
               });
               const saved = await photo.save();
-
               if (!saved) {
                 res.sendStatus(500);
                 return console.log(saved);

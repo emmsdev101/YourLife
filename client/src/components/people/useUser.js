@@ -6,7 +6,7 @@ import usePeople from "../../logic/usePeople";
 const useUser = (data, id) => {
   const my_api =
     process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
-  const profilePhoto = my_api + "/photos/" + data.photo;
+  const profilePhoto = my_api + "/photo/" + data.photo;
 
   const { follow, isFollowing } = usePeople();
   const [dpLoad, setDpLoad] = useState(false);

@@ -35,7 +35,6 @@ app.use(cookieParser("secretcode"));
 app.use("/user", accRoute);
 app.use("/post", postRoute);
 app.use('/photo', photoRoute)
-app.use("/photos", express.static(path.join("uploads/user")));
 //----------------------------------------- END OF MIDDLEWARE---------------------------------------------------
 
 // Routes

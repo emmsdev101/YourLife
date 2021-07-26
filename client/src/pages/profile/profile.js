@@ -65,7 +65,7 @@ function Profile() {
       <div
         id={id}
         className="photo-item-div"
-        style={{ backgroundImage: "url(" + my_api + "/photos/" + image + ")" }}
+        style={{ backgroundImage: "url(" + my_api + "/photo/" + image + ")" }}
       ></div>
     );
   };

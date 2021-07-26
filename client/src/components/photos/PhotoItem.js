@@ -6,7 +6,7 @@ const PhotoItem = ({viewPhoto, src, index}) => {
     const [photoUrl, setPhotoUrl] = useState(null)
 
     useEffect(() => {
-        const photo_url = my_api + "/photos/" +src
+        const photo_url = my_api + "/photo/" +src
         let image = new Image()
         image.onload = () => {
             setPhotoUrl(photo_url)

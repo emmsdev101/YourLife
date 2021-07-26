@@ -3,7 +3,7 @@
 # dependencies
 /node_modules
 # uploads/user/**
-.env
+
 /.pnp
 .pnp.js
 

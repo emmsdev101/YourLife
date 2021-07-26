@@ -6,7 +6,7 @@ const Following = require("./../model/following");
 
 const saveImage = require("./../helper/Upload");
 const user = require("./../model/user");
-
+const {uploadFile} = require('./../helper/s3')
 // --- Authentication handler ------------- //
 
 const auth = (req, res, next) => {
@@ -222,14 +222,14 @@ router.post("/change-profile", auth, async (req, res, next) => {
   try {
     const file = req.body.file;
     const path = await saveImage(req, res, file);
-
     if (path) {
+      const uploaded = await uploadFile(path)
       const updatedProfile = await User.updateOne(
         { _id: req.session.user },
-        { photo: path }
+        { photo: uploaded.key }
       );
       if (updatedProfile) {
-        res.send(path);
+        res.send(uploaded.key);
       }
     }
   } catch (err) {

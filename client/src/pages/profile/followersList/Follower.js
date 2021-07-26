@@ -12,7 +12,7 @@ const Follower = ({style, user}) => {
     const [profilePiture, setProfilePicture] = useState(null)
     
     useEffect(() => {
-        const src = my_api + "/photos/" + user.photo
+        const src = my_api + "/photo/" + user.photo
         let image = new Image()
         image.onload = () => {
         setProfilePicture(src)

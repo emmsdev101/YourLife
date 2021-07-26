@@ -22,7 +22,7 @@ function Post({ content, openPost }) {
   const username = content.username
   const firstname = content.firstname
   const lastname = content.lastname
-  const profile_photo_url = my_api + "/photos/" + content.photo
+  const profile_photo_url = my_api + "/photo/" + content.photo
   const photos = content.photos
 
   
@@ -102,7 +102,7 @@ function Post({ content, openPost }) {
                         photo={photo}
                         key={id}
                         id={id}
-                        src={my_api + "/photos/" + photo.path}
+                        src={my_api + "/photo/" + photo.path}
                         view = {false}
                       />
                     ))

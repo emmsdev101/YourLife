@@ -5,6 +5,8 @@ const User = require("./../model/user");
 const ImageModel = require('../model/photo');
 const photo = require("../model/photo");
 
+const {getFileStream} = require('../helper/s3')
+
 const auth = (req, res, next) => {
     if (req.session.user) {
       next();
@@ -45,6 +47,16 @@ router.get('/my-gallery', async(req, res)=> {
     }catch(err){
         console.log(err)
         res.sendStatus(500)
+    }
+})
+router.get('/:key', (req, res)=>{
+    try{
+        const key = req.params.key
+    const readStream = getFileStream(key)
+    readStream.pipe(res)
+    }catch(err){
+        console.log(err)
+        res.send(444)
     }
 })
 module.exports = router

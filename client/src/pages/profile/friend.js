@@ -8,7 +8,7 @@ const FriendItem = ({follower, id})=> {
     const [profilePicture, setProfilePicture] = useState(null);
     const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
     useEffect(() => {
-        const picture_url = my_api + "/photos/"+follower.photo
+        const picture_url = my_api + "/photo/"+follower.photo
         let picture = new Image()
         picture.onload = () => {
             setProfilePicture(picture_url)

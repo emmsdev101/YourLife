@@ -9,7 +9,7 @@ const Comment = ({document}) => {
     const [dpLoaded, setDpLoaded] = useState(false)
 
     const fullname = document.firstname + ' ' + document.lastname
-    const profile_photo_url =  my_api + "/photos/" + document.photo
+    const profile_photo_url =  my_api + "/photo/" + document.photo
     const content = document.comment_content
     
     useEffect(() => {
