@@ -144,7 +144,7 @@ function Post({ content, openPost }) {
             </button>
           </div>
         </div>
-        <div className="span"></div>
+
       </React.Fragment>
     );
 }

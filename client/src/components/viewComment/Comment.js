@@ -44,8 +44,9 @@ const Comment = ({document}) => {
             <p className = {style.commentContent}>
                 {content}
             </p>
-            </div>
             <p className = {style.commentTime}>1h</p>
+            </div>
+            
         </div>
     );
 }

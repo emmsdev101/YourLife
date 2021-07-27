@@ -103,7 +103,6 @@ const ViewPost = ({ id, back, setRenderHeader }) => {
                 ))
               : null}
           </div>
-          <hr></hr>
         </div>
       </div>
       {story !== null? <ViewComment postId = {id} story = {story}/>:''}

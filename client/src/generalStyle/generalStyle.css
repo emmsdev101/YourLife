@@ -15,18 +15,18 @@
     width: 25px;
 }
 .active{
-    height: 59px;
-    border-bottom: 5px solid #5D5FEF;
+    height: 100%;
+    border-bottom: 3px solid #5D5FEF;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
+    width: calc(100% / 5 - 10px);
     color: #5D5FEF;
 }
 .inactive{
-    width: 50px;
+    width: calc(100% / 5 - 10px);
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 60px;
+    height: 100%;
 }
