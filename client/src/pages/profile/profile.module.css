@@ -14,8 +14,10 @@
     display: grid;
     place-items: center;
 }
-
 .headerIcon{
     width: 20px;
     height: 20px;
+}
+.button-unfollow{
+    
 }

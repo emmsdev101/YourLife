@@ -101,10 +101,22 @@ router.get("/account", auth, async (req, res, next) => {
 router.get("/profile", auth, async (req, res) => {
   try {
     const username = req.query.username;
-    if (username) {
-      const profile = await User.findOne({ username: username });
+    const follower  = await User.findOne({_id:req.session.user},{username:1})
+    if (username && follower) {
+      const profile = await User.findOne({ username: username },{_id:0, password:0});
       if (profile) {
-        res.send(profile);
+        const isFollowed = await Following.findOne({follower:follower.username,following:username})
+        res.send({
+          username:profile.username,
+          photo:profile.photo,
+          firstname:profile.firstname,
+          lastname:profile.lastname,
+          gender:profile.gender,
+          age:profile.age,
+          followers:profile.followers,
+          following:profile.following,
+          isFollowed:isFollowed?true:false
+        });
       } else res.send(304);
     } else res.send(304);
   } catch (err) {

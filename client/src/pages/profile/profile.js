@@ -1,9 +1,8 @@
 import "./profile.css";
 import ChangeDp from "./../../components/changeDp/changeDp";
 import Post from "../../components/post/post";
-import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library";
 import FriendItem from "./friend";
-import React, { Suspense, useRef, lazy } from "react";
+import React, { Suspense, lazy } from "react";
 import CreatePost from "../../components/createPost/createPost";
 
 import style from "./profile.module.css";
@@ -17,6 +16,7 @@ import {
   FaArrowLeft,
   FaUserPlus,
   FaPen,
+  FaUserMinus,
 } from "react-icons/fa";
 import useProfile from "./useProfile";
 import useStories from "./useStories";
@@ -39,6 +39,8 @@ function Profile() {
     isOwn,
     profilePhoto,
     back,
+    isFollowed,
+    followUser
   } = useProfile();
   const { addFeed, feedStories, loading } = useStories();
   const {
@@ -119,22 +121,22 @@ function Profile() {
       ) : (
         ""
       )}
-
       <div className={style.header}>
         <div className={style.back} onClick={back}>
           <FaArrowLeft className={style.headerIcon} />
         </div>
         <div className={style.title}>
-          <h3>Your Profile</h3>
+          <h3>{isOwn?"Your Profile":fullname}</h3>
         </div>
         <div className={style.menu}>
           <FaBars className={style.headerIcon} />
         </div>
       </div>
       <div className="profile-header-div">
+      <div className = "profile-background" style = {{backgroundImage:'url('+profilePhoto+')'}}></div>
         <div className="row1-profile-header">
           <div className="follower-div">
-            <p className="follow-count">{followers}</p>
+            <p className="follow-count">{followers?followers:0}</p>
             <p className="follow-count-title">Followers</p>
           </div>
           {isOwn?
@@ -142,7 +144,7 @@ function Profile() {
           profilePhoto !== null? <Avatar /> : <TempAvatar />
           }
           <div className="following-div">
-            <p className="follow-count">{following}</p>
+            <p className="follow-count">{following?following:0}</p>
             <p className="follow-count-title">Following</p>
           </div>
         </div>
@@ -153,12 +155,10 @@ function Profile() {
         </div>
         {!isOwn ? (
           <div className="profile-action">
-            <button className="button-follow">
-              {" "}
-              <FaUserPlus className="follow-icon"></FaUserPlus> Follow
+            <button className={isFollowed?"button-unfollow":"button-follow"} onClick = {followUser}>
+              {isFollowed?<><FaUserMinus className = "unfollow-icon"/>Unfollow</>:<><FaUserPlus className="follow-icon"/> Follow</>}
             </button>
             <button className="button-message">
-              {" "}
               <FaEnvelope className="message-icon"></FaEnvelope> Message
             </button>
           </div>

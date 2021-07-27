@@ -22,7 +22,7 @@ const useProfile = () => {
   const user_context = useContext(GlobalUserContext);
   const set_user_context = useContext(GlobalUserActionsContext);
 
-  const { fetchPhotos, getFollowing, getUserInfo } = usePeople();
+  const { fetchPhotos, getFollowing, getUserInfo, follow } = usePeople();
 
   const [photos, setPhotos] = useState(null);
   const [follows, setFollows] = useState(null);
@@ -31,6 +31,7 @@ const useProfile = () => {
   const [followers, setFollowers] = useState(null)
   const [following, setFollowing] = useState(null)
   const [profilePhoto, setProfilePhoto] = useState(null)
+  const [isFollowed, setIsFollwed] = useState(false)
 
   let isMounted = useRef(true);
 
@@ -58,6 +59,7 @@ const useProfile = () => {
         setFollowers(profileData.followers)
         setFollowing(profileData.following)
         setProfilePhoto(my_api + "/photo/"+profileData.photo)
+        setIsFollwed(profileData.isFollowed)
       }
     }
     fetchProfileData();
@@ -71,6 +73,14 @@ const useProfile = () => {
   const back = () => {
     history.goBack();
   }
+  const followUser = () => {
+    follow(user)
+    if(isFollowed){
+      setFollowers(followers-1)
+    }else setFollowers(followers+1)
+    setIsFollwed(!isFollowed)
+    
+  }
 
 
   return {
@@ -83,6 +93,8 @@ const useProfile = () => {
     photos,
     isOwn,
     back,
+    isFollowed,
+    followUser
   };
 };
 
