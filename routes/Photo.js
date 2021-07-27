@@ -44,11 +44,14 @@ router.get('/my-photos', async(req, res)=> {
 })
 router.get('/my-gallery', async(req, res)=> {
     try{
-        const username = req.query.username
+        let username = req.query.username
         if(!username){
             const user = await User.findOne({_id:req.session.user})
-            if(user)username = user.username
-            else return res.sendStatus(304)
+            if(user){
+                username = user.username
+            }
+            else {
+                return res.sendStatus(304)}
         }
             const images = await ImageModel.find({owner:username}, null, {limit:30})
             res.send(images)
