@@ -18,7 +18,7 @@ function useFeed() {
         const get_feeds = await axios({
             method: "get",
             withCredentials: true,
-            url: my_api + "/post/all-feeds",
+            url: my_api + "/post/get-feeds",
           });
           if (get_feeds.status === 200) {
               if(Array.isArray(get_feeds.data)){
