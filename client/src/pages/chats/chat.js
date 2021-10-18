@@ -1,5 +1,4 @@
 import './style.css'
-import image1 from '../../res/images/mylove.jpg'
 import Conversation from "../Conversation/conversation";
 import { useIcons, useReactHooks } from '../../logic/library'
 function Chat(){
@@ -15,7 +14,7 @@ const InboxItem = ({unread}) => {
 
     return(<>
         <div className = {unread? "chat-inbox unread":"chat-inbox"} onClick = {()=>{setOnread(true)}}>
-            <img className = "chat-picture" src = {image1}></img>
+            <img className = "chat-picture" ></img>
             <div className = "chat-detail">
                 <p className = "chat-name">Jonalyn Garder</p>
                 <p className = "chat-content">Gwapo ungoy koba</p>

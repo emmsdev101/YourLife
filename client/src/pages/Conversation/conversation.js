@@ -1,5 +1,4 @@
 import './style.css'
-import image2 from '../../res/images/test1.jpg'
 import './style.css'
 import { useIcons } from '../../logic/library'
 function Chat({setOpen}){
@@ -17,7 +16,7 @@ function Chat({setOpen}){
        <div className = "conversation">
        <div className = "conversation-nav">
                 <div className = "conversation-back" onClick = {()=>{setOpen(false)}}><FaArrowLeft className = "back-icon"></FaArrowLeft></div>
-                <img className = "reciever-picture" src = {image2}></img>
+                <img className = "reciever-picture"></img>
                 <h3 className = "reciever-name">Bacon Powder</h3>
                 <div className = "conversation-back"><FaEllipsisV></FaEllipsisV></div>
             </div>

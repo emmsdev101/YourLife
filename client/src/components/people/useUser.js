@@ -39,9 +39,9 @@ const useUser = (data, id) => {
   const followUser = async () => {
     if (followed) {
       follow_btn.current.disabled = false;
-      if (isMounted) follow(data.username);
+      if (isMounted) follow(data.username, data._id);
     } else {
-      if (isMounted) follow(data.username);
+      if (isMounted) follow(data.username,data._id);
       follow_btn.current.disabled = true;
     }
     setFollow(!followed);

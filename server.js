@@ -9,6 +9,7 @@ const path = require("path");
 const accRoute = require("./routes/Account");
 const postRoute = require("./routes/Story");
 const photoRoute = require('./routes/Photo')
+const notificationRoute = require('./routes/Notification')
 
 require("dotenv").config();
 
@@ -35,6 +36,7 @@ app.use(cookieParser("secretcode"));
 app.use("/user", accRoute);
 app.use("/post", postRoute);
 app.use('/photo', photoRoute)
+app.use('/notification', notificationRoute)
 //----------------------------------------- END OF MIDDLEWARE---------------------------------------------------
 
 // Routes

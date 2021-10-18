@@ -32,6 +32,7 @@ const ViewComment = ({ story, postId }) => {
     };
     fetchComments();
     sumbitRef.current.disabled = true;
+    console.log(story)
   }, []);
   useEffect(() => {
     if (content.length === 0) {
@@ -51,7 +52,7 @@ const ViewComment = ({ story, postId }) => {
   };
   const postComment = async () => {
     setPosting(true);
-    const new_comment = await addComment(postId, content);
+    const new_comment = await addComment(postId, content, story.post_owner);
     if (new_comment) {
       setRealTimeComments((olds) => [...olds, new_comment]);
       setNumComments(numComments + 1);

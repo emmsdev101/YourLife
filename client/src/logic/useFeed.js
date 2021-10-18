@@ -28,7 +28,6 @@ function useFeed() {
       }catch(err){
           if(err.response){
             if(err.response.status === 401){
-                alert("Your session has expired! Please login again")
                   cookie.remove("username")
                   window.location.replace("/login")
                 return null
@@ -54,7 +53,6 @@ function useFeed() {
         }catch(err){
             if(err.response){
               if(err.response.status === 401){
-                  alert("Your session has expired! Please login again")
                   cookie.remove("username")
                   window.location.replace("/login")
                   return null
@@ -91,7 +89,6 @@ function useFeed() {
     }catch(err){
         if(err.response){
           if(err.response.status === 401){
-              alert("Your session has expired! Please login again")
               cookie.remove("username")
               window.location.replace("/login")
               return null
@@ -122,7 +119,6 @@ function useFeed() {
         }catch(err){
             if(err.response){
               if(err.response.status === 401){
-                  alert("Your session has expired! Please login again")
                   cookie.remove("username")
                   window.location.replace("/login")
                   return null
@@ -150,7 +146,6 @@ function useFeed() {
     }catch(err){
         if(err.response){
           if(err.response.status === 401){
-              alert("Your session has expired! Please login again")
               cookie.remove("username")
               window.location.replace("/login")
               return null
@@ -176,7 +171,6 @@ function useFeed() {
     } catch(err){
       if(err.response){
         if(err.response.status === 401){
-            alert("Your session has expired! Please login again")
             cookie.remove("username")
             window.location.replace("/login")
             return null
@@ -184,13 +178,18 @@ function useFeed() {
       }
       }
   };
-  const requestLike = async (post_id) => {
+  const requestLike = async (post_data) => {
     try {
       const req_like = await axios({
         method: "post",
         withCredentials: true,
         url: my_api + "/post/like/like-post",
-        data: { post_id: post_id },
+        data: { 
+          post_id: post_data._id,
+          post_owner:post_data.post_owner,
+          firstname:post_data.firstname,
+          lastname:post_data.lastname,
+        },
       });
       if (req_like.status === 200) {
         return true;
@@ -200,7 +199,35 @@ function useFeed() {
     }catch(err){
         if(err.response){
           if(err.response.status === 401){
-              alert("Your session has expired! Please login again")
+              cookie.remove("username")
+              window.location.replace("/login")
+              return null
+          }
+        }
+      
+    }
+  };
+  const requestUnlike= async (post_data) => {
+    try {
+      const req_like = await axios({
+        method: "post",
+        withCredentials: true,
+        url: my_api + "/post/like/unlike-post",
+        data: { 
+          post_id: post_data._id,
+          post_owner:"emmanuelkatipunan",
+          firstname:post_data.firstname,
+          lastname:post_data.lastname,
+        },
+      });
+      if (req_like.status === 200) {
+        return true;
+      } else {
+        console.log(req_like.status);
+      }
+    }catch(err){
+        if(err.response){
+          if(err.response.status === 401){
               cookie.remove("username")
               window.location.replace("/login")
               return null
@@ -231,7 +258,7 @@ function useFeed() {
       
     }
   };
-  const addComment = async (post_id, content) => {
+  const addComment = async (post_id, content, post_owner) => {
     try {
       const comment = await axios({
         method: "post",
@@ -239,7 +266,8 @@ function useFeed() {
         url: my_api + "/post/comment/add-comment",
         data: {
              post_id: post_id,
-             content:content
+             content:content,
+             post_owner:post_owner
              },
       });
       if (comment.status === 200) {
@@ -251,7 +279,6 @@ function useFeed() {
     }catch(err){
         if(err.response){
           if(err.response.status === 401){
-              alert("Your session has expired! Please login again")
               cookie.remove("username")
               window.location.replace("/login")
               return null
@@ -276,7 +303,6 @@ function useFeed() {
     }catch(err){
         if(err.response){
           if(err.response.status === 401){
-              alert("Your session has expired! Please login again")
               cookie.remove("username")
               window.location.replace("/login")
               return null
@@ -300,6 +326,7 @@ function useFeed() {
     postLiked,
     addComment,
     getComments,
+    requestUnlike
   };
 }
 export default useFeed;

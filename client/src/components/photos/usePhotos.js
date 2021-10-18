@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import Cookies from "universal-cookie/es6";
 import useFeed from "../../logic/useFeed";
 import usePeople from "../../logic/usePeople";
-import testImage1 from "./../../res/images/test1.jpg";
 
 const cookie = new Cookies();
 const usePhotos = (back) => {

@@ -13,7 +13,7 @@ function User({data, id}){
     } = useUser(data, id)
 
     const viewProfile = ()=> {
-        history. push("/profile/"+data.username)
+        history.push("/profile/"+data.username)
     }
     
     if(followed !== null) return(

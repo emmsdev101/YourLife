@@ -4,6 +4,10 @@ const StorySchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
+	owner_id:{
+		type:String,
+		required:true
+	},
 	content: {
 		type: String,
 		required: false

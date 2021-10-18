@@ -2,7 +2,7 @@
     --width : 100vw
 }
 .unread{
-    background-color: #FCDDEC;
+    background-color: #5d5fef3b;
 }
 .notification-div{
     width: 100%;
@@ -11,7 +11,7 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: left;
-    color: rgb(73, 73, 73);
+    color: rgb(29, 29, 29);
     padding-top: 5px;
     padding-bottom: 5px;  
     
@@ -21,6 +21,7 @@
     width: 90px;
     border-radius: 50px;
     margin-left: 10px;
+    color: rgb(165, 165, 165);
 }
 .notification-detail{
     margin-left: 10px;
@@ -39,6 +40,7 @@
     font-weight: 700;
 }
 .notification-content{
-    font-size: small;
+    font-size: medium;
     text-align: left;
+    
 }

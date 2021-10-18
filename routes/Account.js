@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const router = express.Router();
 const User = require("./../model/user");
 const Following = require("./../model/following");
+const Notification = require("./../model/notification");
 
 const saveImage = require("./../helper/Upload");
 const user = require("./../model/user");
@@ -247,7 +248,6 @@ router.post("/login", async (req, res) => {
           res.send({
             wrong_password: true,
           });
-          console.log("wrong password");
         }
       });
     }
@@ -278,7 +278,6 @@ router.post("/change-profile", auth, async (req, res, next) => {
 });
 router.put("/update-dp", auth, async (req, res) => {});
 router.get("/logout", async (req, res) => {
-  console.log("user " + req.session.user + " is logged out.");
   req.session.destroy((err) => {
     if (err) {
       consoole.log(err);
@@ -358,6 +357,13 @@ router.post("/follow", auth, async (req, res) => {
           res.send(true);
         });
       }
+      const followNotification = new Notification({
+        type:'follow',
+        last_activity:follower,
+        user_id:req.body.user_id,
+        seen:false
+      })
+      followNotification.save()
     });
   };
   const unfollow = async (follower) => {

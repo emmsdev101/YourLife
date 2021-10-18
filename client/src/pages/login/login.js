@@ -1,6 +1,7 @@
 
 import { useCustomHooks, useReactHooks } from '../../logic/library';
 import './loginStyle.css'
+import logo_text from './../../res/images/logo_text.svg';
 function Login(){
     const {useState, useHistory, Cookies, useContext, axios} = useReactHooks()
     const {GlobalUserActionsContext} = useCustomHooks()
@@ -47,14 +48,14 @@ function Login(){
     return (
         <div className = "signup">
             <div className = "signup-header">
-                <h2>Login</h2>
+                <img src = {logo_text}/>
             </div>  
             <div className = "signup-body">
                 <label htmlFor = "fname-input"> Username:</label>
                 <input type = "username" className = "signup-input" id = "username-input" value = {username} onChange = {usernameChage}/>
                 <label htmlFor = "fname-input"> Password:</label>
                 <input type = "password" className = "signup-input" id = "password-input" value = {password} onChange = {passwordChage}/>
-                <button className = "signup-submit" onClick = {signIn}>Submit</button>
+                <button className = "signup-submit" onClick = {signIn}>Login</button>
                 <center>or</center>
                 <button className = "signup-btn" onClick = {()=>{history.push('/signup')}}>Signup</button>
                 <center>If you dont have an account yet</center>

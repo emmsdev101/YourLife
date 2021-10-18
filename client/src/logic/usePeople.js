@@ -19,7 +19,6 @@ function usePeople() {
     } catch (err) {
       if (err.response) {
         if (err.response.status === 401) {
-          alert("Your session has expired! Please login again");
           cookie.remove("username");
           window.location.replace("/login")
           return null;
@@ -46,7 +45,6 @@ function usePeople() {
     } catch (err) {
       if (err.response) {
         if (err.response.status === 401) {
-          alert("Your session has expired! Please login again");
           cookie.remove("username");
           window.location.replace("/login")
           return null;
@@ -67,7 +65,6 @@ function usePeople() {
       if (fetchResult.status === 200) {
         return fetchResult.data;
       } else if (fetchResult.status === 401) {
-        alert("Your session has expired! Please login again");
       } else {
         console.log(fetchResult.status);
         return null;
@@ -75,7 +72,6 @@ function usePeople() {
     } catch (err) {
       if (err.response) {
         if (err.response.status === 401) {
-          alert("Your session has expired! Please login again");
           cookie.remove("username");
           window.location.replace("/login")
           return null;
@@ -94,7 +90,6 @@ function usePeople() {
       if (fetchResult.status === 200) {
         return fetchResult.data;
       } else if (fetchResult.status === 401) {
-        alert("Your session has expired! Please login again");
       } else {
         console.log(fetchResult.status);
         return null;
@@ -102,7 +97,6 @@ function usePeople() {
     } catch (err) {
       if (err.response) {
         if (err.response.status === 401) {
-          alert("Your session has expired! Please login again");
           cookie.remove("username");
           window.location.replace("/login")
           return null;
@@ -124,12 +118,10 @@ function usePeople() {
       if (updateProfile.status === 200) {
         return true;
       } else if (updateProfile.status === 401) {
-        alert("Your session has expired! Please login again");
       }
     } catch (err) {
       if (err.response) {
         if (err.response.status === 401) {
-          alert("Your session has expired! Please login again");
           cookie.remove("username");
           window.location.replace("/login")
           return null;
@@ -137,7 +129,7 @@ function usePeople() {
       }
     }
   };
-  const follow = async (username) => {
+  const follow = async (username,user_id) => {
     try {
       const follow_request = await axios({
         method: "post",
@@ -146,6 +138,7 @@ function usePeople() {
         url: my_api + "/user/follow",
         data: {
           username: username,
+          user_id:user_id
         },
       });
       if (follow_request.status === 200) {
@@ -156,7 +149,6 @@ function usePeople() {
     } catch (err) {
       if (err.response) {
         if (err.response.status === 401) {
-          alert("Your session has expired! Please login again");
           cookie.remove("username");
           window.location.replace("/login")
           return null;
@@ -179,7 +171,6 @@ function usePeople() {
     } catch (err) {
       if (err.response) {
         if (err.response.status === 401) {
-          alert("Your session has expired! Please login again");
           cookie.remove("username");
           window.location.replace("/login")
           return null;
@@ -202,7 +193,6 @@ function usePeople() {
     } catch (err) {
       if (err.response) {
         if (err.response.status === 401) {
-          alert("Your session has expired! Please login again");
           cookie.remove("username");
           window.location.replace("/login")
           return null;
@@ -221,12 +211,10 @@ function usePeople() {
       if (followStatus.status === 200) {
         return followStatus.data;
       } else if (followStatus.status === 401) {
-        alert("Your session has expired! Please login again");
       }
     } catch (err) {
       if (err.response) {
         if (err.response.status === 401) {
-          alert("Your session has expired! Please login again");
           cookie.remove("username");
           window.location.replace("/login")
           return null;

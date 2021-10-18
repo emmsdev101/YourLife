@@ -33,7 +33,13 @@ function App() {
             <Suspense fallback={<div>Loading...</div>}>
               <Route exact path="/menu" component={Menu} />
               <Route exact path="/people" component={People} />
-              <Route exact path="/notification" component={Notification} />
+              <Route
+                exact
+                path="/notification"
+                render={(props) => (
+                  <Notification {...props} setRenderHeader={setRenderHeader} />
+                )}
+              />
               <Route exact path="/chat" component={Chat} />
               <Route exact path="/profile" component={Profile} />
               <Route
@@ -92,8 +98,7 @@ function App() {
                   />
                 )}
               />
-              <Route exact path = "/profile/:username"
-              component = {Profile}/>
+              <Route exact path="/profile/:username" component={Profile} />
             </Suspense>
           </div>
         ) : (

@@ -7,7 +7,7 @@ const User = require("./../model/user");
 const ImageModel = require("../model/photo");
 const Liked = require("./../model/liked");
 const Followers = require("./../model/following");
-
+const Notification = require('./../model/notification')
 const Comment = require("./Comment");
 const Like = require("./Like");
 
@@ -40,6 +40,7 @@ router.post("/create", auth, async (req, res, next) => {
       const owner = user.username;
       const data = new Story({
         owner: owner,
+        owner_id:user._id,
         content: content,
         photo_only: content !== "" && content !== undefined ? false : true,
         likes: 0,
@@ -64,7 +65,6 @@ router.post("/create", auth, async (req, res, next) => {
               const saved = await photo.save();
               if (!saved) {
                 res.sendStatus(500);
-                return console.log(saved);
               }
               savedImages.push(saved);
             }
@@ -83,7 +83,6 @@ router.post("/create", auth, async (req, res, next) => {
           };
           res.send(posted);
         } else {
-          console.log(post);
           res.sendStatus(500);
         }
       } else {
@@ -104,13 +103,11 @@ router.post("/create", auth, async (req, res, next) => {
             };
             res.send(posted);
           } else {
-            console.log(post);
             res.sendStatus(500);
           }
         }
       }
     } else {
-      console.log(owner);
       res.sendStatus(404);
     }
   } catch (err) {
@@ -177,6 +174,7 @@ router.get("/view", auth, async (req, res, next) => {
               username: user.username,
               firstname: user.firstname,
               lastname: user.lastname,
+              post_owner:user._id,
               photo: user.photo,
               content: story.content,
               images: images,
@@ -213,7 +211,6 @@ router.get("/get-feeds", auth, async (req, res, next) => {
       const user = await User.findOne({ _id: userId }, { username: 1 }); 
       const numOfFollowings = await Followers.countDocuments({follower: user.username})
     if(skip > numOfFollowings)skip = 0
-    console.log(skip)
       if (user) {
         const followings = await Followers.find({ follower: user.username },null,{skip:skip,limit:20});
         if (Array.isArray(followings)) {
@@ -236,20 +233,19 @@ router.get("/get-feeds", auth, async (req, res, next) => {
                 const post = feeds[i];
                 const postImages = await ImageModel.find({post_id: post._id},{})
                 if(Array.isArray(postImages)){
-                  const liked = await Liked.findOne({
-                    post_id: post._id,
-                    liked_by: user.username,
-                  });
+                  const liked = await Liked.findOne({post_id:post._id, liked_by:userId})
+                  const likes = await Liked.countDocuments({post_id:post._id})
                   feedsObjectList.push({
+                    post_owner: postOwner._id,
                     username: postOwner.username,
                     firstname: postOwner.firstname,
                     lastname: postOwner.lastname,
                     photo: postOwner.photo,
                     content: post.content,
                     photos: postImages,
-                    likes: post.likes,
+                    likes: likes,
                     comments: post.comments,
-                    liked:liked?true:false,
+                    liked:liked,
                     _id:post._id,
                     date:post.date
                   });
@@ -280,6 +276,7 @@ router.get("/all-feeds", auth, async (req, res, next) => {
           liked_by: feedOwner.username,
         });
         feedsObjectList.push({
+          post_owner: feedOwner._id,
           username: feedOwner.username,
           firstname: feedOwner.firstname,
           lastname: feedOwner.lastname,
@@ -317,13 +314,11 @@ router.delete("/all", admin, (req, res, next) => {
       console.log(story_err);
       return res.sendStatus(444);
     }
-    console.log("Story deleted from database");
     ImageModel.deleteMany({}, function (photo_err, photo_del) {
       if (photo_err) {
         console.log(photo_err);
         return res.sendStatus(444);
       }
-      console.log("Photo deleted from database");
       res.send({ msg: "Story deleted" });
       const dir = "./uploads/user/";
       // fs.unlinkSync(dir, (del_err)=>{

@@ -10,7 +10,7 @@ function Post({ content, openPost }) {
   const { useFeed, usePeople } = useCustomHooks();
   const { FaComment, FaEllipsisH, FaThumbsUp, FaUserCircle } = useIcons();
   const my_api = process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
-  const { requestLike, postLiked } = useFeed();
+  const { requestLike, postLiked, requestUnlike } = useFeed();
 
   const [render, setRender] = useState(false);
   const [isMounted, setIsMounted] = useState(true);
@@ -33,11 +33,6 @@ function Post({ content, openPost }) {
 
   useEffect(() => {
 
-    const checkLiked = async() => {
-      const is_liked = await postLiked(content._id)
-      setLiked(is_liked)
-    }
-
     const getUserDetails = async () => {
       let pp = new Image();
       pp.onload = () => {
@@ -45,8 +40,9 @@ function Post({ content, openPost }) {
       };
       pp.src = profile_photo_url
     };
-    checkLiked()
     getUserDetails();
+    setLiked(content.liked)
+    console.log(content)
 
     return () => {
       setIsMounted(false);
@@ -58,13 +54,14 @@ function Post({ content, openPost }) {
   };
 
   const likePost = () => {
-    setLiked(!liked)
-    requestLike(content._id)
-    if(liked){
+    if(content.liked){
       setLikes(likes-1)
+      requestUnlike(content)
     }else{
+      requestLike(content)
       setLikes(likes+1)
     }
+    setLiked(!content.liked)
   }
   const openComment = () => {
     setPostToComment(content._id)
