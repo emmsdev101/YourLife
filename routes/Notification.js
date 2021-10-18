@@ -47,6 +47,7 @@ router.get("/", auth, async (req, res) => {
           }
           notificationRes.push({
             type: "comment",
+            date:lastComment[0].createdAt,
             comments: {
               last_commentor: lastCommentors,
               last_comment: lastComment[0]?.content,
@@ -92,6 +93,7 @@ router.get("/", auth, async (req, res) => {
           seen: notification.seen,
           num_likers: numLikers,
           notification_id: notification._id,
+          date:notification.createdAt
         });
       }
       if (notification.type === "follow") {
@@ -104,6 +106,7 @@ router.get("/", auth, async (req, res) => {
           follower: follower,
           seen: notification.seen,
           notification_id: notification._id,
+          date:notification.createdAt
         });
       }
     }
@@ -134,6 +137,7 @@ router.post("/read-comment", auth, async (req, res) => {
   })
 });
 router.post("/read", auth, async(req, res) => {
+  const notificationId = req.body.notificationId
   const updateNotification = await Notification.findByIdAndUpdate(
     notificationId,
     {

@@ -153,6 +153,7 @@ router.get("/fetch-comments", auth, async (req, res) => {
               lastname: commentor.lastname,
               photo: commentor.photo,
               comment_content: comment.content,
+              date:comment.createdAt
             };
             commentors.push(commentResult);
           }

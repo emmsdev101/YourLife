@@ -32,7 +32,6 @@ const ViewComment = ({ story, postId }) => {
     };
     fetchComments();
     sumbitRef.current.disabled = true;
-    console.log(story)
   }, []);
   useEffect(() => {
     if (content.length === 0) {
@@ -115,7 +114,8 @@ const ViewComment = ({ story, postId }) => {
           {comments !== null ? (
             comments.length > 0 ? (
               comments.map((doc, id) => <Comment document={doc} key={id} />)
-            ) : (
+            ) :realTimeComments.length?"":
+            (
               <div className={style.noComment}>
                 <h3>No comments on this post</h3>
                 <p>Be the first to comment</p>

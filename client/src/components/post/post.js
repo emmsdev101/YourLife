@@ -25,8 +25,15 @@ function Post({ content, openPost }) {
   const profile_photo_url = my_api + "/photo/" + content.photo
   const photos = content.photos
 
-  
 
+  const postDate = new Date(content.date)
+  const dateNow = new Date()
+
+  const dateDiff = dateNow.getTime() - postDate.getTime()
+  const daysLapsed = Math.trunc(dateDiff / (1000 * 3600 * 24))
+  const hoursLapsed = Math.trunc(dateDiff / (1000 * 3600))
+  const minutesLapsed = Math.trunc(dateDiff / (1000 * 60))
+  
   const history = useHistory();
 
   const setPostToComment = useContext(GlobalCommentAction);
@@ -42,8 +49,6 @@ function Post({ content, openPost }) {
     };
     getUserDetails();
     setLiked(content.liked)
-    console.log(content)
-
     return () => {
       setIsMounted(false);
     };
@@ -77,7 +82,7 @@ function Post({ content, openPost }) {
               <img
                 className="profile-photo"
                 src={profile_photo_url}
-                alt="profile picture"
+                alt=""
                 onClick = {viewProfile}
               />
             ) : (
@@ -85,7 +90,14 @@ function Post({ content, openPost }) {
             )}
             <div className="post-details">
               <p className = "postName" onClick = {viewProfile}>{firstname + " " + lastname}</p>
-              <p className = "postTime">13 minutes ago</p>
+              <p className = "postTime">
+                {daysLapsed>0?daysLapsed>1?daysLapsed+" days ago":"Day ago":
+                hoursLapsed>0?hoursLapsed>1?hoursLapsed + " hours ago":hoursLapsed+" hour ago":
+                minutesLapsed>0?minutesLapsed>1?minutesLapsed + "minutes ago":minutesLapsed+" minute ago":
+                "just now"
+                }
+
+              </p>
             </div>
             <div className="post-menu">
               {" "}

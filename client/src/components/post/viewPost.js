@@ -12,31 +12,42 @@ const my_api =
   process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
 
 const ViewPost = ({ id, back, setRenderHeader }) => {
-
-  const { FaUserCircle} = useIcons();
-  const { useEffect, useState,useHistory } = useReactHooks();
+  const { FaUserCircle } = useIcons();
+  const { useEffect, useState, useHistory } = useReactHooks();
   const { useFeed } = useCustomHooks();
   const { getAStory } = useFeed();
 
   const [story, setStory] = useState(null);
   const [photos, setPhotos] = useState(null);
   const [profilePhoto, setProfilePhoto] = useState(null);
-  const [view, setView] = useState(null)
+  const [view, setView] = useState(null);
 
-  const history = useHistory()
+  const [daysLapsed, setdaysLapsed] = useState(0);
+  const [hoursLapsed, setHoursLapsed] = useState(0);
+  const [minutesLapsed, setMinutesLapsed] = useState(0);
+
+  const history = useHistory();
+
   useEffect(() => {
-    if(setRenderHeader)setRenderHeader(false)
+    if (setRenderHeader) setRenderHeader(false);
     const fetchPost = async () => {
       const fetchedStory = await getAStory(id);
       if (fetchedStory) {
-          setStory(fetchedStory)
-          preloadProfilePhoto(fetchedStory.photo);
+        setStory(fetchedStory);
+        preloadProfilePhoto(fetchedStory.photo);
+
+        const postDate = new Date(fetchedStory.date);
+        const dateNow = new Date();
+
+        const dateDiff = dateNow.getTime() - postDate.getTime();
+        setdaysLapsed(Math.trunc(dateDiff / (1000 * 3600 * 24)));
+        setHoursLapsed(Math.trunc(dateDiff / (1000 * 3600)));
+        setMinutesLapsed(Math.trunc(dateDiff / (1000 * 60)));
       }
-        setPhotos(fetchedStory.images);
+      setPhotos(fetchedStory.images);
     };
     fetchPost();
-    return () => {
-    }
+    return () => {};
   }, []);
   function preloadProfilePhoto(subUrl) {
     const photoUrl = my_api + "/photo/" + subUrl;
@@ -47,31 +58,30 @@ const ViewPost = ({ id, back, setRenderHeader }) => {
     image.src = photoUrl;
   }
   const close = () => {
-    back(null)
-  }
+    back(null);
+  };
   const openPhoto = (val) => {
-    console.log(photos[val])
-    setView(val)
-  }
+    console.log(photos[val]);
+    setView(val);
+  };
   const closePhoto = (val) => {
-    setView(val)
-  }
-  if(view !== null)return (<ViewPhoto photos = {photos} index = {view} back = {closePhoto}/>  )
+    setView(val);
+  };
+  if (view !== null)
+    return <ViewPhoto photos={photos} index={view} back={closePhoto} />;
   return (
     <div className="view-post">
       <header className="post-header">
-        <div className = "back" onClick = {close}>
-          <FaArrowLeft/>
+        <div className="back" onClick={close}>
+          <FaArrowLeft />
         </div>
-        <h3 className = "post-title">{story !== null? story.firstname:"Loading..."}</h3>
+        <h3 className="post-title">
+          {story !== null ? story.firstname : "Loading..."}
+        </h3>
       </header>
       <div className="view-post-heading">
         {profilePhoto !== null ? (
-          <img
-            className="profile-photo"
-            src={profilePhoto}
-            alt="profile picture"
-          />
+          <img className="profile-photo" src={profilePhoto} alt="" />
         ) : (
           <FaUserCircle className="alt-dp" />
         )}
@@ -81,7 +91,21 @@ const ViewPost = ({ id, back, setRenderHeader }) => {
               ? story.firstname + " " + story.lastname
               : "loading..."}
           </h4>
-          <p>13 minutes ago</p>
+          <p>
+            {daysLapsed > 0
+              ? daysLapsed > 1
+                ? daysLapsed + " days ago"
+                : "Day ago"
+              : hoursLapsed > 0
+              ? hoursLapsed > 1
+                ? hoursLapsed + " hours ago"
+                : hoursLapsed + " hour ago"
+              : minutesLapsed > 0
+              ? minutesLapsed > 1
+                ? minutesLapsed + "minutes ago"
+                : minutesLapsed + " minute ago"
+              : "just now"}
+          </p>
         </div>
       </div>
       <div className="post-body">
@@ -96,18 +120,17 @@ const ViewPost = ({ id, back, setRenderHeader }) => {
                     key={id}
                     id={id}
                     src={my_api + "/photo/" + photo.path}
-                    view = {true}
-                    openPhoto = {openPhoto}
-                    index = {idx}
+                    view={true}
+                    openPhoto={openPhoto}
+                    index={idx}
                   />
                 ))
               : null}
           </div>
         </div>
       </div>
-      {story !== null? <ViewComment postId = {id} story = {story}/>:''}
+      {story !== null ? <ViewComment postId={id} story={story} /> : ""}
     </div>
-    
   );
 };
 

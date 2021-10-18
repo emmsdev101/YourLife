@@ -180,6 +180,7 @@ router.get("/view", auth, async (req, res, next) => {
               images: images,
               likes: story.likes,
               comments: story.comments,
+              date:story.date
             };
             res.send(storyObject);
           });

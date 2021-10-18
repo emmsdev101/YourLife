@@ -12,6 +12,14 @@ const Comment = ({document}) => {
     const fullname = document.firstname + ' ' + document.lastname
     const profile_photo_url =  my_api + "/photo/" + document.photo
     const content = document.comment_content
+
+    const postDate = new Date(document.date)
+    const dateNow = new Date()
+  
+    const dateDiff = dateNow.getTime() - postDate.getTime()
+    const daysLapsed = Math.trunc(dateDiff / (1000 * 3600 * 24))
+    const hoursLapsed = Math.trunc(dateDiff / (1000 * 3600))
+    const minutesLapsed = Math.trunc(dateDiff / (1000 * 60))
     
     useEffect(() => {
         const preloadPicture = async () => {
@@ -25,6 +33,7 @@ const Comment = ({document}) => {
         return () => {
             setDpLoaded(false)
         }
+        
     }, []);
     const viewProfile = () => {
         history.push("/profile/"+document.username)
@@ -33,7 +42,7 @@ const Comment = ({document}) => {
         <div className = {style.comment}>
             <div className = {style.commentProfile}>
                 {dpLoaded? 
-                <img src = {profile_photo_url} className = {style.profilePhoto} onClick = {viewProfile}/>:
+                <img src = {profile_photo_url} className = {style.profilePhoto} onClick = {viewProfile} alt = ''/>:
                 <FaUserCircle className = {style.tempProfilePhoto} onClick = {viewProfile}/>
                 }
             </div>
@@ -44,7 +53,13 @@ const Comment = ({document}) => {
             <p className = {style.commentContent}>
                 {content}
             </p>
-            <p className = {style.commentTime}>1h</p>
+            <p className = {style.commentTime}>
+            {daysLapsed>0?daysLapsed>1?daysLapsed+" days ago":"Day ago":
+                hoursLapsed>0?hoursLapsed>1?hoursLapsed + " hours ago":hoursLapsed+" hour ago":
+                minutesLapsed>0?minutesLapsed>1?minutesLapsed + "minutes ago":minutesLapsed+" minute ago":
+                "just now"
+                }
+            </p>
             </div>
             
         </div>
