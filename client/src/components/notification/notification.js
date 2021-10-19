@@ -59,6 +59,7 @@ function NotificationItem({
           },
         });
       } else {
+        console.log("like",notification.notification_id)
         axios({
           method: "post",
           withCredentials: true,

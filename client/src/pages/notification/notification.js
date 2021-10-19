@@ -6,7 +6,7 @@ import { Suspense, lazy} from 'react'
 
 const ViewPost = lazy(() => import("../../components/post/viewPost"));
 function Notification({setRenderHeader}){
-    const {FaBars, FaBell, FaEnvelope, FaHome, FaSearch, FaUsers} = useIcons()
+    const {FaSearch} = useIcons()
     const {useHistory} = useReactHooks()
     const {notifications,viewNotification, setViewNotification, closePost} = useNotification(setRenderHeader)
     
@@ -28,6 +28,10 @@ function Notification({setRenderHeader}){
               <button className = "search-button"><FaSearch className = "search-icon"></FaSearch></button>
           </div>
           <div className = "people-list-div">
+            <br/>
+            {!notifications?"loading":
+              notifications.length<1?"You have no notifications":"loading"
+            }
               {notifications?.map((item, id)=>(
                   <NotificationItem notification = {item} setRenderHeader = {setRenderHeader} setViewNotification={setViewNotification} openProfile = {switchPage} key = {id}></NotificationItem>
               ))}

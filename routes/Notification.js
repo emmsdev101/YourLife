@@ -137,7 +137,7 @@ router.post("/read-comment", auth, async (req, res) => {
   })
 });
 router.post("/read", auth, async(req, res) => {
-  const notificationId = req.body.notificationId
+  const notificationId = req.body.notification_id
   const updateNotification = await Notification.findByIdAndUpdate(
     notificationId,
     {
