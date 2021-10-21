@@ -18,7 +18,7 @@ router.get("/", auth, async (req, res) => {
   try {
     const userId = req.session.user;
 
-    const myNotifications = await Notification.find({ user_id: userId });
+    const myNotifications = await Notification.find({ user_id: userId }).sort({updatedAt:-1});
     let notificationRes = [];
     for (let index = 0; index < myNotifications.length; index++) {
       const notification = myNotifications[index];

@@ -29,8 +29,8 @@ function Notification({setRenderHeader}){
           </div>
           <div className = "people-list-div">
             <br/>
-            {!notifications?"loading":
-              notifications.length<1?"You have no notifications":"loading"
+            {!notifications?"loading notifications...":
+              notifications.length<1?"You have no notifications":""
             }
               {notifications?.map((item, id)=>(
                   <NotificationItem notification = {item} setRenderHeader = {setRenderHeader} setViewNotification={setViewNotification} openProfile = {switchPage} key = {id}></NotificationItem>

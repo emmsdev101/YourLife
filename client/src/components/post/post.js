@@ -48,7 +48,6 @@ function Post({ content, openPost }) {
       pp.src = profile_photo_url
     };
     getUserDetails();
-    setLiked(content.liked)
     return () => {
       setIsMounted(false);
     };
@@ -59,14 +58,14 @@ function Post({ content, openPost }) {
   };
 
   const likePost = () => {
-    if(content.liked){
+    if(liked){
       setLikes(likes-1)
       requestUnlike(content)
     }else{
       requestLike(content)
       setLikes(likes+1)
     }
-    setLiked(!content.liked)
+    setLiked(!liked)
   }
   const openComment = () => {
     setPostToComment(content._id)
