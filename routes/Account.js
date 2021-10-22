@@ -31,13 +31,14 @@ const queryFollowers = async (ownId, username, limit, page) => {
       let follwersObject = [];
       for (let index = 0; index < followers.length; index++) {
         const follower = followers[index];
+        const myProfile =  await User.findOne({_id:ownId})
         const get_profile = await User.findOne({
           $and: [{ _id: { $ne: ownId } }, { username: follower.follower }],
         });
         if (get_profile) {
           let followed = false;
           const isfollowing = await Following.findOne({
-            follower: username,
+            follower: myProfile.username,
             following: get_profile.username,
           });
           if (isfollowing) {

@@ -20,6 +20,8 @@ const Follower = ({style, user, back}) => {
         setProfilePicture(src)
         }
         image.src = src
+
+        console.log(user)
     }, []);
 
     const reqFollow = () => {
@@ -33,7 +35,7 @@ const Follower = ({style, user, back}) => {
     
     return (
         <div className = {style.follower}>
-            {profilePiture? <img className = {style.picture} src = {profilePiture} onClick = {viewProfile}/>:
+            {profilePiture? <img className = {style.picture} src = {profilePiture} onClick = {viewProfile} alt = ''/>:
             <FaUserCircle className = {style.picture} onClick = {viewProfile}/>}
             <p className = {style.followerName} onClick = {viewProfile} >{fullname}</p>
             <button className = {follower? style.unfollowBtn:style.followBtn} onClick = {reqFollow}>{follower? "Unfollow":"Follow"}</button>
