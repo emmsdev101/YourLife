@@ -4,11 +4,12 @@ import { FaUserCircle } from "react-icons/fa";
 import axios from "axios";
 
 function NotificationItem({
-  unread,
   notification,
   setRenderHeader,
   setViewNotification,
   openProfile,
+  id,
+  readNotif
 }) {
   const my_api =
     process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
@@ -47,6 +48,7 @@ function NotificationItem({
   }
   const readNotification = async () => {
     if (!seen) {
+      readNotif(id)
       if (notification.type === "comment") {
         axios({
           method: "post",
@@ -125,7 +127,7 @@ function NotificationItem({
   } else if (notification.type === "like") {
     const likers = notification.likers;
     const numLikers = notification.num_likers;
-    const profilePhoto = my_api + "/photo/" + likers[0].photo;
+    const profilePhoto = my_api + "/photo/" + likers[0]?.photo;
 
     preloadProfilePicture(profilePhoto);
 

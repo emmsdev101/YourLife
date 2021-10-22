@@ -3,6 +3,16 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const app = express();
+
+const http = require('http');
+const server = http.createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
+
 const session = require("express-session");
 const mongoose = require("mongoose");
 const path = require("path");
@@ -10,6 +20,10 @@ const accRoute = require("./routes/Account");
 const postRoute = require("./routes/Story");
 const photoRoute = require('./routes/Photo')
 const notificationRoute = require('./routes/Notification')
+
+let onlineUsers = new Object()
+app.set('socketio', io)
+app.set('onlineUsers',onlineUsers)
 
 require("dotenv").config();
 
@@ -46,6 +60,20 @@ app.use(express.static("client/build"));
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
 });
+
+io.on('connection', (socket) => {
+  socket.on('connect-me',(userId)=>{
+    onlineUsers[userId] = socket.id
+  })
+  socket.on('join', (room)=>{
+    socket.join(room)
+  })
+});
+
+
+server.listen(process.env.PORT || 4001,()=>{
+  
+})
 // }
 
 //----------------------------------------- END OF ROUTES---------------------------------------------------

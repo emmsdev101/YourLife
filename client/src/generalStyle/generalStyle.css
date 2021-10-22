@@ -30,3 +30,17 @@
     justify-content: center;
     height: 100%;
 }
+
+#notificationCount{
+    background-color: rgb(202, 27, 27);
+    width: 15px;
+    height: 23px;
+    border-radius: 5px;
+    text-align: center;
+    position: relative;
+    left: -10px;
+    top: -10px;
+    color: white;
+    
+    
+}

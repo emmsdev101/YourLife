@@ -2,8 +2,8 @@ import React from "react";
 import { FaBars, FaBell, FaEnvelope, FaHome, FaUser, FaUsers } from "react-icons/fa";
 import useHeader from "./useHeader";
 
-const Header = () => {
-    const {switchPage, setActive, active} = useHeader()
+const Header = ({notifications}) => {
+    const {switchPage, active, newNotifs} = useHeader(notifications)
     return (
       <header className="home-header">
         <div
@@ -32,6 +32,7 @@ const Header = () => {
           }}
         >
           <FaBell className="nav-icon"></FaBell>
+          {newNotifs?<div id = "notificationCount">{newNotifs}</div>:""}
         </div>
         <div
           className={active === "/chat" ? "active" : "inactive"}

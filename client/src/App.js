@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState, useRef } from "react";
+import React, { Suspense, lazy } from "react";
 import { Route, Switch } from "react-router-dom";
 import style from "./app.module.css";
 import Header from "./components/header/Header";
@@ -23,13 +23,16 @@ function App() {
     addFeed,
     fetchStory,
     loading,
+    notifications,
+    setNotifications
   } = useApp();
+
   return (
     <Switch>
       <React.Fragment>
         {isLogged() ? (
           <div className={style.App}>
-            {renderHeader ? <Header /> : ""}
+            {renderHeader ? <Header notifications = {notifications}/> : ""}
             <Suspense fallback={<div>Loading...</div>}>
               <Route exact path="/menu" component={Menu} />
               <Route exact path="/people" component={People} />
@@ -37,7 +40,7 @@ function App() {
                 exact
                 path="/notification"
                 render={(props) => (
-                  <Notification {...props} setRenderHeader={setRenderHeader} />
+                  <Notification {...props} setRenderHeader={setRenderHeader} notifications = {notifications} setNotifications = {setNotifications} />
                 )}
               />
               <Route exact path="/chat" component={Chat} />
@@ -115,6 +118,7 @@ function App() {
           </Suspense>
         )}
       </React.Fragment>
+      
     </Switch>
   );
 }

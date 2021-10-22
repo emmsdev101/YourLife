@@ -17,7 +17,6 @@ const auth = (req, res, next) => {
 router.get("/", auth, async (req, res) => {
   try {
     const userId = req.session.user;
-
     const myNotifications = await Notification.find({ user_id: userId }).sort({updatedAt:-1});
     let notificationRes = [];
     for (let index = 0; index < myNotifications.length; index++) {
@@ -86,6 +85,7 @@ router.get("/", auth, async (req, res) => {
           lastlikersData.push(likerData);
         }
         notificationRes.push({
+          _id:notification._id,
           type: "like",
           likers: lastlikersData,
           story: story_details,
@@ -102,6 +102,7 @@ router.get("/", auth, async (req, res) => {
           { password: 0 }
         );
         notificationRes.push({
+          _id:notification._id,
           type: "follow",
           follower: follower,
           seen: notification.seen,

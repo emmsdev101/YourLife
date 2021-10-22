@@ -20,6 +20,8 @@ const admin = (req, res, next) => {
   } else res.sendStatus(401);
 };
 router.post("/add-comment", auth, async (req, res) => {
+  let io = req.app.get("socketio");
+  let onlineUsers = req.app.get("onlineUsers");
   try {
     const postId = req.body.post_id;
     const content = req.body.content;
@@ -93,24 +95,48 @@ router.post("/add-comment", auth, async (req, res) => {
           });
           createNotification.save();
         }
-        const commentors = await Room.findOne({
+        const commentRoom = await Room.findOne({
           post_id: postId,
         });
-        if (commentors) {
-          const senderExists = commentors.recipients.find(
+        if (commentRoom) {
+          const senderExists = commentRoom.recipients.find(
             (recipient) => recipient === userId
           );
           if (!senderExists) {
-            commentors.recipients.push(userId);
-            commentors.save();
+            commentRoom.recipients.push(userId);
+            commentRoom.save();
           }
+          io.in(postId).emit("notification",{
+            type: "comment",
+            date:savedComment.createdAt,
+            comments: {
+              last_commentor: [user],
+              last_comment: savedComment.content,
+            },
+            post_id: postId,
+            comment_id: savedComment._id,
+            seen: false,
+            sender:userId
+        })
         } else {
-          const newCommentors = new Room({
+          const newcommentRoom = new Room({
             post_id: postId,
             recipients: [userId,post_owner],
             owner: post_owner,
           });
-          newCommentors.save();
+          newcommentRoom.save();
+          io.to(onlineUsers[post_owner]).emit("notification",{
+            type: "comment",
+            date:savedComment.createdAt,
+            comments: {
+              last_commentor: [user],
+              last_comment: savedComment.content,
+            },
+            post_id: postId,
+            comment_id: savedComment._id,
+            seen: false,
+            sender:userId
+        })
         }
       } else {
         res.send(false);

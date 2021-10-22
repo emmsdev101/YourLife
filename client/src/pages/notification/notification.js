@@ -5,10 +5,10 @@ import useNotification from './useNotification'
 import { Suspense, lazy} from 'react'
 
 const ViewPost = lazy(() => import("../../components/post/viewPost"));
-function Notification({setRenderHeader}){
+function Notification({setRenderHeader, notifications, setNotifications}){
     const {FaSearch} = useIcons()
     const {useHistory} = useReactHooks()
-    const {notifications,viewNotification, setViewNotification, closePost} = useNotification(setRenderHeader)
+    const {viewNotification, setViewNotification, closePost, readNotification} = useNotification(setRenderHeader, notifications, setNotifications)
     
     const history = useHistory()
     function switchPage(page){
@@ -33,7 +33,7 @@ function Notification({setRenderHeader}){
               notifications.length<1?"You have no notifications":""
             }
               {notifications?.map((item, id)=>(
-                  <NotificationItem notification = {item} setRenderHeader = {setRenderHeader} setViewNotification={setViewNotification} openProfile = {switchPage} key = {id}></NotificationItem>
+                  <NotificationItem notification = {item} setRenderHeader = {setRenderHeader} setViewNotification={setViewNotification} openProfile = {switchPage} key = {id} id = {id} readNotif = {readNotification}></NotificationItem>
               ))}
           </div>
       </div>    )

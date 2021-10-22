@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaComment, FaThumbsUp } from "react-icons/fa";
-import { GlobalCommentAction } from "../../logic/commentContext";
+import { SocketContext } from "./../../logic/socketHandler";
 import useFeed from "../../logic/useFeed";
 import Loader from "../Loader/Loader";
 import Comment from "./Comment";
@@ -8,7 +8,7 @@ import style from "./view-comment.module.css";
 
 const ViewComment = ({ story, postId }) => {
   const { addComment, getComments, requestLike, postLiked } = useFeed();
-
+  const socket = useContext(SocketContext)
   const [content, setContent] = useState("");
   const [comments, setComments] = useState(null);
   const [likes, setLikes] = useState(story.likes);
@@ -57,6 +57,8 @@ const ViewComment = ({ story, postId }) => {
       setNumComments(numComments + 1);
       setContent("");
       setPosting(false);
+
+      socket.emit('join', postId)
     }
   };
   const loadMoreComments = async () => {

@@ -31,28 +31,25 @@ const queryFollowers = async (ownId, username, limit, page) => {
       let follwersObject = [];
       for (let index = 0; index < followers.length; index++) {
         const follower = followers[index];
-        const get_profile = await User.findOne(
-         { $and: [
-            { _id: {$ne: ownId} },
-            {  username: follower.follower },
-        ]
-         } );
+        const get_profile = await User.findOne({
+          $and: [{ _id: { $ne: ownId } }, { username: follower.follower }],
+        });
         if (get_profile) {
-            let followed = false;
-            const isfollowing = await Following.findOne({
-              follower: username,
-              following: get_profile.username,
-            });
-            if (isfollowing) {
-              followed = true;
-            }
-            follwersObject.push({
-              username: get_profile.username,
-              firstname: get_profile.firstname,
-              lastname: get_profile.lastname,
-              photo: get_profile.photo,
-              followed: followed,
-            });
+          let followed = false;
+          const isfollowing = await Following.findOne({
+            follower: username,
+            following: get_profile.username,
+          });
+          if (isfollowing) {
+            followed = true;
+          }
+          follwersObject.push({
+            username: get_profile.username,
+            firstname: get_profile.firstname,
+            lastname: get_profile.lastname,
+            photo: get_profile.photo,
+            followed: followed,
+          });
         }
       }
       return follwersObject;
@@ -66,7 +63,7 @@ const queryFollowers = async (ownId, username, limit, page) => {
 router.get("/fetchAll", auth, async (req, res) => {
   try {
     const users = await User.find(
-      {_id: {$ne: req.session.user}},
+      { _id: { $ne: req.session.user } },
       {
         password: 0,
       }
@@ -85,7 +82,6 @@ router.get("/account", auth, async (req, res, next) => {
         _id: user_id,
       },
       {
-        _id: 0,
         password: 0,
       },
       function (err, doc) {
@@ -102,21 +98,30 @@ router.get("/account", auth, async (req, res, next) => {
 router.get("/profile", auth, async (req, res) => {
   try {
     const username = req.query.username;
-    const follower  = await User.findOne({_id:req.session.user},{username:1})
+    const follower = await User.findOne(
+      { _id: req.session.user },
+      { username: 1 }
+    );
     if (username && follower) {
-      const profile = await User.findOne({ username: username },{_id:0, password:0});
+      const profile = await User.findOne(
+        { username: username },
+        { _id: 0, password: 0 }
+      );
       if (profile) {
-        const isFollowed = await Following.findOne({follower:follower.username,following:username})
+        const isFollowed = await Following.findOne({
+          follower: follower.username,
+          following: username,
+        });
         res.send({
-          username:profile.username,
-          photo:profile.photo,
-          firstname:profile.firstname,
-          lastname:profile.lastname,
-          gender:profile.gender,
-          age:profile.age,
-          followers:profile.followers,
-          following:profile.following,
-          isFollowed:isFollowed?true:false
+          username: profile.username,
+          photo: profile.photo,
+          firstname: profile.firstname,
+          lastname: profile.lastname,
+          gender: profile.gender,
+          age: profile.age,
+          followers: profile.followers,
+          following: profile.following,
+          isFollowed: isFollowed ? true : false,
         });
       } else res.send(304);
     } else res.send(304);
@@ -189,7 +194,12 @@ router.get("/accout-followers", auth, async (req, res) => {
     const limit = parseInt(req.query.limit);
     const username = req.query.username;
     if (username) {
-      const followers = await queryFollowers(req.session.user, username, limit, 1);
+      const followers = await queryFollowers(
+        req.session.user,
+        username,
+        limit,
+        1
+      );
       if (followers) {
         res.send(followers);
       } else {
@@ -330,7 +340,7 @@ router.post("/follow", auth, async (req, res) => {
       follower: follower,
       following: req.body.username,
     });
-    follow.save(function (err, followed) {
+    follow.save(async function (err, followed) {
       if (err) {
         console.log(err);
         return res.sendStatus(444);
@@ -358,12 +368,35 @@ router.post("/follow", auth, async (req, res) => {
         });
       }
       const followNotification = new Notification({
-        type:'follow',
-        last_activity:follower,
-        user_id:req.body.user_id,
-        seen:false
-      })
-      followNotification.save()
+        type: "follow",
+        last_activity: follower,
+        user_id: req.body.user_id,
+        seen: false,
+      });
+      const savedNotification = followNotification.save();
+      if (savedNotification) {
+        let io = req.app.get("socketio");
+        let onlineUsers = req.app.get("onlineUsers");
+
+        const followed = await User.findOne(
+          { username: req.body.username },
+          { password: 0 }
+        );
+        const followee = await User.findOne(
+          { username: follower },
+          { password: 0 }
+        );
+        if (followed && followee) {
+          io.to(onlineUsers[followed._id]).emit("notification", {
+            _id: savedNotification._id,
+            type: "follow",
+            follower: followee,
+            seen: false,
+            notification_id: savedNotification._id,
+            date: savedNotification.createdAt,
+          });
+        }
+      }
     });
   };
   const unfollow = async (follower) => {
