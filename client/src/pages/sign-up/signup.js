@@ -54,15 +54,15 @@ function Signup(){
                 <label htmlFor = "fname-input"> First name:</label>
                 <input type = "text" className = "signup-input" id = "fname-input" onChange = {(e)=>{
                     setFirstname(e.target.value)
-                }} value = {firstname}/>
+                }} value = {firstname} required/>
                 <label htmlFor = "fname-input"> Last name:</label>
                 <input type = "text" className = "signup-input" id = "lname-input" onChange = {(e)=>{
                     setLatname(e.target.value)
-                }} value = {lastname}/>
+                }} value = {lastname} required/>
                 <label htmlFor = "fname-input"> Age:</label>
                 <input type = "number" className = "signup-input" id = "age-input" onChange = {(e)=>{
                     setAge(e.target.value)
-                }} value = {age}/>
+                }} value = {age} required/>
                 <label htmlFor = "fname-input"> Gender:</label>
                 <select className = "signup-input" name = "gender" id = "gender" value = {gender} onChange = {genderOnchange}>
                     {gender_options.map((item)=>(
@@ -72,15 +72,17 @@ function Signup(){
                 <label htmlFor = "fname-input"> Username:</label>
                 <input type = "username" className = "signup-input" id = "username-input" onChange = {(e)=>{
                     setUsername(e.target.value)
-                }} value = {username}/>
+                }} value = {username} required/>
                 <label htmlFor = "fname-input"> Password:</label>
                 <input type = "password" className = "signup-input" id = "password-input" onChange = {(e)=>{
                     setPassword(e.target.value)
-                }} value = {password}/>
+                }} value = {password} required/>
                 <label htmlFor = "fname-input"> Re-type Password:</label>
-                <input type = "password" className = "signup-input" id = "repassword-input"/>
+                <input type = "password" className = "signup-input" id = "repassword-input" required/>
                 <button className = "signup-submit" onClick = {()=>{signUp()}}>Submit</button>
+                <p className = 'login-link'> Already have an accout? <a href = '/login'>Login here</a></p>
             </div>
+            
 
         </div>
     )

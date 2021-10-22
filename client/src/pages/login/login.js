@@ -8,6 +8,8 @@ function Login(){
     const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' :''
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('')
+    const [loading, setLoading] = useState(false)
     const history = useHistory()
     const cookies = new Cookies()
 
@@ -20,6 +22,7 @@ function Login(){
         setPassword(e.target.value)
     }
     const signIn = async() =>{
+        setLoading(true)
         const res = await axios({
             method: 'post',
             withCredentials: true,
@@ -31,10 +34,11 @@ function Login(){
           });
 
         if(res.status === 200){
+            setLoading(false)
           if(res.data.wrong_password){
-              alert('Wrong Password')
+            setErrorMessage("Wrong password")
           }else if(res.data.wrong_user){
-              alert('Wrong username')
+              setErrorMessage("Wrong username")
           }
           else{
               cookies.set('username', res.data.username)
@@ -43,14 +47,32 @@ function Login(){
           }
         }else{
             alert('Error')
+            setLoading(false)
         }
+    }
+    const errorCard = () => {
+        return(
+            <div className = "error-card">
+                <p>{errorMessage}</p>
+            </div>
+        )
+    }
+    const splash = () => {
+        return(
+            <div className = "splash">
+                <p>Logging in . . .</p>
+            </div>
+        )
     }
     return (
         <div className = "signup">
+            {loading?splash():''}
             <div className = "signup-header">
-                <img src = {logo_text}/>
-            </div>  
+                <img src = {logo_text} alt = ''/>
+            </div>
+              {errorMessage?errorCard():''}
             <div className = "signup-body">
+                
                 <label htmlFor = "fname-input"> Username:</label>
                 <input type = "username" className = "signup-input" id = "username-input" value = {username} onChange = {usernameChage}/>
                 <label htmlFor = "fname-input"> Password:</label>
@@ -60,7 +82,6 @@ function Login(){
                 <button className = "signup-btn" onClick = {()=>{history.push('/signup')}}>Signup</button>
                 <center>If you dont have an account yet</center>
             </div>
-
         </div>
     )
 }

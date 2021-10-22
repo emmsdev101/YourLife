@@ -1,5 +1,7 @@
 import { useCustomHooks, useIcons, useReactHooks } from '../../logic/library'
 import style from './menu.module.css'
+import Alert from './../../components/alert/Alert'
+import React from 'react'
 function Menu(){
     const  {useContext, useHistory,useEffect, useState, Cookies, axios} = useReactHooks()
     const {GlobalUserContext} = useCustomHooks()
@@ -12,9 +14,13 @@ function Menu(){
     const [profile_photo_url, setProfilePhotoUrl] = useState(null)
 
     const history = useHistory()
+    const [confirmLogout, setConfirmLogout] = useState(false)
 
     function switchPage(page){
        history.push(page)
+    }
+    function cancel(){
+        setConfirmLogout(false)
     }
     useEffect(() => {
        let temp_img = new Image()
@@ -34,12 +40,16 @@ function Menu(){
         if(logged_out.status === 200){
             cookie.remove('username')
             window.location.replace('/login')
-            alert('You are logged out')
         }else{
             console.log(logged_out.status)
         }
     }
+    const openLogout = ()=>{
+        setConfirmLogout(true)
+    }
     return(
+        <React.Fragment>
+            {confirmLogout?<Alert confirm = {logout} cancel = {cancel} message = {"Are you sure you want to log out?"}/>:''}
          <div className = {style.menu}>
            <div className ={style.profile} onClick = {()=>{switchPage('/profile')}}>
            <p className ={style.menuItemTitle}>Your Profile</p>
@@ -63,11 +73,12 @@ function Menu(){
                <FaHandshake className = {style.itemIcon}/>
                <p className = {style.menuItemTitle}>Support</p>
            </div>
-           <div className ={style.menuItem} onClick = {logout}>
+           <div className ={style.menuItem} onClick = {openLogout}>
                <FaSignOutAlt className = {style.itemIcon}/>
                <p className = {style.menuItemTitle}>Logout</p>
            </div>
         </div>
+        </React.Fragment>
     )
 }
 export default Menu

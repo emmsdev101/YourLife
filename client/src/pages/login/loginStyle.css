@@ -29,8 +29,9 @@ center{
   }
 .signup{
     height: 100vh;
-    width: 100vw;
+    width: 768px;
     background-color: rgb(226, 226, 226);
+    margin: auto;
 }
 .signup-header{
     background-color:#EF5DA8;
@@ -65,5 +66,36 @@ label{
     border: none;
     color: white;
     border-radius: 5px;
-
 }
+.error-card{
+    width: 80%;
+    margin: auto;
+    background-color: #facece;
+    border: 1px solid #fa9e9e;
+    margin-top: 30px;
+    border-radius: 3px;
+    color: #db0000;
+    padding-left: 20px;
+    font-size: large;
+}
+.splash{
+    position: absolute;
+    background-color: #ffffff96;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(29, 29, 29);
+    font-size: large;
+    font-weight: bold;
+}
+.login-link a{
+    color: #EF5DA8;
+}
+@media only screen and (max-width: 768px){
+    .signup{
+      width: 100%;
+      height: auto;
+    }
+  }

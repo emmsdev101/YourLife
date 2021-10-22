@@ -10,7 +10,7 @@ const useFollowersList = (isOwn, back) => {
     const [followers, setFollwers] = useState(null)
     const [loading, setLoading] = useState(true)
     const params = useParams()
-   const user = params.username
+    const user = params.username
 
 
     useEffect(()=> {

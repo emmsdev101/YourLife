@@ -1,8 +1,5 @@
-import { useRef } from "react";
 import { FaArrowLeft, FaCamera, FaImages, FaVideo } from "react-icons/fa";
-import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library";
 import UploadingProgress from "../uploadingProgress/UploadingProgress";
-import imageCompression from "./../../logic/imageCompression";
 import style from "./createpost.module.css";
 import useCreatePost from "./useCreatePost";
 function CreatePost({ showMe, addStory }) {
