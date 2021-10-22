@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
 });
 
 
-server.listen(process.env.PORT || 4001,()=>{
+server.listen(process.env.PORT || 4000,()=>{
   
 })
 // }
@@ -86,7 +86,4 @@ try {
 } catch (err) {
   console.log(err);
 }
-//Start Server
-app.listen(process.env.PORT || 4000, () => {
-  console.log("Server Has Started");
-});
+
