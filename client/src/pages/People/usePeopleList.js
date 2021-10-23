@@ -14,7 +14,6 @@ const usePeopleList = (setRenderHeader) => {
     initPeople();
   }, []);
   useEffect(() => {
-    console.log(searchInput)
       async function searchReq() {
         const searchResult = await searchPeople(searchInput)
         if(searchResult){
