@@ -5,7 +5,7 @@ import useNotification from "./useNotification";
 import { Suspense, lazy } from "react";
 
 const ViewPost = lazy(() => import("../../components/post/viewPost"));
-function Notification({ setRenderHeader, notifications, setNotifications }) {
+function Notification({ setRenderHeader, notifications, setNotifications, refreshNotifs }) {
   const { FaSearch } = useIcons();
   const { useHistory } = useReactHooks();
   const { viewNotification, setViewNotification, closePost, readNotification,loadingNext, loadMore } =
@@ -30,6 +30,7 @@ function Notification({ setRenderHeader, notifications, setNotifications }) {
       <div className="people-body">
         <div className="people-header">
           <h3>Notification</h3>
+          <button className = "notif-refresh" onClick = {refreshNotifs}>Refresh</button>
           <button className="search-button">
             <FaSearch className="search-icon"></FaSearch>
           </button>

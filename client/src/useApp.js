@@ -51,16 +51,7 @@ const useApp = () => {
     }
   }, [location.pathname]);
   useEffect(() => {
-    async function initNotifications() {
-      const getNotifications = await axios({
-        method: "get",
-        withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        url: my_api + "/notification",
-      });
-      setNotifications(getNotifications.data);
-      setNotifLoaded(true);
-    }
+    
     initNotifications();
     if (userContext._id) {
       socket.emit("connect-me", userContext._id);
@@ -133,6 +124,20 @@ const useApp = () => {
       return false;
     }
   }
+  async function initNotifications() {
+    const getNotifications = await axios({
+      method: "get",
+      withCredentials: true,
+      headers: { "Content-Type": "application/json" },
+      url: my_api + "/notification",
+    });
+    setNotifications(getNotifications.data);
+    setNotifLoaded(true);
+  }
+  const refreshNotifs = async()=>{
+    setNotifications(null)
+    initNotifications()
+  }
   return {
     isLogged,
     renderHeader,
@@ -142,7 +147,7 @@ const useApp = () => {
     fetchStory,
     loading,
     notifications,
-    setNotifications
+    setNotifications,refreshNotifs
   };
 };
 export default useApp;

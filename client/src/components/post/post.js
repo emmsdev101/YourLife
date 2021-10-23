@@ -68,7 +68,7 @@ function Post({ content, openPost }) {
   const likePost = () => {
     if(liked){
       setLikes(likes-1)
-      requestUnlike(content)
+      requestUnlike(content._id)
     }else{
       requestLike(content)
       setLikes(likes+1)

@@ -24,7 +24,8 @@ function App() {
     fetchStory,
     loading,
     notifications,
-    setNotifications
+    setNotifications,
+    refreshNotifs,
   } = useApp();
 
   return (
@@ -42,7 +43,7 @@ function App() {
                 exact
                 path="/notification"
                 render={(props) => (
-                  <Notification {...props} setRenderHeader={setRenderHeader} notifications = {notifications} setNotifications = {setNotifications} />
+                  <Notification {...props} setRenderHeader={setRenderHeader} notifications = {notifications} setNotifications = {setNotifications} refreshNotifs = {refreshNotifs} />
                 )}
               />
               <Route exact path="/chat" component={Chat} />

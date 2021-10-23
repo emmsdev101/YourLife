@@ -125,6 +125,7 @@ router.post("/add-comment", auth, async (req, res) => {
             owner: post_owner,
           });
           newcommentRoom.save();
+          console.log("post owner", post_owner)
           io.to(onlineUsers[post_owner]).emit("notification",{
             type: "comment",
             date:savedComment.createdAt,

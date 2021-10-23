@@ -152,7 +152,21 @@ router.get("/my-posts", auth, async (req, res, next) => {
           photos: photos,
           liked: liked ? true : false,
           _id: feed._id,
-          date:feed.date
+          date:feed.date,
+          post_owner: user._id
+
+          // post_owner: postOwner._id,
+          //           username: postOwner.username,
+          //           firstname: postOwner.firstname,
+          //           lastname: postOwner.lastname,
+          //           photo: postOwner.photo,
+          //           content: post.content,
+          //           photos: postImages,
+          //           likes: likes,
+          //           comments: post.comments,
+          //           liked: liked,
+          //           _id: post._id,
+          //           date: post.date,
         });
       }
       res.send(feedsObjectList);
