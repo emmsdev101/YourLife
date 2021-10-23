@@ -27,6 +27,27 @@ function usePeople() {
       }
     }
   };
+  const searchPeople = async (toSearch) => {
+    try {
+      const fetch_res = await axios({
+        method: "get",
+        withCredentials: true,
+        url: my_api + "/user/search",
+        params:{toSearch}
+      });
+      if (fetch_res.status === 200) {
+          return fetch_res.data
+      }
+    } catch (err) {
+      if (err.response) {
+        if (err.response.status === 401) {
+          cookie.remove("username");
+          window.location.replace("/login")
+          return null;
+        }
+      }
+    }
+  };
   const getUserInfo = async (username) => {
     try {
       const url = username? my_api + "/user/profile": my_api + "/user/account"
@@ -80,6 +101,7 @@ function usePeople() {
       }
     }
   };
+
   const fetchGalerry = async(user) => {
     try {
       const fetchResult = await axios({
@@ -232,7 +254,8 @@ function usePeople() {
     isFollowing,
     getFollowing,
     getFollowStatus,
-    fetchGalerry
+    fetchGalerry,
+    searchPeople
   };
 }
 export default usePeople;

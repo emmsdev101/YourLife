@@ -35,7 +35,9 @@ function App() {
             {renderHeader ? <Header notifications = {notifications}/> : ""}
             <Suspense fallback={<div>Loading...</div>}>
               <Route exact path="/menu" component={Menu} />
-              <Route exact path="/people" component={People} />
+              <Route exact path="/people" render = {(props)=>(
+                <People {...props} setRenderHeader = {setRenderHeader}/>
+              )} />
               <Route
                 exact
                 path="/notification"

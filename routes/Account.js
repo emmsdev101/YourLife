@@ -31,7 +31,7 @@ const queryFollowers = async (ownId, username, limit, page) => {
       let follwersObject = [];
       for (let index = 0; index < followers.length; index++) {
         const follower = followers[index];
-        const myProfile =  await User.findOne({_id:ownId})
+        const myProfile = await User.findOne({ _id: ownId });
         const get_profile = await User.findOne({
           $and: [{ _id: { $ne: ownId } }, { username: follower.follower }],
         });
@@ -71,8 +71,7 @@ router.get("/fetchAll", auth, async (req, res) => {
       {
         password: 0,
       },
-      {limit:limit,
-      skip:to_skip}
+      { limit: limit, skip: to_skip }
     );
     res.send(users);
   } catch (error) {
@@ -462,6 +461,33 @@ router.post("/follow", auth, async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+  }
+});
+router.get("/search", auth, async (req, res) => {
+  try {
+    const searchInput = req.query.toSearch;
+    const space = searchInput.indexOf(" ");
+    const firstname = searchInput.slice(
+      0,
+      space >= 0 ? space : searchInput.length
+    );
+    const lastname = searchInput.slice(space >= 0 ? space +1 : searchInput.length);
+
+    if (lastname) {
+      const searchUsers = await User.find({
+        firstname: { $regex: firstname, $options: "i" },
+        lastname:{$regex:lastname, $options:"i"}
+      }).limit(30);
+      res.send(searchUsers);
+    } else {
+      const searchUsers = await User.find({
+        firstname: { $regex: firstname, $options: "i" },
+      }).limit(30);
+      res.send(searchUsers);
+    }
+  } catch (error) {
+    res.send(error);
+    console.log(error);
   }
 });
 router;

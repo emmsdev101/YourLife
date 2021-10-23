@@ -35,6 +35,7 @@
     width: 23px;
 }
 .peopleList{
+    padding-bottom: 10px;
 }
 .divider{
     margin-left: 10px;
@@ -49,4 +50,39 @@
     border-radius: 5px;
     margin-bottom: 10px;
     font-weight: bold;
+}
+.searchHeader{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid grey;
+}
+.searchDiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(202, 199, 199);
+    width: fit-content;
+    padding: 8px;
+    border-radius: 25px;
+    width: calc(100% - 40px);
+    margin-left: 5px;
+
+}
+.searchInput{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    text-decoration: none;
+    font-size: large;
+    width: 90%;
+}
+.searchBack{
+    font-size: x-large;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

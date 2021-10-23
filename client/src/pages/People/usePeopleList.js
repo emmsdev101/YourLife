@@ -1,23 +1,36 @@
 import { useEffect, useState } from "react";
 import usePeople from "../../logic/usePeople";
 
-const usePeopleList = () => {
+const usePeopleList = (setRenderHeader) => {
   const [page, setPage] = useState(1)
-  const { fetchPoeple } = usePeople();
+  const { fetchPoeple, searchPeople } = usePeople();
   const [people, setPeople] = useState(null);
   const [loading, setLoading] = useState(false)
+  const [isSearching, setIsSearching] = useState(false)
+  const [searched, setSearched] = useState(null)
+  const [searchInput, setSearchInput] = useState('')
   useEffect(() => {
-    async function initPeople() {
-      const res_people = await fetchPoeple(0);
-      if (Array.isArray(res_people)) {
-        setPeople(res_people);
-      }
-    }
+
     initPeople();
   }, []);
   useEffect(() => {
-      console.log(people)
-  }, [people])
+    console.log(searchInput)
+      async function searchReq() {
+        const searchResult = await searchPeople(searchInput)
+        if(searchResult){
+          setPeople(searchResult)
+        }
+      }
+      searchReq()
+  }, [searchInput])
+
+  async function initPeople() {
+    const res_people = await fetchPoeple(0);
+    if (Array.isArray(res_people)) {
+      setPeople(res_people);
+    }
+  }
+
   const loadMore = async () => {
     setLoading(true)
     const res_people = await fetchPoeple(page);
@@ -30,6 +43,16 @@ const usePeopleList = () => {
     }
     
   };
-  return { people, loading, loadMore };
+  const toggleSearch = ()=> {
+    if(isSearching){
+      setRenderHeader(true)
+    }else setRenderHeader(false)
+    setIsSearching(!isSearching)
+    initPeople()
+  }
+  const registerInput = (e)=>{
+    setSearchInput(e.target.value)
+  }
+  return { people, loading, loadMore, toggleSearch, isSearching, searchInput, registerInput};
 };
 export default usePeopleList;
