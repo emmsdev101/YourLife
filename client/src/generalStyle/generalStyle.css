@@ -33,7 +33,8 @@
 
 #notificationCount{
     background-color: rgb(202, 27, 27);
-    width: 15px;
+    padding-left:3px;
+    padding-right: 3px;
     height: 23px;
     border-radius: 5px;
     text-align: center;

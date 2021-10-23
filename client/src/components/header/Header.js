@@ -32,7 +32,7 @@ const Header = ({notifications}) => {
           }}
         >
           <FaBell className="nav-icon"></FaBell>
-          {newNotifs?<div id = "notificationCount">{newNotifs}</div>:""}
+          {newNotifs?<div id = "notificationCount">{newNotifs > 9?'9+':newNotifs}</div>:""}
         </div>
         <div
           className={active === "/chat" ? "active" : "inactive"}
