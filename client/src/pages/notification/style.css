@@ -9,6 +9,7 @@
 }
 .people-body{
     background-color: white;
+    padding-bottom: 20px;
 }
 .search-button{
     padding: 5px;
@@ -26,4 +27,14 @@
 .search-icon{
     height: 23px;
     width: 23px;
+}
+.load-more{
+    background-color: #5D5FEF;
+    width: calc(100% - 30px);
+    margin: auto;
+    padding: 5px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-weight: bold;
+    color: white;
 }

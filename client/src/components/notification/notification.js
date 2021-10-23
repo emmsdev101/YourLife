@@ -124,7 +124,7 @@ function NotificationItem({
         </div>
       </div>
     );
-  } else if (notification.type === "like") {
+  } else if (notification.type === "like" && notification.story) {
     const likers = notification.likers;
     const numLikers = notification.num_likers;
     const profilePhoto = my_api + "/photo/" + likers[0]?.photo;
