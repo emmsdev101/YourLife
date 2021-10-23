@@ -5,7 +5,7 @@ import usePeople from '../../logic/usePeople';
 import usePeopleList from './usePeopleList';
 import Loader from '../../components/Loader/Loader';
 function People(){
-    const {people} = usePeopleList()
+    const {people, loading, loadMore} = usePeopleList()
     return(
         <div className = {style.people}>
                 <div className = {style.headingTool}>
@@ -21,6 +21,11 @@ function People(){
                     <Loader/>
                     </div>
                     }
+                    
+                    {loading?<div>
+                    <h3>Loading...</h3>
+                    <Loader/>
+                    </div>:people !== null?<div className = {style.loadMore} onClick = {loadMore}>Load more</div>:''}
             </div>
       </div>
     )

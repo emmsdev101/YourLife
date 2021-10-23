@@ -16,7 +16,15 @@
 }
 .userDetails{
     margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
     }
+.followDiv{
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+}
 .userStatus{
     margin: 0;
     font-size: small;

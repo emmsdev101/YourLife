@@ -6,12 +6,13 @@ function usePeople() {
   const my_api =
     process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
   
-  const fetchPoeple = async () => {
+  const fetchPoeple = async (page) => {
     try {
       const fetch_res = await axios({
         method: "get",
         withCredentials: true,
         url: my_api + "/user/fetchAll",
+        params:{page}
       });
       if (fetch_res.status === 200) {
           return fetch_res.data

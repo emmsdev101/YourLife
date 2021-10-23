@@ -63,11 +63,16 @@ const queryFollowers = async (ownId, username, limit, page) => {
 // --------------- GET ROUTES ---------------
 router.get("/fetchAll", auth, async (req, res) => {
   try {
+    const page = parseInt(req.query.page);
+    const limit = 20;
+    const to_skip = page * limit;
     const users = await User.find(
       { _id: { $ne: req.session.user } },
       {
         password: 0,
-      }
+      },
+      {limit:limit,
+      skip:to_skip}
     );
     res.send(users);
   } catch (error) {
