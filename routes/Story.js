@@ -213,7 +213,7 @@ router.get("/get-feeds", auth, async (req, res, next) => {
       const numOfFollowings = await Followers.countDocuments({follower: user.username})
     if(skip > numOfFollowings)skip = 0
       if (user) {
-        const followings = await Followers.find({ follower: user.username },null,{skip:skip,limit:20});
+        const followings = await Followers.find({ follower: user.username },null,{skip:skip,limit:50});
         if (Array.isArray(followings)) {
           let feedsObjectList = [];
           let limit = 0;
