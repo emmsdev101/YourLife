@@ -53,6 +53,14 @@ function Post({ content, openPost }) {
     };
   }, [content]);
 
+  useEffect(() => {
+    async function checkLiked(){
+      const isliked = await postLiked(content._id)
+      setLiked(isliked)
+    }
+    checkLiked()
+  }, [])
+
   const viewPost = () => {
     openPost(content._id)
   };

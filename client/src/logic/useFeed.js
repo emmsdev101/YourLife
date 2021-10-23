@@ -187,8 +187,6 @@ function useFeed() {
         data: { 
           post_id: post_data._id,
           post_owner:post_data.post_owner,
-          firstname:post_data.firstname,
-          lastname:post_data.lastname,
         },
       });
       if (req_like.status === 200) {
@@ -207,17 +205,14 @@ function useFeed() {
       
     }
   };
-  const requestUnlike= async (post_data) => {
+  const requestUnlike= async (postId) => {
     try {
       const req_like = await axios({
         method: "post",
         withCredentials: true,
         url: my_api + "/post/like/unlike-post",
         data: { 
-          post_id: post_data._id,
-          post_owner:"emmanuelkatipunan",
-          firstname:post_data.firstname,
-          lastname:post_data.lastname,
+          post_id: postId,
         },
       });
       if (req_like.status === 200) {
@@ -296,6 +291,7 @@ function useFeed() {
           params: { post_id: post_id, page:page, size:size },
         });
         if (comments.status === 200) {
+          console.log(comments.data)
           return comments.data;
         } else {
           console.log(comments.status);

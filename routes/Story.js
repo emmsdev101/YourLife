@@ -7,7 +7,8 @@ const User = require("./../model/user");
 const ImageModel = require("../model/photo");
 const Liked = require("./../model/liked");
 const Followers = require("./../model/following");
-const Notification = require('./../model/notification')
+const Notification = require("./../model/notification");
+const Comments = require("./../model/comment");
 const Comment = require("./Comment");
 const Like = require("./Like");
 
@@ -40,7 +41,7 @@ router.post("/create", auth, async (req, res, next) => {
       const owner = user.username;
       const data = new Story({
         owner: owner,
-        owner_id:user._id,
+        owner_id: user._id,
         content: content,
         photo_only: content !== "" && content !== undefined ? false : true,
         likes: 0,
@@ -119,6 +120,7 @@ router.post("/create", auth, async (req, res, next) => {
 router.get("/my-posts", auth, async (req, res, next) => {
   try {
     let username = req.query.username;
+    const userId = req.session.user
     let user;
     if (!username) {
       user = await User.findOne({ _id: req.session.user });
@@ -135,19 +137,22 @@ router.get("/my-posts", auth, async (req, res, next) => {
         const photos = await ImageModel.find({ post_id: feed._id });
         const liked = await Liked.findOne({
           post_id: feed._id,
-          liked_by: user.username,
+          liked_by: userId,
         });
+        const likes = await Liked.countDocuments({post_id:feed._id})
+        const comments = await Comments.countDocuments({post_id:feed._id})
         feedsObjectList.push({
           username: user.username,
           firstname: user.firstname,
           lastname: user.lastname,
           photo: user.photo,
           content: feed.content,
-          likes: feed.likes,
-          comments: feed.comments,
+          likes: likes,
+          comments: comments,
           photos: photos,
           liked: liked ? true : false,
           _id: feed._id,
+          date:feed.date
         });
       }
       res.send(feedsObjectList);
@@ -160,6 +165,11 @@ router.get("/my-posts", auth, async (req, res, next) => {
 router.get("/view", auth, async (req, res, next) => {
   try {
     const post_id = req.query.id;
+    const userId = req.session.user;
+
+    const likes = await Liked.countDocuments({ post_id: post_id });
+    const comments = await Comments.countDocuments({ post_id: post_id });
+    const isLiked = await Liked.findOne({ post_id: post_id, liked_by: userId });
     if (post_id) {
       Story.findOne({ _id: post_id }, (err, story) => {
         if (err) return res.sendStatus(444);
@@ -170,17 +180,20 @@ router.get("/view", auth, async (req, res, next) => {
           ImageModel.find({ post_id: story._id }, (err, images) => {
             if (err) return res.sendStatus(444);
             if (!images) return res.sendStatus(403);
+
             const storyObject = {
               username: user.username,
               firstname: user.firstname,
               lastname: user.lastname,
-              post_owner:user._id,
+              post_owner: user._id,
               photo: user.photo,
               content: story.content,
               images: images,
-              likes: story.likes,
-              comments: story.comments,
-              date:story.date
+              likes: likes || 0,
+              comments: comments || 0,
+              date: story.date,
+              liked:isLiked?true:false,
+              _id:story._id
             };
             res.send(storyObject);
           });
@@ -205,37 +218,55 @@ router.get("/view-all", admin, async (req, res, next) => {
 });
 router.get("/get-feeds", auth, async (req, res, next) => {
   try {
-    const page = req.query.page || 1
+    const page = req.query.page || 1;
     let skip = (page - 1) * 10;
     const userId = req.session.user;
     if (userId) {
-      const user = await User.findOne({ _id: userId }, { username: 1 }); 
-      const numOfFollowings = await Followers.countDocuments({follower: user.username})
-    if(skip > numOfFollowings)skip = 0
+      const user = await User.findOne({ _id: userId }, { username: 1 });
+      const numOfFollowings = await Followers.countDocuments({
+        follower: user.username,
+      });
+      if (skip > numOfFollowings) skip = 0;
       if (user) {
-        const followings = await Followers.find({ follower: user.username },null,{skip:skip,limit:50});
+        const followings = await Followers.find(
+          { follower: user.username },
+          null,
+          { skip: skip, limit: 50 }
+        );
         if (Array.isArray(followings)) {
           let feedsObjectList = [];
           let limit = 0;
-          if(followings.length === 1) limit = 0;
-          else if(followings.length === 2) limit = 5;
-          else if(followings.length === 3) limit = 3;
-          else if(followings.length > 3) limit = 1;
+          if (followings.length === 1) limit = 0;
+          else if (followings.length === 2) limit = 5;
+          else if (followings.length === 3) limit = 3;
+          else if (followings.length > 3) limit = 1;
           for (let i = 0; i < followings.length; i++) {
             const following = followings[i];
             const postOwner = await User.findOne({
               username: following.following,
             });
-            const feeds = await Story.find({
-              owner:following.following
-            },null,{limit:limit}).sort({date:-1});
+            const feeds = await Story.find(
+              {
+                owner: following.following,
+              },
+              null,
+              { limit: limit }
+            ).sort({ date: -1 });
             if (Array.isArray(feeds)) {
               for (let i = 0; i < feeds.length; i++) {
                 const post = feeds[i];
-                const postImages = await ImageModel.find({post_id: post._id},{})
-                if(Array.isArray(postImages)){
-                  const liked = await Liked.findOne({post_id:post._id, liked_by:userId})
-                  const likes = await Liked.countDocuments({post_id:post._id})
+                const postImages = await ImageModel.find(
+                  { post_id: post._id },
+                  {}
+                );
+                if (Array.isArray(postImages)) {
+                  const liked = await Liked.findOne({
+                    post_id: post._id,
+                    liked_by: userId,
+                  });
+                  const likes = await Liked.countDocuments({
+                    post_id: post._id,
+                  });
                   feedsObjectList.push({
                     post_owner: postOwner._id,
                     username: postOwner.username,
@@ -246,19 +277,19 @@ router.get("/get-feeds", auth, async (req, res, next) => {
                     photos: postImages,
                     likes: likes,
                     comments: post.comments,
-                    liked:liked,
-                    _id:post._id,
-                    date:post.date
+                    liked: liked,
+                    _id: post._id,
+                    date: post.date,
                   });
                 }
               }
             }
           }
-          feedsObjectList.sort((a, b)=>b.date - a.date)
-          res.send(feedsObjectList)
-        }else return res.sendStatus(304)
-      }else return res.sendStatus(304)
-    }else return res.send(401)
+          feedsObjectList.sort((a, b) => b.date - a.date);
+          res.send(feedsObjectList);
+        } else return res.sendStatus(304);
+      } else return res.sendStatus(304);
+    } else return res.send(401);
   } catch (err) {
     console.log(err);
   }

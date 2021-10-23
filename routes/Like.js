@@ -17,11 +17,11 @@ const auth = (req, res, next) => {
 router.get("/post-liked", auth, async (req, res) => {
   try {
     const post_id = req.query.post_id;
-    const user = await User.findOne({ _id: req.session.user });
-    if (user) {
+    const userId = req.session.user;
+    if (userId) {
       const post_liked = await Liked.findOne({
         post_id: post_id,
-        liked_by: user.username,
+        liked_by: userId,
       });
       if (post_liked) {
         res.send(true);

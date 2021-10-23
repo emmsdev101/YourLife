@@ -7,28 +7,25 @@ import Comment from "./Comment";
 import style from "./view-comment.module.css";
 
 const ViewComment = ({ story, postId }) => {
-  const { addComment, getComments, requestLike, postLiked } = useFeed();
-  const socket = useContext(SocketContext)
+  const { addComment, getComments, requestLike,requestUnlike, postLiked } = useFeed();
+  const socket = useContext(SocketContext);
   const [content, setContent] = useState("");
   const [comments, setComments] = useState(null);
   const [likes, setLikes] = useState(story.likes);
   const [numComments, setNumComments] = useState(story.comments);
-  const [liked, setLiked] = useState(null);
+  const [liked, setLiked] = useState(story.liked);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [posting, setPosting] = useState(false);
   const [realTimeComments, setRealTimeComments] = useState([]);
 
   let sumbitRef = useRef();
-  let contentInput = useRef()
+  let contentInput = useRef();
 
   useEffect(() => {
     const fetchComments = async () => {
       const fechted_comments = await getComments(postId, 1, numComments);
       setComments(fechted_comments);
-
-      const is_liked = await postLiked(postId);
-      setLiked(is_liked);
     };
     fetchComments();
     sumbitRef.current.disabled = true;
@@ -36,13 +33,12 @@ const ViewComment = ({ story, postId }) => {
   useEffect(() => {
     if (content.length === 0) {
       sumbitRef.current.disabled = false;
-      
     }
-    const inputs = contentInput.current.value
-    if(inputs.match(/\n/gm)){
-      const input_rows =inputs.match(/\n/gm).length
-      if(input_rows <= 10){
-      contentInput.current.rows = input_rows
+    const inputs = contentInput.current.value;
+    if (inputs.match(/\n/gm)) {
+      const input_rows = inputs.match(/\n/gm).length;
+      if (input_rows <= 10) {
+        contentInput.current.rows = input_rows;
       }
     }
   }, [content]);
@@ -58,7 +54,7 @@ const ViewComment = ({ story, postId }) => {
       setContent("");
       setPosting(false);
 
-      socket.emit('join', postId)
+      socket.emit("join", postId);
     }
   };
   const loadMoreComments = async () => {
@@ -72,15 +68,15 @@ const ViewComment = ({ story, postId }) => {
     }
   };
   const addLike = () => {
-    if (liked !== null) {
-      requestLike(postId);
-      if (liked) {
-        setLikes(likes - 1);
-        setLiked(false);
-      } else {
-        setLikes(likes + 1);
-        setLiked(true);
-      }
+    console.log(story)
+    if (liked) {
+      requestUnlike(story._id);
+      setLikes(likes - 1);
+      setLiked(false);
+    } else {
+      requestLike(story);
+      setLikes(likes + 1);
+      setLiked(true);
     }
   };
   return (
@@ -116,8 +112,9 @@ const ViewComment = ({ story, postId }) => {
           {comments !== null ? (
             comments.length > 0 ? (
               comments.map((doc, id) => <Comment document={doc} key={id} />)
-            ) :realTimeComments.length?"":
-            (
+            ) : realTimeComments.length ? (
+              ""
+            ) : (
               <div className={style.noComment}>
                 <h3>No comments on this post</h3>
                 <p>Be the first to comment</p>
@@ -138,8 +135,8 @@ const ViewComment = ({ story, postId }) => {
             className={style.commentInput}
             value={content}
             onChange={inputContent}
-            rows = "1"
-            ref = {contentInput}
+            rows="1"
+            ref={contentInput}
           />
           <button
             ref={sumbitRef}
