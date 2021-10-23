@@ -81,6 +81,7 @@ const useApp = () => {
                 existing.createdAt = msg.createdAt;
               }
               oldNotifs.unshift(existing);
+              setNotifications(null)
               setNotifications(oldNotifs);
             }else{
               setNotifications((olds)=>[msg, ...olds])

@@ -5,6 +5,7 @@ const User = require("./../model/user");
 const Liked = require("./../model/liked");
 const Notification = require("./../model/notification");
 const Room = require("./../model/notificationRoom");
+const SocketSchema = require('./../model/socketclients')
 
 const auth = (req, res, next) => {
   if (req.session.user) {
@@ -68,14 +69,18 @@ router.post("/like-post", auth, async (req, res) => {
           createNotification.save();
 
           const story = await Story.findOne({ _id: post_id });
-          io.to(onlineUsers[post_owner]).emit("notification", {
-            type: "like",
-            likers: [liker],
-            seen: false,
-            createdAt: new_like.createdAt,
-            story: story,
-            post_id:post_id
-          });
+
+          const connected = await SocketSchema.findOne({user_id:post_owner})
+          if(connected){
+            io.to(connected.socket_id).emit("notification", {
+              type: "like",
+              likers: [liker],
+              seen: false,
+              createdAt: new_like.createdAt,
+              story: story,
+              post_id:post_id
+            });
+          }
         } else {
           notification.last_activity = new_like._id;
           notification.save();

@@ -20,10 +20,11 @@ const accRoute = require("./routes/Account");
 const postRoute = require("./routes/Story");
 const photoRoute = require('./routes/Photo')
 const notificationRoute = require('./routes/Notification')
+const SocketSchema = require('./model/socketclients')
 
 let onlineUsers = new Object()
 app.set('socketio', io)
-app.set('onlineUsers',onlineUsers)
+
 
 require("dotenv").config();
 
@@ -63,8 +64,24 @@ app.get("*", (req, res) => {
 
 io.on('connection', (socket) => {
   socket.on('connect-me',(userId)=>{
-    onlineUsers[userId] = socket.id
+    async function connect(){
+      const socketConnected = await SocketSchema.findOne({user_id:userId})
+      if(socketConnected){
+        socketConnected.socket_id = socket.id
+        socketConnected.save()
+      }else{
+        const newSocketClient = new SocketSchema({
+          socket_id:socket.id,
+          user_id:userId
+        })
+        newSocketClient.save()
+      }
+    }
+    connect()
   })
+  socket.on('disconnect', function(){
+    SocketSchema.findOneAndDelete({socket_id:socket.id})
+});
   socket.on('join', (room)=>{
     socket.join(room)
   })

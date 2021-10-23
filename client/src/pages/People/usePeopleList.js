@@ -10,11 +10,11 @@ const usePeopleList = (setRenderHeader) => {
   const [searched, setSearched] = useState(null)
   const [searchInput, setSearchInput] = useState('')
   useEffect(() => {
-
     initPeople();
   }, []);
   useEffect(() => {
       async function searchReq() {
+        setPeople(null)
         const searchResult = await searchPeople(searchInput)
         if(searchResult){
           setPeople(searchResult)

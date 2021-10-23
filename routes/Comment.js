@@ -5,6 +5,7 @@ const User = require("./../model/user");
 const Comment = require("../model/comment");
 const Notification = require("./../model/notification");
 const Room = require("./../model/notificationRoom");
+const SocketSchema = require('./../model/socketclients')
 
 const auth = (req, res, next) => {
   if (req.session.user) {
@@ -21,7 +22,6 @@ const admin = (req, res, next) => {
 };
 router.post("/add-comment", auth, async (req, res) => {
   let io = req.app.get("socketio");
-  let onlineUsers = req.app.get("onlineUsers");
   try {
     const postId = req.body.post_id;
     const content = req.body.content;
@@ -125,19 +125,22 @@ router.post("/add-comment", auth, async (req, res) => {
             owner: post_owner,
           });
           newcommentRoom.save();
-          console.log("post owner", post_owner)
-          io.to(onlineUsers[post_owner]).emit("notification",{
-            type: "comment",
-            date:savedComment.createdAt,
-            comments: {
-              last_commentor: [user],
-              last_comment: savedComment.content,
-            },
-            post_id: postId,
-            comment_id: savedComment._id,
-            seen: false,
-            sender:userId
-        })
+          const connected = await SocketSchema.findOne({user_id:post_owner})
+          if(connected){
+            io.to(connected.socket_id).emit("notification",{
+              type: "comment",
+              date:savedComment.createdAt,
+              comments: {
+                last_commentor: [user],
+                last_comment: savedComment.content,
+              },
+              post_id: postId,
+              comment_id: savedComment._id,
+              seen: false,
+              sender:userId
+          })
+          }
+          
         }
       } else {
         res.send(false);
