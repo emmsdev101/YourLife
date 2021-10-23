@@ -4,6 +4,7 @@ const router = express.Router();
 const User = require("./../model/user");
 const Following = require("./../model/following");
 const Notification = require("./../model/notification");
+const SocketSchema = require('./../model/socketclients')
 
 const saveImage = require("./../helper/Upload");
 const user = require("./../model/user");
@@ -110,7 +111,7 @@ router.get("/profile", auth, async (req, res) => {
     if (username && follower) {
       const profile = await User.findOne(
         { username: username },
-        { _id: 0, password: 0 }
+        {password: 0 }
       );
       if (profile) {
         const isFollowed = await Following.findOne({
@@ -127,6 +128,7 @@ router.get("/profile", auth, async (req, res) => {
           followers: profile.followers,
           following: profile.following,
           isFollowed: isFollowed ? true : false,
+          _id:profile._id
         });
       } else res.send(304);
     } else res.send(304);
@@ -392,14 +394,18 @@ router.post("/follow", auth, async (req, res) => {
           { password: 0 }
         );
         if (followed && followee) {
-          io.to(onlineUsers[followed._id]).emit("notification", {
-            _id: savedNotification._id,
-            type: "follow",
-            follower: followee,
-            seen: false,
-            notification_id: savedNotification._id,
-            date: savedNotification.createdAt,
-          });
+          const connected = await SocketSchema.findOne({user_id:req.body.user_id})
+          if(connected){
+            io.to(connected.socket_id).emit("notification", {
+              _id: savedNotification._id,
+              type: "follow",
+              follower: followee,
+              seen: false,
+              notification_id: savedNotification._id,
+              date: savedNotification.createdAt,
+            });
+          }
+          
         }
       }
     });

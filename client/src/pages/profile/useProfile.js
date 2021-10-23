@@ -32,6 +32,7 @@ const useProfile = () => {
   const [following, setFollowing] = useState(null)
   const [profilePhoto, setProfilePhoto] = useState(null)
   const [isFollowed, setIsFollwed] = useState(false)
+  const [_id, setId] = useState(null)
 
   let isMounted = useRef(true);
 
@@ -60,6 +61,7 @@ const useProfile = () => {
         setFollowing(profileData.following)
         setProfilePhoto(my_api + "/photo/"+profileData.photo)
         setIsFollwed(profileData.isFollowed)
+        setId(profileData._id)
       }
     }
     fetchProfileData();
@@ -74,15 +76,13 @@ const useProfile = () => {
     history.goBack();
   }
   const followUser = () => {
-    follow(user)
+    follow(user,_id)
     if(isFollowed){
       setFollowers(followers-1)
     }else setFollowers(followers+1)
     setIsFollwed(!isFollowed)
     
   }
-
-
   return {
     following,
     followers,
@@ -97,5 +97,4 @@ const useProfile = () => {
     followUser
   };
 };
-
 export default useProfile;
