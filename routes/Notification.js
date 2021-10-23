@@ -17,7 +17,15 @@ const auth = (req, res, next) => {
 router.get("/", auth, async (req, res) => {
   try {
     const userId = req.session.user;
-    const myNotifications = await Notification.find({ user_id: userId }).sort({updatedAt:-1});
+    const page = req.query.page || 0;
+
+    console.log("page", page);
+    const limit = 20;
+    const skip = limit * page;
+    const myNotifications = await Notification.find({ user_id: userId })
+      .sort({ updatedAt: -1 })
+      .limit(limit)
+      .skip(skip);
     let notificationRes = [];
     for (let index = 0; index < myNotifications.length; index++) {
       const notification = myNotifications[index];
@@ -46,7 +54,7 @@ router.get("/", auth, async (req, res) => {
           }
           notificationRes.push({
             type: "comment",
-            date:lastComment[0].createdAt,
+            date: lastComment[0].createdAt,
             comments: {
               last_commentor: lastCommentors,
               last_comment: lastComment[0]?.content,
@@ -85,7 +93,7 @@ router.get("/", auth, async (req, res) => {
           lastlikersData.push(likerData);
         }
         notificationRes.push({
-          _id:notification._id,
+          _id: notification._id,
           type: "like",
           likers: lastlikersData,
           story: story_details,
@@ -93,7 +101,7 @@ router.get("/", auth, async (req, res) => {
           seen: notification.seen,
           num_likers: numLikers,
           notification_id: notification._id,
-          date:notification.createdAt
+          date: notification.createdAt,
         });
       }
       if (notification.type === "follow") {
@@ -102,12 +110,12 @@ router.get("/", auth, async (req, res) => {
           { password: 0 }
         );
         notificationRes.push({
-          _id:notification._id,
+          _id: notification._id,
           type: "follow",
           follower: follower,
           seen: notification.seen,
           notification_id: notification._id,
-          date:notification.createdAt
+          date: notification.createdAt,
         });
       }
     }
@@ -129,32 +137,33 @@ router.post("/read-comment", auth, async (req, res) => {
   );
   if (updateNotification) {
     res.send({
-      success:true,
-      message:"Notification updated"
-    })
-  } else res.send({
-    success:false,
-    message:"Notification not updated"
-  })
+      success: true,
+      message: "Notification updated",
+    });
+  } else
+    res.send({
+      success: false,
+      message: "Notification not updated",
+    });
 });
-router.post("/read", auth, async(req, res) => {
-  const notificationId = req.body.notification_id
+router.post("/read", auth, async (req, res) => {
+  const notificationId = req.body.notification_id;
   const updateNotification = await Notification.findByIdAndUpdate(
     notificationId,
     {
       seen: true,
     }
   );
-  if(updateNotification){
+  if (updateNotification) {
     res.send({
-      success:true,
-      message:"Notification updated"
-    })
-  }else{
+      success: true,
+      message: "Notification updated",
+    });
+  } else {
     res.send({
-      success:true,
-      message:"Notification updated"
-    })
+      success: true,
+      message: "Notification updated",
+    });
   }
 });
 

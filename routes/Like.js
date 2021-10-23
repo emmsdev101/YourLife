@@ -68,7 +68,6 @@ router.post("/like-post", auth, async (req, res) => {
           createNotification.save();
 
           const story = await Story.findOne({ _id: post_id });
-          console.log("Sending notification to:", onlineUsers[post_owner])
           io.to(onlineUsers[post_owner]).emit("notification", {
             type: "like",
             likers: [liker],
