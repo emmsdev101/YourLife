@@ -222,71 +222,25 @@ router.get("/generate-feeds", auth, async (req, res, next) => {
     if (myProfile) {
       const following = await Followers.find({ follower: myProfile.username });
       if (following) {
-        await FeedsSchema.deleteMany({user_id:userId})
+        await FeedsSchema.deleteMany({ user_id: userId });
         for (let i = 0; i < following.length; i++) {
           const profile = following[i];
-          const stories = await Story.find(
-            { owner: profile.following },
-          );
+          const stories = await Story.find({ owner: profile.following });
           for (let j = 0; j < stories.length; j++) {
             const post = stories[j];
-              const addFeed = new FeedsSchema({
-                post_id: post._id,
-                user_id: userId,
-                date_posted:post.date,
-                owner_id:post.owner_id,
-                photos:post.photos,
-                content:post.content
-              });
-              addFeed.save();            
+            const addFeed = new FeedsSchema({
+              post_id: post._id,
+              user_id: userId,
+              date_posted: post.date,
+              owner_id: post.owner_id,
+              photos: post.photos,
+              content: post.content,
+            });
+            addFeed.save();
           }
         }
-        const myProfile = await User.findOne({ _id: userId }, { username: 1 });
-        if (myProfile) {
-          const myFeeds = await FeedsSchema.find({ user_id: userId }, null, {
-            limit: 20,
-          }).sort({ date_posted: -1 });
-          if (myFeeds) {
-            let feedsResult = [];
-            for (let i = 0; i < myFeeds.length; i++) {
-              const feedItem = myFeeds[i];
-              const postOwner = await User.findOne({
-                _id: feedItem.owner_id,
-              });
-              if (postOwner) {
-                const likes = await Liked.countDocuments({
-                  post_id: feedItem.post_id,
-                });
-                const comments = await Comments.countDocuments({
-                  post_id: feedItem.post_id,
-                });
-                const photos = await ImageModel.find({
-                  post_id: feedItem.post_id,
-                });
-                const liked = await Liked.findOne({
-                  post_id: feedItem.post_id,
-                  liked_by: userId,
-                });
-                feedsResult.push({
-                  username: postOwner.username,
-                  firstname: postOwner.firstname,
-                  lastname: postOwner.lastname,
-                  photo: postOwner.photo,
-                  content: feedItem.content,
-                  likes: likes || 0,
-                  comments: comments || 0,
-                  photos: photos,
-                  liked: liked ? true : false,
-                  _id: feedItem.post_id,
-                  date: feedItem.date_posted,
-                  post_owner: postOwner._id,
-                });
-              }
-            }
-            res.send(feedsResult);
-          } else res.sendStatus(403);
-        } else res.sendStatus(403);
       }
+      res.send(true)
     } else res.sendStatus(403);
   } catch (err) {
     console.log(err);
@@ -295,14 +249,15 @@ router.get("/generate-feeds", auth, async (req, res, next) => {
 router.get("/get-feeds", auth, async (req, res, next) => {
   try {
     const userId = req.session.user;
-    const page = req.query.page || 0
-    const limit = 20
-    const skip = 10 * page
-    console.log("skip", skip)
+    const page = req.query.page || 0;
+    const limit = 20;
+    const skip = 10 * page;
+    console.log("skip", skip);
     const myProfile = await User.findOne({ _id: userId }, { username: 1 });
     if (myProfile) {
       const myFeeds = await FeedsSchema.find({ user_id: userId }, null, {
-        limit: limit,skip:skip
+        limit: limit,
+        skip: skip,
       }).sort({ date_posted: -1 });
       if (myFeeds) {
         let feedsResult = [];

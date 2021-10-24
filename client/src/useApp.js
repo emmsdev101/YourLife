@@ -33,10 +33,10 @@ const useApp = () => {
   useEffect(() => {
     if (isLogged()) {
       fetchStory();
-      generateNewFeeds()
+      generateFeeds()
       setInterval(async()=>{
         console.log("Generating feeds")
-        generateNewFeeds()
+        generateFeeds()
       },1000 * 60)
       setUserContext();
     }
@@ -104,12 +104,6 @@ const useApp = () => {
       });
     }
   }, [notifLoaded]);
-  async function generateNewFeeds(){
-    const newFeeds = await generateFeeds()
-      if(newFeeds){
-        setStories(newFeeds)
-      }
-  }
   async function fetchStory() {
     setLoading(true);
     const fetched_stories = await fetchFeeds();
