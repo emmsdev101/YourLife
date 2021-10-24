@@ -37,7 +37,7 @@ function Notification({ setRenderHeader, notifications, setNotifications, refres
         </div>
         <div className="people-list-div">
           <br />
-          {!notifications && !notifLoaded
+          {!notifications || !notifLoaded
             ? "loading notifications..."
             : notifications.length < 1
             ? "You have no notifications"
