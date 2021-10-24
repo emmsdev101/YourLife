@@ -27,25 +27,21 @@ const useApp = () => {
   const [notifications, setNotifications] = useState(null);
   const [notifLoaded, setNotifLoaded] = useState(false);
 
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(1);
   let refreshed = useRef(false);
 
   useEffect(() => {
     if (isLogged()) {
-      fetchStory();
-      generateFeeds()
-      setInterval(async()=>{
-        console.log("Generating feeds")
-        generateFeeds()
-      },1000 * 60)
+     initializeFeed();
+      setInterval(async () => {
+        console.log("Generating feeds");
+       initializeFeed();
+      }, 60000 * 5);
       setUserContext();
     }
   }, []);
-  useEffect(() => {}, [renderHeader]);
   useEffect(() => {
     const curr_path = location.pathname.substring(1);
-    console.log(curr_path);
-
     if (
       curr_path === "viewpost" ||
       curr_path.substring(0, curr_path.indexOf("/")) === "profile" ||
@@ -58,7 +54,6 @@ const useApp = () => {
     }
   }, [location.pathname]);
   useEffect(() => {
-    
     initNotifications();
     if (userContext._id) {
       socket.emit("connect-me", userContext._id);
@@ -67,17 +62,17 @@ const useApp = () => {
   useEffect(() => {
     if (notifLoaded) {
       socket.on("notification", (msg) => {
-        if(msg.type === 'follow'){
-          setNotifications((olds)=>[msg, ...olds])
-        }else{
-          if(msg.sender !== userContext._id){
+        if (msg.type === "follow") {
+          setNotifications((olds) => [msg, ...olds]);
+        } else {
+          if (msg.sender !== userContext._id) {
             let existing = notifications.find(
               (item) => item.post_id === msg.post_id && item.type === msg.type
             );
             let oldNotifs = notifications.filter(
               (item) => item.post_id !== msg.post_id && item.type !== msg.type
             );
-            if(existing){
+            if (existing) {
               if (existing.type === "comment") {
                 existing.comments = msg.comments;
                 existing.seen = false;
@@ -88,12 +83,12 @@ const useApp = () => {
                 existing.createdAt = msg.createdAt;
               }
               oldNotifs.unshift(existing);
-              setNotifications(null)
+              setNotifications(null);
               setNotifications(oldNotifs);
-            }else{
-              setNotifications((olds)=>[msg, ...olds])
+            } else {
+              setNotifications((olds) => [msg, ...olds]);
             }
-        }
+          }
         }
       });
 
@@ -104,6 +99,13 @@ const useApp = () => {
       });
     }
   }, [notifLoaded]);
+  async function  initializeFeed(){
+    const myFeeds = await generateFeeds()
+    if(myFeeds){
+      setLoading(false)
+      setStories(myFeeds)
+    }
+  }
   async function fetchStory() {
     setLoading(true);
     const fetched_stories = await fetchFeeds();
@@ -142,10 +144,10 @@ const useApp = () => {
     setNotifications(getNotifications.data);
     setNotifLoaded(true);
   }
-  const refreshNotifs = async()=>{
-    setNotifications(null)
-    initNotifications()
-  }
+  const refreshNotifs = async () => {
+    setNotifications(null);
+    initNotifications();
+  };
   return {
     isLogged,
     renderHeader,
@@ -155,8 +157,11 @@ const useApp = () => {
     fetchStory,
     loading,
     notifications,
-    setNotifications,refreshNotifs,setStories,
-    page, setPage
+    setNotifications,
+    refreshNotifs,
+    setStories,
+    page,
+    setPage,
   };
 };
 export default useApp;

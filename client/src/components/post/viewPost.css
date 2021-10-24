@@ -99,10 +99,8 @@
 
 .single{
     width: 100%;
-    object-fit: cover;
-    min-height: 300px;
+    object-fit:cover;
     height:auto;
-    
 }
 .double{
     width: 50%;
@@ -127,14 +125,13 @@
 }
 .images-section{
     width: 100%;
-    height: auto;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
     margin-top: 10px;
 }
 .content-photo{
-    padding: 3px;
+    padding: 1px;
 }
 .content-loading{
     background-color: rgb(221, 221, 221);

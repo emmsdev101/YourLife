@@ -1,11 +1,9 @@
-import React, { lazy, Suspense, useContext } from "react";
+import React, { } from "react";
 import "./viewPost.css";
 import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library";
-import usePeople from "../../logic/usePeople";
 import PostImage from "../postImage/postImage";
 import { FaArrowLeft } from "react-icons/fa";
 import ViewComment from "../viewComment/ViewComment";
-import PhotoItem from "../photos/PhotoItem";
 import ViewPhoto from "../photos/ViewPhoto";
 
 const my_api =

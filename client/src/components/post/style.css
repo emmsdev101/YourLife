@@ -154,8 +154,7 @@
 .quad{
     object-fit: cover;
     width: 50%;
-    height: 200px;
-    
+    height: 200px; 
 }
 .images-section{
     width: 100%;
@@ -166,7 +165,7 @@
     margin-top: 10px;
 }
 .content-photo{
-    padding: 3px;
+    padding: 1px;
 }
 .content-loading{
     background-color: rgb(221, 221, 221);

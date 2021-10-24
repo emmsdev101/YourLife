@@ -134,7 +134,7 @@ function Post({ content, openPost }) {
                 )}
               </div>
               {likes > 0 || comments > 0 ?
-              <div className="content-footer">
+              <div className="content-footer" onClick={viewPost}>
                 <div className="comment-status">
                 <React.Fragment>
                   <p className="comment-count">{likes}</p>

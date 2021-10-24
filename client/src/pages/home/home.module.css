@@ -85,17 +85,16 @@
     font-size: small;
 }
 .loadMore{
-    background-color: #dddddd;
-    border: 1px solid #5D5FEF;
-    color: #5D5FEF;
+    background-color: #5D5FEF;
+    border:none;
+    color: #ffffff;
     padding: 10px;
     outline: none;
-    border-radius: 25px;
+    border-radius: 5px;
     width: calc(100% - 10px);
-    height: 50px;
     font-weight: bold;
     margin-bottom: 20px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 .loadingDiv{
     padding: 30px;
