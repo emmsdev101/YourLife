@@ -8,8 +8,8 @@ import Loader from "../../components/Loader/Loader";
 
 const ViewPost = lazy(() => import ("./../../components/post/viewPost"));
 
-function Home({ feedStories, addFeed, fetchFeeds, loading, setRenderHeader }) {
-  const { createPost, createStory, viewPost, view} = useHome(setRenderHeader);
+function Home({ feedStories, addFeed, fetchFeeds, loading, setRenderHeader, setFeeds, page, setPage }) {
+  const { createPost, createStory, viewPost, view, isLoading, loadMore} = useHome(setRenderHeader, setFeeds, page, setPage);
 
   if(view){
    return (
@@ -58,6 +58,7 @@ function Home({ feedStories, addFeed, fetchFeeds, loading, setRenderHeader }) {
                     : ""}
                 </div>
               )}
+              {feedStories?.length > 10? isLoading?<div className = {style.loadingDiv}><Loader/></div>:<button className = {style.loadMore} onClick = {loadMore}>Load more</button>:''}
             </div>
           )}
         </React.Fragment>

@@ -4,7 +4,9 @@ const router = express.Router();
 const User = require("./../model/user");
 const Following = require("./../model/following");
 const Notification = require("./../model/notification");
-const SocketSchema = require('./../model/socketclients')
+const SocketSchema = require("./../model/socketclients");
+const FeedsSchema = require("./../model/newsfeed");
+const Story = require("./../model/story")
 
 const saveImage = require("./../helper/Upload");
 const user = require("./../model/user");
@@ -111,7 +113,7 @@ router.get("/profile", auth, async (req, res) => {
     if (username && follower) {
       const profile = await User.findOne(
         { username: username },
-        {password: 0 }
+        { password: 0 }
       );
       if (profile) {
         const isFollowed = await Following.findOne({
@@ -128,7 +130,7 @@ router.get("/profile", auth, async (req, res) => {
           followers: profile.followers,
           following: profile.following,
           isFollowed: isFollowed ? true : false,
-          _id:profile._id
+          _id: profile._id,
         });
       } else res.send(304);
     } else res.send(304);
@@ -394,8 +396,10 @@ router.post("/follow", auth, async (req, res) => {
           { password: 0 }
         );
         if (followed && followee) {
-          const connected = await SocketSchema.findOne({user_id:req.body.user_id})
-          if(connected){
+          const connected = await SocketSchema.findOne({
+            user_id: req.body.user_id,
+          });
+          if (connected) {
             io.to(connected.socket_id).emit("notification", {
               _id: savedNotification._id,
               type: "follow",
@@ -405,7 +409,21 @@ router.post("/follow", auth, async (req, res) => {
               date: savedNotification.createdAt,
             });
           }
-          
+        }
+      }
+      const stories = await Story.find({ owner: req.body.username });
+      if (stories) {
+        for (let i = 0; i < stories.length; i++) {
+          const story = stories[i]
+          const createMyFeed = new FeedsSchema({
+            user_id: req.session.user,
+            post_id: story._id,
+            date_posted:story.date,
+            content:story.content,
+            photos:story.photos,
+            owner_id:story.owner_id
+          });
+          createMyFeed.save();
         }
       }
     });
@@ -444,10 +462,19 @@ router.post("/follow", auth, async (req, res) => {
           );
           Promise.all([followerReq, followedReq]).then((result) => {
             res.send(true);
+            deleteFromFeeds()
           });
         }
       }
     );
+    async function deleteFromFeeds(){
+      const stories = await Story.find({ owner: req.body.username});
+    for (let i = 0; i < stories.length; i++) {
+      const story = stories[i];
+      await FeedsSchema.findOneAndDelete({post_id:story._id, user_id:req.session.user})
+      
+    }
+    }
   };
   try {
     User.findOne({ _id: req.session.user }, (err, user_follower) => {
@@ -477,12 +504,14 @@ router.get("/search", auth, async (req, res) => {
       0,
       space >= 0 ? space : searchInput.length
     );
-    const lastname = searchInput.slice(space >= 0 ? space +1 : searchInput.length);
+    const lastname = searchInput.slice(
+      space >= 0 ? space + 1 : searchInput.length
+    );
 
     if (lastname) {
       const searchUsers = await User.find({
         firstname: { $regex: firstname, $options: "i" },
-        lastname:{$regex:lastname, $options:"i"}
+        lastname: { $regex: lastname, $options: "i" },
       }).limit(30);
       res.send(searchUsers);
     } else {

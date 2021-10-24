@@ -15,7 +15,7 @@ const username = cookie.get("username");
 const useApp = () => {
   const my_api =
     process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
-  const { fetchFeeds } = useFeed();
+  const { fetchFeeds, generateFeeds } = useFeed();
   const location = useLocation();
   const setUserContext = useContext(GlobalUserActionsContext);
   const socket = useContext(SocketContext);
@@ -26,11 +26,18 @@ const useApp = () => {
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState(null);
   const [notifLoaded, setNotifLoaded] = useState(false);
+
+  const [page, setPage] = useState(1)
   let refreshed = useRef(false);
 
   useEffect(() => {
     if (isLogged()) {
       fetchStory();
+      generateNewFeeds()
+      setInterval(async()=>{
+        console.log("Generating feeds")
+        generateNewFeeds()
+      },1000 * 60)
       setUserContext();
     }
   }, []);
@@ -97,6 +104,12 @@ const useApp = () => {
       });
     }
   }, [notifLoaded]);
+  async function generateNewFeeds(){
+    const newFeeds = await generateFeeds()
+      if(newFeeds){
+        setStories(newFeeds)
+      }
+  }
   async function fetchStory() {
     setLoading(true);
     const fetched_stories = await fetchFeeds();
@@ -148,7 +161,8 @@ const useApp = () => {
     fetchStory,
     loading,
     notifications,
-    setNotifications,refreshNotifs
+    setNotifications,refreshNotifs,setStories,
+    page, setPage
   };
 };
 export default useApp;

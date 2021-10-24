@@ -26,6 +26,8 @@ function App() {
     notifications,
     setNotifications,
     refreshNotifs,
+    setStories,
+    page, setPage
   } = useApp();
 
   return (
@@ -59,6 +61,9 @@ function App() {
                     fetchFeeds={fetchStory}
                     loading={loading}
                     setRenderHeader={setRenderHeader}
+                    setFeeds = {setStories}
+                    page = {page}
+                     setPage = {setPage}
                   />
                 )}
               />
@@ -73,6 +78,9 @@ function App() {
                     fetchFeeds={fetchStory}
                     loading={loading}
                     setRenderHeader={setRenderHeader}
+                    setFeeds = {setStories}
+                    page = {page}
+                    setPage = {setPage}
                   />
                 )}
               />
@@ -87,6 +95,9 @@ function App() {
                     fetchFeeds={fetchStory}
                     loading={loading}
                     setRenderHeader={setRenderHeader}
+                    setFeeds = {setStories}
+                    page = {page}
+                    setPage = {setPage}
                   />
                 )}
               />
@@ -101,6 +112,9 @@ function App() {
                     fetchFeeds={fetchStory}
                     loading={loading}
                     setRenderHeader={setRenderHeader}
+                    setFeeds = {setStories}
+                    page = {page}
+                    setPage = {setPage}
                   />
                 )}
               />

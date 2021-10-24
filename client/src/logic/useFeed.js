@@ -13,12 +13,13 @@ function useFeed() {
   const [uploadingProgress, setUploadingProgress] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const fetchFeeds = async () => {
+  const fetchFeeds = async (page) => {
       try{
         const get_feeds = await axios({
             method: "get",
             withCredentials: true,
             url: my_api + "/post/get-feeds",
+            params:{page}
           });
           if (get_feeds.status === 200) {
               if(Array.isArray(get_feeds.data)){
@@ -62,6 +63,29 @@ function useFeed() {
         }
     
   };
+  const generateFeeds = async() => {
+    try{
+      const get_feeds = await axios({
+          method: "get",
+          withCredentials: true,
+          url: my_api + "/post/generate-feeds",
+        });
+        if (get_feeds.status === 200) {
+            if(Array.isArray(get_feeds.data)){
+              return get_feeds.data
+            }else return null
+        }
+    }catch(err){
+        if(err.response){
+          if(err.response.status === 401){
+                cookie.remove("username")
+                window.location.replace("/login")
+              return null
+          }
+        }
+      
+    }
+  }
   const addFeed = (newFeedPar) => {
     if(feedStories){
       setFeedStories((feeds) => [newFeedPar, ...feeds]);
@@ -322,7 +346,8 @@ function useFeed() {
     postLiked,
     addComment,
     getComments,
-    requestUnlike
+    requestUnlike,
+    generateFeeds
   };
 }
 export default useFeed;
