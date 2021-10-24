@@ -22,7 +22,7 @@ router.get("/", auth, async (req, res) => {
     const limit = 20;
     const skip = limit * page;
     const myNotifications = await Notification.find({ user_id: userId })
-      .sort({ updatedAt: -1 })
+      .sort({ updatedAt: -1})
       .limit(limit)
       .skip(skip);
     let notificationRes = [];

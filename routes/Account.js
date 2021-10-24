@@ -479,7 +479,7 @@ router.post("/follow", auth, async (req, res) => {
     async function deleteNotif(){
       const userFollowing = await User.findOne({username:req.body.username},{_id:1})
       if(userFollowing){
-        const deleted = await Notification.deleteMany({type:"follow",user_id:userFollowing._id})
+        const deleted = await Notification.deleteMany({type:"follow",user_id:userFollowing._id,last_activity: follower})
       }
     }
   };
