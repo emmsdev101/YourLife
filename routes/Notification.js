@@ -132,6 +132,7 @@ router.post("/read-comment", auth, async (req, res) => {
     notificationId,
     {
       last_activity: commentId,
+      seen:true
     }
   );
   if (updateNotification) {
