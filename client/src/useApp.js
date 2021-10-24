@@ -33,11 +33,7 @@ const useApp = () => {
   useEffect(() => {
     if (isLogged()) {
      initializeFeed();
-      setInterval(async () => {
-        console.log("Generating feeds");
-       initializeFeed();
-      }, 60000 * 5);
-      setUserContext();
+    setUserContext();
     }
   }, []);
   useEffect(() => {
