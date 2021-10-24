@@ -106,18 +106,37 @@ router.post("/add-comment", auth, async (req, res) => {
             commentRoom.recipients.push(userId);
             commentRoom.save();
           }
-          io.in(postId).emit("notification",{
-            type: "comment",
-            date:savedComment.createdAt,
-            comments: {
-              last_commentor: [user],
-              last_comment: savedComment.content,
-            },
-            post_id: postId,
-            comment_id: savedComment._id,
-            seen: false,
-            sender:userId
-        })
+          const recipients = commentRoom.recipients
+          for (let i = 0; i < recipients.length; i++) {
+            const reciever = recipients[i];
+            const connected = await SocketSchema.findOne({user_id:reciever})
+            if(connected){
+              io.to(connected.socket_id).emit("notification",{
+                type: "comment",
+                date:savedComment.createdAt,
+                comments: {
+                  last_commentor: [user],
+                  last_comment: savedComment.content,
+                  owner: post_owner === reciever,
+                },
+                post_id: postId,
+                comment_id: savedComment._id,
+                seen: false,
+                sender:userId,
+            })
+            }
+            const notification_reciever = await Notification.findOne({
+              user_id: reciever,
+              post_id: postId,
+              type: "comment",
+            });
+            if(notification_reciever){
+              notification_reciever.seen = false
+              notification_reciever.save()
+            }
+            
+          }
+          
         } else {
           const newcommentRoom = new Room({
             post_id: postId,
@@ -133,11 +152,12 @@ router.post("/add-comment", auth, async (req, res) => {
               comments: {
                 last_commentor: [user],
                 last_comment: savedComment.content,
+                owner: true,
               },
               post_id: postId,
               comment_id: savedComment._id,
               seen: false,
-              sender:userId
+              sender:userId,
           })
           }
           

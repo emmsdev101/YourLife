@@ -62,6 +62,7 @@ const useApp = () => {
   useEffect(() => {
     if (notifLoaded) {
       socket.on("notification", (msg) => {
+        console.log(msg)
         if (msg.type === "follow") {
           setNotifications((olds) => [msg, ...olds]);
         } else {
@@ -89,12 +90,6 @@ const useApp = () => {
               setNotifications((olds) => [msg, ...olds]);
             }
           }
-        }
-      });
-
-      notifications.forEach((notification) => {
-        if (notification.type === "comment") {
-          socket.emit("join", notification.post_id);
         }
       });
     }
@@ -135,6 +130,7 @@ const useApp = () => {
     }
   }
   async function initNotifications() {
+    setNotifLoaded(false)
     const getNotifications = await axios({
       method: "get",
       withCredentials: true,
@@ -145,7 +141,7 @@ const useApp = () => {
     setNotifLoaded(true);
   }
   const refreshNotifs = async () => {
-    setNotifications(null);
+    setNotifications([]);
     initNotifications();
   };
   return {
@@ -162,6 +158,7 @@ const useApp = () => {
     setStories,
     page,
     setPage,
+    notifLoaded
   };
 };
 export default useApp;

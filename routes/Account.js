@@ -463,6 +463,7 @@ router.post("/follow", auth, async (req, res) => {
           Promise.all([followerReq, followedReq]).then((result) => {
             res.send(true);
             deleteFromFeeds()
+            deleteNotif()
           });
         }
       }
@@ -474,6 +475,12 @@ router.post("/follow", auth, async (req, res) => {
       await FeedsSchema.findOneAndDelete({post_id:story._id, user_id:req.session.user})
       
     }
+    }
+    async function deleteNotif(){
+      const userFollowing = await User.findOne({username:req.body.username},{_id:1})
+      if(userFollowing){
+        const deleted = await Notification.deleteMany({type:"follow",user_id:userFollowing._id})
+      }
     }
   };
   try {

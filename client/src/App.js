@@ -27,7 +27,9 @@ function App() {
     setNotifications,
     refreshNotifs,
     setStories,
-    page, setPage
+    page,
+    setPage,
+    notifLoaded,
   } = useApp();
 
   return (
@@ -35,17 +37,28 @@ function App() {
       <React.Fragment>
         {isLogged() ? (
           <div className={style.App}>
-            {renderHeader ? <Header notifications = {notifications}/> : ""}
+            {renderHeader ? <Header notifications={notifications} /> : ""}
             <Suspense fallback={<div>Loading...</div>}>
               <Route exact path="/menu" component={Menu} />
-              <Route exact path="/people" render = {(props)=>(
-                <People {...props} setRenderHeader = {setRenderHeader}/>
-              )} />
+              <Route
+                exact
+                path="/people"
+                render={(props) => (
+                  <People {...props} setRenderHeader={setRenderHeader} />
+                )}
+              />
               <Route
                 exact
                 path="/notification"
                 render={(props) => (
-                  <Notification {...props} setRenderHeader={setRenderHeader} notifications = {notifications} setNotifications = {setNotifications} refreshNotifs = {refreshNotifs} />
+                  <Notification
+                    {...props}
+                    setRenderHeader={setRenderHeader}
+                    notifications={notifications}
+                    setNotifications={setNotifications}
+                    refreshNotifs={refreshNotifs}
+                    notifLoaded = {notifLoaded}
+                  />
                 )}
               />
               <Route exact path="/chat" component={Chat} />
@@ -61,9 +74,9 @@ function App() {
                     fetchFeeds={fetchStory}
                     loading={loading}
                     setRenderHeader={setRenderHeader}
-                    setFeeds = {setStories}
-                    page = {page}
-                     setPage = {setPage}
+                    setFeeds={setStories}
+                    page={page}
+                    setPage={setPage}
                   />
                 )}
               />
@@ -78,9 +91,9 @@ function App() {
                     fetchFeeds={fetchStory}
                     loading={loading}
                     setRenderHeader={setRenderHeader}
-                    setFeeds = {setStories}
-                    page = {page}
-                    setPage = {setPage}
+                    setFeeds={setStories}
+                    page={page}
+                    setPage={setPage}
                   />
                 )}
               />
@@ -95,9 +108,9 @@ function App() {
                     fetchFeeds={fetchStory}
                     loading={loading}
                     setRenderHeader={setRenderHeader}
-                    setFeeds = {setStories}
-                    page = {page}
-                    setPage = {setPage}
+                    setFeeds={setStories}
+                    page={page}
+                    setPage={setPage}
                   />
                 )}
               />
@@ -112,9 +125,9 @@ function App() {
                     fetchFeeds={fetchStory}
                     loading={loading}
                     setRenderHeader={setRenderHeader}
-                    setFeeds = {setStories}
-                    page = {page}
-                    setPage = {setPage}
+                    setFeeds={setStories}
+                    page={page}
+                    setPage={setPage}
                   />
                 )}
               />
@@ -135,7 +148,6 @@ function App() {
           </Suspense>
         )}
       </React.Fragment>
-      
     </Switch>
   );
 }

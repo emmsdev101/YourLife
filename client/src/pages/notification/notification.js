@@ -5,7 +5,7 @@ import useNotification from "./useNotification";
 import { Suspense, lazy } from "react";
 
 const ViewPost = lazy(() => import("../../components/post/viewPost"));
-function Notification({ setRenderHeader, notifications, setNotifications, refreshNotifs }) {
+function Notification({ setRenderHeader, notifications, setNotifications, refreshNotifs,notifLoaded }) {
   const { FaSearch } = useIcons();
   const { useHistory } = useReactHooks();
   const { viewNotification, setViewNotification, closePost, readNotification,loadingNext, loadMore } =
@@ -37,7 +37,7 @@ function Notification({ setRenderHeader, notifications, setNotifications, refres
         </div>
         <div className="people-list-div">
           <br />
-          {!notifications
+          {!notifications && !notifLoaded
             ? "loading notifications..."
             : notifications.length < 1
             ? "You have no notifications"

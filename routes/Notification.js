@@ -19,7 +19,6 @@ router.get("/", auth, async (req, res) => {
     const userId = req.session.user;
     const page = req.query.page || 0;
 
-    console.log("page", page);
     const limit = 20;
     const skip = limit * page;
     const myNotifications = await Notification.find({ user_id: userId })
@@ -63,7 +62,7 @@ router.get("/", auth, async (req, res) => {
             },
             post_id: notification.post_id,
             comment_id: lastComment[0]._id,
-            seen: lastComment[0]?._id.toString() === notification.last_activity,
+            seen: notification.seen,
             notification_id: notification._id,
           });
         }
