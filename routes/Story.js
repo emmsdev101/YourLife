@@ -292,7 +292,7 @@ router.get("/get-feeds", auth, async (req, res, next) => {
     const userId = req.session.user;
     const page = req.query.page || 0;
     const limit = 20;
-    const skip = 10 * page;
+    const skip = limit * page;
     console.log("skip", skip);
     const myProfile = await User.findOne({ _id: userId }, { username: 1 });
     if (myProfile) {

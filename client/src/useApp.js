@@ -99,7 +99,7 @@ const useApp = () => {
   }
   async function fetchStory() {
     setLoading(true);
-    const fetched_stories = await fetchFeeds();
+    const fetched_stories = await generateFeeds()
     if (fetched_stories) {
       if (Array.isArray(stories)) {
         if (refreshed.current) setStories(fetched_stories);
