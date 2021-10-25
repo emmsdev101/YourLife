@@ -50,7 +50,7 @@ const useProfile = () => {
     }
     async function fetchProfileData() {
       const profileData = await getUserInfo(isOwn?null:user)
-      const following = await getFollowing(6,1,isOwn?null:user);
+      const following = await getFollowing(6,0,isOwn?null:user);
       const fetchResult = await fetchPhotos(user);
       if (isMounted.current) {
         setPhotos(fetchResult);

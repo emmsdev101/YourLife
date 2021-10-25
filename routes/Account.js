@@ -27,9 +27,8 @@ const admin = (req, res, next) => {
 };
 const queryFollowers = async (ownId, username, limit, page) => {
   try {
-    const followers = await Following.find({ following: username }, null, {
-      limit: limit,
-    });
+    const skip = limit * page
+    const followers = await Following.find({ following: username }).skip(skip).limit(limit);
     if (Array.isArray(followers)) {
       let follwersObject = [];
       for (let index = 0; index < followers.length; index++) {
@@ -176,6 +175,7 @@ router.get("/isfollowing", auth, async (req, res) => {
 router.get("/followers", auth, async (req, res) => {
   try {
     const limit = parseInt(req.query.limit);
+    const page = req.query.page
     let username = req.query.username;
     if (!username) {
       const user = await User.findOne({ _id: req.session.user });
@@ -186,7 +186,7 @@ router.get("/followers", auth, async (req, res) => {
       req.session.user,
       username,
       limit,
-      1
+      page
     );
     if (followers) {
       res.send(followers);
@@ -532,7 +532,64 @@ router.get("/search", auth, async (req, res) => {
     console.log(error);
   }
 });
-router;
+router.get("/search-follower", auth, async (req, res) => {
+  try {
+    const searchInput = req.query.toSearch;
+    const space = searchInput.indexOf(" ");
+    const firstname = searchInput.slice(
+      0,
+      space >= 0 ? space : searchInput.length
+    );
+    const lastname = searchInput.slice(
+      space >= 0 ? space + 1 : searchInput.length
+    );
+    if (lastname) {
+      const searchUsers = await User.find({
+        firstname: { $regex: firstname, $options: "i" },
+        lastname: { $regex: lastname, $options: "i" },
+      },{password:0}).limit(30);
+      isFollower(searchUsers);
+    } else {
+      const searchUsers = await User.find({
+        firstname: { $regex: firstname, $options: "i" },
+      }, {password:0}).limit(30);
+      isFollower(searchUsers);
+    }
+  } catch (error) {
+    res.send(error);
+    console.log(error);
+  }
+
+  async function isFollower (users){
+    let followers  = []
+    if(users){
+      for (let i = 0; i < users.length; i++) {
+        const user = users[i];
+        const isFollower = await Following.findOne({following:user.username})
+        if(isFollower){
+          const myProfile = await User.findOne({_id:req.session.user})
+          if(myProfile){
+            const isfollowing = await Following.findOne({
+              follower: myProfile.username,
+              following: user.username,
+            });
+            
+
+            followers.push({
+              username: user.username,
+              firstname: user.firstname,
+              lastname: user.lastname,
+              photo: user.photo,
+              followed: isfollowing?true:false,
+            })
+          }
+        }
+        
+      }
+      res.send(followers)
+    }else res.sendStatus(403)
+  }
+});
 // DELETING SINGLE USER
 
 router.delete("/accout", auth, async (req, res) => {

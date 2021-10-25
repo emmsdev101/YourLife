@@ -72,6 +72,7 @@
 .list{
     overflow-y: scroll;
     height: calc(100vh - 180px);
+    padding-bottom: 20px;
 }
 .follower{
     width: calc(100% - 10px);
@@ -115,4 +116,19 @@
     border-radius: 5px;
     margin-left: auto;
     margin-right: 10px;
+}
+.loadMore{
+    background-color: #5D5FEF;
+    border:none;
+    color: #ffffff;
+    padding: 10px;
+    outline: none;
+    border-radius: 5px;
+    width: calc(100% - 10px);
+    font-weight: bold;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+.loadingDiv{
+    padding: 30px;
 }
