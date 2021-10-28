@@ -65,12 +65,12 @@ function CreatePost({ showMe, addStory }) {
             <p>Photo</p>
           </div>
           <div className={style.addPhotos}>
-            <FaCamera className={style.utilityIcons} />
+            <FaCamera className={style.utilityIcons} onClick={openPicker} />
             <p>Capture</p>
           </div>
           <div className={style.addPhotos}>
             <FaVideo className={style.utilityIcons} />
-            <p>Vedio</p>
+            <p>Video</p>
           </div>
           <div className={style.addPhotos}></div>
         </div>

@@ -310,7 +310,8 @@ router.post("/register", (req, res) => {
     if (err) throw err;
     if (doc)
       res.send({
-        exists: true,
+        success:false,
+        emailError:'Username already taken'
       });
     if (!doc) {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -325,13 +326,7 @@ router.post("/register", (req, res) => {
       try {
         await newUser.save();
         res.send({
-          registered: true,
-          id: newUser._id,
-          username: newUser.username,
-          firstname: newUser.firstname,
-          lastname: newUser.lastname,
-          age: newUser.age,
-          gender: newUser.gender,
+          success:true
         });
       } catch (error) {
         console.log(error);

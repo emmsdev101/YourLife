@@ -57,16 +57,8 @@ function Login(){
             </div>
         )
     }
-    const splash = () => {
-        return(
-            <div className = "splash">
-                <p>Logging in . . .</p>
-            </div>
-        )
-    }
     return (
         <div className = "signup">
-            {loading?splash():''}
             <div className = "signup-header">
                 <img src = {logo_text} alt = ''/>
             </div>
@@ -77,7 +69,7 @@ function Login(){
                 <input type = "username" className = "signup-input" id = "username-input" value = {username} onChange = {usernameChage}/>
                 <label htmlFor = "fname-input"> Password:</label>
                 <input type = "password" className = "signup-input" id = "password-input" value = {password} onChange = {passwordChage}/>
-                <button className = "signup-submit" onClick = {signIn}>Login</button>
+                <button className = {loading?'loading':"signup-submit"} onClick = {signIn}>{loading?"Logging in...":'Login'}</button>
                 <center>or</center>
                 <button className = "signup-btn" onClick = {()=>{history.push('/signup')}}>Signup</button>
                 <center>If you dont have an account yet</center>
