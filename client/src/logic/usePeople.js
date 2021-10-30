@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "universal-cookie/es6";
+import { MY_API } from "../config";
 const cookie = new Cookies();
 function usePeople() {
-  const my_api =
-    process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+  const my_api = MY_API
   
   const fetchPoeple = async (page) => {
     try {

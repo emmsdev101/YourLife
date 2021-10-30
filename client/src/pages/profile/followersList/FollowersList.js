@@ -28,12 +28,12 @@ const FollowersList = ({isOwn, back, numFollowers, fullname}) => {
                 <p className = {style.followerCount}>{numFollowers}</p>
             </div>
             <div className = {style.list}>
-                {loading?<Loader/>:
-                followers? followers.map((user, id)=>(
-                    <Follower user = {user} key = {id} style = {style} isOwn ={isOwn} back = {back}/>
+                {followers? followers.map((user, id)=>(
+                    <Follower isSearching = {isSearching} user = {user} key = {id} style = {style} isOwn ={isOwn} back = {back}/>
                 )) :''
                 }
-                {followers?.length < numFollowers && !isSearching? loadingNext?<div className = {style.loadingDiv}><Loader/></div>:<button className = {style.loadMore} onClick = {nextPage}>Load more</button>:''}
+                {loading?<div className = {style.loadingDiv}><Loader/></div>:followers?.length<numFollowers && !isSearching?<button className = {style.loadMore} onClick = {nextPage}>Load more</button>:followers?.length === 0?<div>No Result</div>:''}
+                
             </div>
             
         </div>

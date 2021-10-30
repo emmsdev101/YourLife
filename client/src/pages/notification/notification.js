@@ -1,4 +1,4 @@
-import "./style.css";
+import style from './notification.module.css'
 import NotificationItem from "../../components/notification/notification";
 import { useIcons, useReactHooks } from "../../logic/library";
 import useNotification from "./useNotification";
@@ -27,15 +27,15 @@ function Notification({ setRenderHeader, notifications, setNotifications, refres
     );
   } else
     return (
-      <div className="people-body">
-        <div className="people-header">
+      <div className={style.peopleBody}>
+        <div className={style.peopleHeader}>
           <h3>Notification</h3>
-          <button className = "notif-refresh" onClick = {refreshNotifs}>Refresh</button>
-          <button className="search-button">
-            <FaSearch className="search-icon"></FaSearch>
+          <button className = {style.notifRefresh} onClick = {refreshNotifs}>Refresh</button>
+          <button className={style.searchButton}>
+            <FaSearch className={style.searchIcon}></FaSearch>
           </button>
         </div>
-        <div className="people-list-div">
+        <div className={style.peopleListDiv}>
           <br />
           {!notifications || !notifLoaded
             ? "loading notifications..."
@@ -54,7 +54,7 @@ function Notification({ setRenderHeader, notifications, setNotifications, refres
             ></NotificationItem>
           ))}
           {notifications?.length > 9  && !loadingNext? (
-            <div className="load-more" onClick ={loadMore}>Load more</div>
+            <div className={style.loadMore} onClick ={loadMore}>Load more</div>
           ) : (
             ""
           )}

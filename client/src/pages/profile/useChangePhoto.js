@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { GlobalUserContext } from '../../logic/userContext';
-
+import { MY_API } from '../../config';
 const useChangePhoto = () => {
-    const my_api =
-    process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+    const my_api = MY_API
     const user_context = useContext(GlobalUserContext);
     const [upload, setUpload] = useState(false);
     const [profile_photo_url, setProfilePhotoUrl] = useState();

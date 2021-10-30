@@ -68,8 +68,12 @@ router.get("/fetchAll", auth, async (req, res) => {
     const page = parseInt(req.query.page);
     const limit = 20;
     const to_skip = page * limit;
+
+    const user = await User.findOne({_id:req.session.user})
+    const iFollowed = await Following.find({follower:user.username})
+    const ifollowedArray = iFollowed.map(f=>f.following)
     const users = await User.find(
-      { _id: { $ne: req.session.user } },
+      { username:{$nin:ifollowedArray}},
       {
         password: 0,
       },
@@ -543,46 +547,16 @@ router.get("/search-follower", auth, async (req, res) => {
         firstname: { $regex: firstname, $options: "i" },
         lastname: { $regex: lastname, $options: "i" },
       },{password:0}).limit(30);
-      isFollower(searchUsers);
+      res.send(searchUsers);
     } else {
       const searchUsers = await User.find({
         firstname: { $regex: firstname, $options: "i" },
       }, {password:0}).limit(30);
-      isFollower(searchUsers);
+      res.send(searchUsers)
     }
   } catch (error) {
     res.send(error);
     console.log(error);
-  }
-
-  async function isFollower (users){
-    let followers  = []
-    if(users){
-      for (let i = 0; i < users.length; i++) {
-        const user = users[i];
-        const isFollower = await Following.findOne({following:user.username})
-        if(isFollower){
-          const myProfile = await User.findOne({_id:req.session.user})
-          if(myProfile){
-            const isfollowing = await Following.findOne({
-              follower: myProfile.username,
-              following: user.username,
-            });
-            
-
-            followers.push({
-              username: user.username,
-              firstname: user.firstname,
-              lastname: user.lastname,
-              photo: user.photo,
-              followed: isfollowing?true:false,
-            })
-          }
-        }
-        
-      }
-      res.send(followers)
-    }else res.sendStatus(403)
   }
 });
 // DELETING SINGLE USER

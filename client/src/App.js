@@ -2,7 +2,6 @@ import React, { Suspense, lazy } from "react";
 import { Route, Switch } from "react-router-dom";
 import style from "./app.module.css";
 import Header from "./components/header/Header";
-import "./generalStyle/generalStyle.css";
 import useApp from "./useApp";
 
 const Profile = lazy(() => import("./pages/profile/profile"));

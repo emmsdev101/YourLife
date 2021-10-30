@@ -1,10 +1,19 @@
 ::rot{
     --width : 100vw
 }
-.unread{
+.unreadNotificationDiv{
     background-color: #5d5fef3b;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: left;
+    color: rgb(29, 29, 29);
+    padding-top: 5px;
+    padding-bottom: 5px; 
 }
-.notification-div{
+.notificationDiv{
     width: 100%;
     height: auto;
     display: flex;
@@ -16,7 +25,7 @@
     padding-bottom: 5px;  
     
 }
-.notification-picture{
+.notificationPicture{
     height: 90px;
     width: 90px;
     border-radius: 50px;
@@ -24,23 +33,23 @@
     color: rgb(165, 165, 165);
     object-fit: cover;
 }
-.notification-detail{
+.notificationDetail{
     margin-left: 10px;
     width: calc(100% - 100px);
 
     }
-.notification-status{
+.notificationStatus{
     margin: 0;
     font-size: smaller;
     text-align: left;
 }
-.notification-name{
+.notificationName{
     margin: 0;
     text-align: left;
     font-size: medium;
     font-weight: 700;
 }
-.notification-content{
+.notificationContent{
     font-size: medium;
     text-align: left;
     

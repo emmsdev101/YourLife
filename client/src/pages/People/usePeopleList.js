@@ -7,7 +7,6 @@ const usePeopleList = (setRenderHeader) => {
   const [people, setPeople] = useState(null);
   const [loading, setLoading] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
-  const [searched, setSearched] = useState(null)
   const [searchInput, setSearchInput] = useState('')
   useEffect(() => {
     initPeople();
@@ -20,7 +19,9 @@ const usePeopleList = (setRenderHeader) => {
           setPeople(searchResult)
         }
       }
-      searchReq()
+      if(isSearching){
+        searchReq()
+      }
   }, [searchInput])
 
   async function initPeople() {

@@ -1,6 +1,7 @@
 import { useReactHooks } from '../../logic/library';
 import axios from 'axios'
 import './style.css'
+import {MY_API} from './../../config'
 function Signup(){
     const {useState} = useReactHooks()
     const [firstname, setFirstname] = useState('');
@@ -16,7 +17,7 @@ function Signup(){
     const [usernameError, setEmailError] = useState('')
     const [loading, setLoading] = useState(false)
     
-    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
+    const my_api = MY_API
     const USER_API = my_api+'/user/register'
     const gender_options = [
         {

@@ -2,7 +2,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { useHistory } from 'react-router-dom';
 import style from './user.module.css'
 import useUser from './useUser';
-function User({data, id}){
+function User({data, id, isSearching}){
     const history = useHistory()
     const {followed,
         dpLoad,
@@ -15,8 +15,18 @@ function User({data, id}){
     const viewProfile = ()=> {
         history.push("/profile/"+data.username)
     }
-    
-    if(followed !== null) return(
+    if(isSearching){
+        return(
+            <div className = {style.userDiv} id = {id}>
+                {dpLoad? <img className = {style.userPicture} src = {profilePhoto} onClick = {viewProfile}></img>:
+                <FaUserCircle className = {style.userPicture} onClick = {viewProfile}/>}
+                <div className = {style.userDetails}>
+                    <p className = {style.username} onClick = {viewProfile}>{data.firstname + ' ' + data.lastname}</p>
+                </div>
+            </div>
+        )
+    }
+    else if(followed !== null) return(
         <div className = {style.userDiv} id = {id}>
             {dpLoad? <img className = {style.userPicture} src = {profilePhoto} onClick = {viewProfile}></img>:
             <FaUserCircle className = {style.userPicture} onClick = {viewProfile}/>}

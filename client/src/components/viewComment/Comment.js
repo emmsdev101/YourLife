@@ -3,9 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { useHistory } from 'react-router-dom';
 import usePeople from '../../logic/usePeople';
+import { MY_API } from '../../config';
 import style from './comment.module.css'
 const Comment = ({document}) => {
-    const my_api = process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+    const my_api = MY_API
     const history = useHistory()
     const [dpLoaded, setDpLoaded] = useState(false)
 

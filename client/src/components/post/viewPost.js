@@ -5,9 +5,9 @@ import PostImage from "../postImage/postImage";
 import { FaArrowLeft } from "react-icons/fa";
 import ViewComment from "../viewComment/ViewComment";
 import ViewPhoto from "../photos/ViewPhoto";
+import { MY_API } from "../../config";
 
-const my_api =
-  process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+const my_api = MY_API
 
 const ViewPost = ({ id, back, setRenderHeader }) => {
   const { FaUserCircle } = useIcons();

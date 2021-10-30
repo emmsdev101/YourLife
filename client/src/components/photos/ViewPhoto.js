@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { FaArrowLeft, FaChevronLeft, FaChevronRight, FaEllipsisV } from "react-icons/fa";
 import Loader from "../Loader/Loader";
 import style from "./photos.module.css";
+import { MY_API } from "../../config";
 const ViewPhoto = ({photos, index, back}) => {
-  const my_api =
-  process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+  const my_api = MY_API
   const [onView, setOnView] = useState(null)
   const [photoIndex, setPhotoIndex] = useState(index)
 

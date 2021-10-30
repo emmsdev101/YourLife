@@ -1,54 +1,55 @@
 import React from "react";
 import { FaBars, FaBell, FaEnvelope, FaHome, FaUser, FaUsers } from "react-icons/fa";
 import useHeader from "./useHeader";
+import style from './header.module.css'
 
 const Header = ({notifications}) => {
     const {switchPage, active, newNotifs} = useHeader(notifications)
     return (
-      <header className="home-header">
+      <header className={style.homeHeader}>
         <div
           className={
-            active === "/home" || active === "/" ? "active" : "inactive"
+            active === "/home" || active === "/" ? style.active : style.inactive
           }
           onClick={() => {
             switchPage("/home");
           }}
         >
           {" "}
-          <FaHome className="nav-icon"></FaHome>
+          <FaHome className={style.navIcon}></FaHome>
         </div>
         <div
-          className={active === "/people" ? "active" : "inactive"}
+          className={active === "/people" ? style.active:style.inactive}
           onClick={() => {
             switchPage("/people");
           }}
         >
-          <FaUsers className="nav-icon"></FaUsers>
+          <FaUsers className={style.navIcon}></FaUsers>
         </div>
         <div
-          className={active === "/notification" ? "active" : "inactive"}
+          className={active === "/notification" ? style.active:style.inactive}
           onClick={() => {
             switchPage("/notification");
           }}
         >
-          <FaBell className="nav-icon"></FaBell>
-          {newNotifs?<div id = "notificationCount">{newNotifs > 9?'9+':newNotifs}</div>:""}
+          <FaBell className={style.navIcon}></FaBell>
+          {newNotifs?<div className={style.notificationCount}>{newNotifs > 9?'9+':newNotifs}</div>:""}
         </div>
         <div
-          className={active === "/chat" ? "active" : "inactive"}
+          className={active === "/chat" ? style.active:style.inactive}
           onClick={() => {
             switchPage("/chat");
           }}
         >
-          <FaEnvelope className="nav-icon"></FaEnvelope>
+          <FaEnvelope className={style.navIcon}></FaEnvelope>
         </div>
         <div
-          className={active === "/menu" ? "active" : "inactive"}
+          className={active === "/menu" ? style.active:style.inactive}
           onClick={() => {
             switchPage("/menu");
           }}
         >
-          <FaBars className="nav-icon"></FaBars>
+          <FaBars className={style.navIcon}></FaBars>
         </div>
       </header>
     );

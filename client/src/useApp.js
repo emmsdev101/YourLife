@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import Cookies from "universal-cookie";
 import useFeed from "./logic/useFeed";
 import { SocketContext } from "./logic/socketHandler";
+import { MY_API } from "./config";
 import {
   GlobalUserActionsContext,
   GlobalUserContext,
@@ -13,8 +14,7 @@ const cookie = new Cookies();
 const username = cookie.get("username");
 
 const useApp = () => {
-  const my_api =
-    process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+  const my_api = MY_API
   const { fetchFeeds, generateFeeds } = useFeed();
   const location = useLocation();
   const setUserContext = useContext(GlobalUserActionsContext);

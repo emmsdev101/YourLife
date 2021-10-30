@@ -24,6 +24,7 @@ import useChangePhoto from "./useChangePhoto";
 import Photos from "../../components/photos/Photos";
 import FollowersList from "./followersList/FollowersList";
 import useProfileMenu from "./useProfileMenu";
+import { MY_API } from "../../config";
 
 const ViewPost = lazy(() => import("../../components/post/viewPost"));
 
@@ -62,8 +63,7 @@ function Profile() {
   } = useProfileMenu();
 
   const PhtoItem = ({ image, id }) => {
-    const my_api =
-      process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+    const my_api = MY_API
     return (
       <div
         id={id}
@@ -76,7 +76,7 @@ function Profile() {
   const Avatar = () => {
     return (
       <div className="dp-div">
-        <img className="avatar" src={isOwn?profile_photo_url:profilePhoto}></img>
+        <img className="avatar" src={isOwn?profile_photo_url:profilePhoto} alt = ''></img>
         {isOwn ? (
           <div className="camera-div" onClick={uploadEnable}>
             <FaCamera />

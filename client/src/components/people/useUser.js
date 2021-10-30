@@ -1,11 +1,11 @@
 import { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { MY_API } from "../../config";
 import usePeople from "../../logic/usePeople";
 
 const useUser = (data, id) => {
-  const my_api =
-    process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+  const my_api = MY_API
   const profilePhoto = my_api + "/photo/" + data.photo;
 
   const { follow, isFollowing } = usePeople();

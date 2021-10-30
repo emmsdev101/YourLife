@@ -8,6 +8,7 @@ import {
   GlobalUserContext,
 } from "../../logic/userContext";
 import Cookies from "universal-cookie";
+import { MY_API } from "../../config";
 
 const cookie = new Cookies();
 const useProfile = () => {
@@ -15,8 +16,7 @@ const useProfile = () => {
   const user = params.username
   ///console.log(user)
   const owner = cookie.get("username");
-  const my_api =
-    process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+  const my_api = MY_API
   let isOwn = user === owner || user === undefined?true:false;
   const history = useHistory();
   const user_context = useContext(GlobalUserContext);

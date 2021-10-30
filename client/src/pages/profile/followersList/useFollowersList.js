@@ -26,12 +26,13 @@ const useFollowersList = (isOwn, back) => {
         if(toSearch.length > 2){
             search()
             setIsSearching(true)
-        }else{
+        }else if(toSearch.length <= 0){
             getFollowers()
             setIsSearching(false)
         }
     },[toSearch])
     async function getFollowers(){
+        setLoading(true)
         setFollwers([])
         const fetched_followers = await getFollowing(20,0, isOwn?null:user)
         if(Array.isArray(fetched_followers)){
@@ -40,11 +41,11 @@ const useFollowersList = (isOwn, back) => {
         setLoading(false)
     }
     const nextPage = async() => {
-        setLoadingNext(true)
+        setLoading(true)
         const fetched_followers = await getFollowing(20,page, isOwn?null:user)
         if(fetched_followers){
             setFollwers((olds)=>[...olds, ...fetched_followers])
-            setLoadingNext(false)
+            setLoading(false)
         }
         setPage(page+1)
     }
@@ -58,6 +59,8 @@ const useFollowersList = (isOwn, back) => {
         if(searchResult){
             setFollwers(searchResult)
             setLoading(false)
+        }else{
+
         }
     }
 

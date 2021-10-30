@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "universal-cookie";
+import {MY_API} from './../config'
 const cookie = new Cookies()
 
 function useFeed() {
-  const my_api =
-  process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+  const my_api = MY_API
   const POST_API = my_api + "/post/create";
   const UPLOAD_API = my_api + "/upload";
 

@@ -3,7 +3,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { useHistory } from 'react-router-dom';
 import usePeople from '../../../logic/usePeople';
 
-const Follower = ({style, user, back}) => {
+const Follower = ({style, user, back, isSearching}) => {
     const history = useHistory()
     const my_api =
     process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
@@ -38,7 +38,7 @@ const Follower = ({style, user, back}) => {
             {profilePiture? <img className = {style.picture} src = {profilePiture} onClick = {viewProfile} alt = ''/>:
             <FaUserCircle className = {style.picture} onClick = {viewProfile}/>}
             <p className = {style.followerName} onClick = {viewProfile} >{fullname}</p>
-            <button className = {follower? style.unfollowBtn:style.followBtn} onClick = {reqFollow}>{follower? "Unfollow":"Follow"}</button>
+            {!isSearching?<button className = {follower? style.unfollowBtn:style.followBtn} onClick = {reqFollow}>{follower? "Unfollow":"Follow"}</button>:''}
         </div>
     );
 }

@@ -1,12 +1,12 @@
 import { useCustomHooks, useReactHooks } from "../../logic/library"
-
+import { MY_API } from "../../config"
 const FriendItem = ({follower, id})=> {
     const {useState, useEffect} = useReactHooks()
     const {usePeople} = useCustomHooks()
 
     const {getUserInfo} = usePeople()
     const [profilePicture, setProfilePicture] = useState(null);
-    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' : ''
+    const my_api = MY_API
     useEffect(() => {
         const picture_url = my_api + "/photo/"+follower.photo
         let picture = new Image()

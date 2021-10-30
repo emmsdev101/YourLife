@@ -4,12 +4,13 @@ import PostImage from "../postImage/postImage";
 import React, { useContext } from "react";
 import { GlobalPostAction } from "../../logic/postContext";
 import { GlobalCommentAction } from "../../logic/commentContext";
+import {MY_API} from './../../config'
 
 function Post({ content, openPost }) {
   const { useState, useHistory, useEffect } = useReactHooks();
   const { useFeed, usePeople } = useCustomHooks();
   const { FaComment, FaEllipsisH, FaThumbsUp, FaUserCircle } = useIcons();
-  const my_api = process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+  const my_api = MY_API
   const { requestLike, postLiked, requestUnlike } = useFeed();
 
   const [render, setRender] = useState(false);

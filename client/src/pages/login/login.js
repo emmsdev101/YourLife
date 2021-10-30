@@ -2,10 +2,11 @@
 import { useCustomHooks, useReactHooks } from '../../logic/library';
 import './loginStyle.css'
 import logo_text from './../../res/images/logo_text.svg';
+import {MY_API} from './../../config'
 function Login(){
     const {useState, useHistory, Cookies, useContext, axios} = useReactHooks()
     const {GlobalUserActionsContext} = useCustomHooks()
-    const my_api = process.env.NODE_ENV === 'development'? 'http://localhost:4000' :''
+    const my_api = MY_API
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('')

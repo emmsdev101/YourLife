@@ -1,11 +1,10 @@
 import React from "react";
 import imageCompression from "../../logic/imageCompression";
-import { useCustomHooks, useIcons, useReactHooks } from "../../logic/library";
+import { useCustomHooks, useReactHooks } from "../../logic/library";
 import PickerView from "./UploadPicker";
-
+import {MY_API} from './../../config'
 function ChangeDp({ setUpload, setProfilePhotoUrl, profile_photo_url }) {
-  const my_api =
-    process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+  const my_api = MY_API
   const { useState, useContext, useRef, useEffect } = useReactHooks();
   const { useFeed, usePeople, GlobalUserContext, GlobalUserActionsContext } =
     useCustomHooks();

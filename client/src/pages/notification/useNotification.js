@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react'
 import axios from 'axios'
+import {MY_API} from './../../config'
 function useNotification(setRenderHeader, notifications, setNotifications) {
-    const my_api =
-    process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+    const my_api = MY_API
     const [viewNotification, setViewNotification] = useState(null)
     const [loadingNext, setLoadingNext] = useState(false)
     const [page, setPage] = useState(1)

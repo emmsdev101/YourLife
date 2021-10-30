@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import style from './photos.module.css'
+import { MY_API } from '../../config';
 const PhotoItem = ({viewPhoto, src, index}) => {
-    const my_api =
-  process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
+    const my_api = MY_API
     const [photoUrl, setPhotoUrl] = useState(null)
 
     useEffect(() => {
@@ -17,7 +17,7 @@ const PhotoItem = ({viewPhoto, src, index}) => {
         viewPhoto(index)
     }
     return (
-        photoUrl? <img className = {style.photoItem} src = {photoUrl} onClick = {view}/>:''
+        photoUrl? <img className = {style.photoItem} src = {photoUrl} onClick = {view} alt = ''/>:''
     );
 }
 

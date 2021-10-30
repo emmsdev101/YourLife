@@ -1,7 +1,6 @@
 import style from './people.module.css'
 import User from '../../components/people/user'
 import { FaArrowLeft, FaSearch } from 'react-icons/fa';
-import usePeople from '../../logic/usePeople';
 import usePeopleList from './usePeopleList';
 import Loader from '../../components/Loader/Loader';
 function People({setRenderHeader}){
@@ -22,7 +21,7 @@ function People({setRenderHeader}){
                 </div>}
             <div className = {style.peopleList}>
                     {people !== null? people.map((user,id)=>(
-                        <User  data = {user} key = {id} id = {id}/>
+                        <User isSearching = {isSearching}  data = {user} key = {id} id = {id}/>
                     )):
                     <div>
                     <h3>Loading...</h3>

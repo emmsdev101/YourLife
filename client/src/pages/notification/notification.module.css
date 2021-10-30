@@ -1,4 +1,4 @@
-.people-header{
+.peopleHeader{
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -7,11 +7,11 @@
     margin-right: 10px;
 
 }
-.people-body{
+.peopleBody{
     background-color: white;
     padding-bottom: 20px;
 }
-.search-button{
+.searchButton{
     padding: 5px;
     border-radius: 19px;
     height: 38px;
@@ -24,11 +24,11 @@
     justify-content: center;
 
 }
-.search-icon{
+.searchIcon{
     height: 23px;
     width: 23px;
 }
-.load-more{
+.loadMore{
     background-color: #5D5FEF;
     width: calc(100% - 30px);
     margin: auto;
@@ -38,7 +38,7 @@
     font-weight: bold;
     color: white;
 }
-.notif-refresh{
+.notifRefresh{
     margin-left: auto;
     margin-right: 5px;
     padding: 5px;

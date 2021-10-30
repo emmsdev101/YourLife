@@ -1,7 +1,8 @@
-import "./style.css";
+import style from './notification.module.css'
 import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import axios from "axios";
+import {MY_API} from './../../config'
 
 function NotificationItem({
   notification,
@@ -11,9 +12,6 @@ function NotificationItem({
   id,
   readNotif
 }) {
-  const my_api =
-    process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
-
   const [dpLoaded, setDpLoaded] = useState(false);
 
   const [seen, setSeen] = useState(null);
@@ -54,7 +52,7 @@ function NotificationItem({
           method: "post",
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
-          url: my_api + "/notification/read-comment",
+          url: MY_API + "/notification/read-comment",
           data: {
             comment_id: notification.comment_id,
             notification_id: notification.notification_id,
@@ -66,7 +64,7 @@ function NotificationItem({
           method: "post",
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
-          url: my_api + "/notification/read",
+          url: MY_API + "/notification/read",
           data: { notification_id: notification.notification_id },
         });
       }
@@ -76,7 +74,7 @@ function NotificationItem({
   };
   if (notification.type === "comment") {
     const profilePhoto =
-      my_api + "/photo/" + notification.comments.last_commentor[0].photo;
+      MY_API + "/photo/" + notification.comments.last_commentor[0].photo;
 
     preloadProfilePicture(profilePhoto);
 
@@ -93,20 +91,20 @@ function NotificationItem({
     }
     return (
       <div
-        className={!seen ? "notification-div unread" : "notification-div"}
+        className={!seen ? style.unreadNotificationDiv : style.notificationDiv}
         onClick={readNotification}
       >
         {dpLoaded ? (
-          <img className="notification-picture" src={profilePhoto} alt=""></img>
+          <img className={style.notificationPicture} src={profilePhoto} alt=""></img>
         ) : (
-          <FaUserCircle className="notification-picture" />
+          <FaUserCircle className={style.notificationPicture} />
         )}
-        <div className="notification-detail">
-          <p className="notification-name">{getCommentorsNames()}</p>
-          <p className="notification-content">
+        <div className={style.notificationDetail}>
+          <p className={style.notificationName}>{getCommentorsNames()}</p>
+          <p className={style.notificationContent}>
             {`Commented on  ${who} story:"${notification.comments.last_comment}"`}
           </p>
-          <p className="notification-status">
+          <p className={style.notificationStatus}>
             {daysLapsed > 0
               ? daysLapsed > 1
                 ? daysLapsed + " days ago"
@@ -127,7 +125,7 @@ function NotificationItem({
   } else if (notification.type === "like" && notification.story) {
     const likers = notification.likers;
     const numLikers = notification.num_likers;
-    const profilePhoto = my_api + "/photo/" + likers[0]?.photo;
+    const profilePhoto = MY_API + "/photo/" + likers[0]?.photo;
 
     preloadProfilePicture(profilePhoto);
 
@@ -148,22 +146,22 @@ function NotificationItem({
 
     return (
       <div
-        className={!seen ? "notification-div unread" : "notification-div"}
+        className={!seen ? style.unreadNotificationDiv : style.notificationDiv}
         onClick={readNotification}
       >
         {dpLoaded ? (
-          <img className="notification-picture" src={profilePhoto} alt=""></img>
+          <img className={style.notificationPicture} src={profilePhoto} alt=""></img>
         ) : (
-          <FaUserCircle className="notification-picture" />
+          <FaUserCircle className={style.notificationPicture} />
         )}
-        <div className="notification-detail">
-          <p className="notification-name">{getLikersNames()}</p>
-          <p className="notification-content">
+        <div className={style.notificationDetail}>
+          <p className={style.notificationName}>{getLikersNames()}</p>
+          <p className={style.notificationContent}>
             {" "}
             "{notification.story.content.slice(0, 60)}"
           </p>
 
-          <p className="notification-status">
+          <p className={style.notificationStatus}>
             {daysLapsed > 0
               ? daysLapsed > 1
                 ? daysLapsed + " days ago"
@@ -183,23 +181,23 @@ function NotificationItem({
     );
   } else if (notification.type === "follow") {
     const fullname = `${notification.follower.firstname} ${notification.follower.lastname}`;
-    const profilePhoto = my_api + "/photo/" + notification.follower.photo;
+    const profilePhoto = MY_API + "/photo/" + notification.follower.photo;
 
     preloadProfilePicture(profilePhoto);
     return (
       <div
-        className={!seen ? "notification-div unread" : "notification-div"}
+        className={!seen ? style.unreadNotificationDiv : style.notificationDiv}
         onClick={readNotification}
       >
         {dpLoaded ? (
-          <img className="notification-picture" src={profilePhoto} alt=""></img>
+          <img className={style.notificationPicture} src={profilePhoto} alt=""></img>
         ) : (
-          <FaUserCircle className="notification-picture" />
+          <FaUserCircle className={style.notificationPicture} />
         )}
-        <div className="notification-detail">
-          <p className="notification-name">{fullname}</p>
-          <p className="notification-content">Followed You</p>
-          <p className="notification-status">
+        <div className={style.notificationDetail}>
+          <p className={style.notificationName}>{fullname}</p>
+          <p className={style.notificationContent}>Followed You</p>
+          <p className={style.notificationStatus}>
             {daysLapsed > 0
               ? daysLapsed > 1
                 ? daysLapsed + " days ago"
