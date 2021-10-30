@@ -14,7 +14,7 @@
     align-items: center;
     flex-direction: row;
     height: 80px;
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid rgba(43, 43, 43, 0.233);
 }
 .searchButton{
     padding: 5px;
