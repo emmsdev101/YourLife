@@ -135,7 +135,7 @@
     width: calc(100% - 70px);
 }
 .chatName{
-    font-size: large;
+    font-size: medium;
 }
 .chatContent{
     font-size: small;

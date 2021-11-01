@@ -61,11 +61,11 @@
     flex-direction: row;
     justify-content: left;
     align-items: center;
-    width: calc(var(--width) - 30px);
+    width: calc(var(--width) - 20px);
     margin: 10px;
 }
 .msgDivIsme{
-    width: calc(var(--width) - 30px);
+    width: calc(var(--width) - 20px);
     display: flex;
     flex-direction: row;
     align-items: top;
@@ -76,10 +76,12 @@
     height: auto;
     background-color: #00000013;
     border-radius: 10px;
-    padding:10px;
+    padding:10px 10px 3px 10px;
     margin: 5px;
     text-align: left;
     font-size: small;
+    white-space: pre-wrap;
+    word-wrap:break-word;
 }
 .msgInnerIsme{
     max-width: calc(100%/2);
@@ -92,6 +94,8 @@
     margin-left: auto;
     text-align: left;
     font-size: small;
+    white-space: pre-wrap;
+    word-wrap:break-word;
 }
 .messageInputs{
     display: flex;

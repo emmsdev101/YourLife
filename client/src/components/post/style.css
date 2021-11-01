@@ -62,6 +62,8 @@
     width: inherit;
     height: auto;
     white-space: pre-wrap;
+    word-wrap:break-word;
+
 }
 .content-footer{
     display: flex;
