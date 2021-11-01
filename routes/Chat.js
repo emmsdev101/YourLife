@@ -64,8 +64,10 @@ router.get("/isMember", auth, async (req, res) => {
     const userId = req.session.user;
     const recipient = req.query.recipient;
     const room = await chatRoom.findOne({
-      "participants.user_id": userId,
-      "participants.user_id": recipient,
+      isgroup:false,
+      "participants.user_id":{
+        $all:[userId,recipient]
+      }
     });
     res.send(room);
   } catch (err) {

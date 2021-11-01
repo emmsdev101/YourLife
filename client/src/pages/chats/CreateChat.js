@@ -35,7 +35,7 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
       search()
       async function search(){
         const searchRequest = await searchPeople(searchInput)
-        if(searchRequest){
+        if(Array.isArray(searchRequest)){
           setPeople(searchRequest)
           setLoading(false)
         }else{

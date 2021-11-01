@@ -85,11 +85,9 @@ io.on('connection', (socket) => {
 });
   socket.on('join', (room)=>{
     socket.join(room)
-    console.log("user joined", socket.id)
   })
   socket.on('leave', (room)=>{
     socket.leave(room)
-    console.log("user leaft the room", socket.id)
   })
 });
 
