@@ -1,12 +1,12 @@
-body{
-    width: 768px;
+:root{
+    --width: 768px;
 }
 *{
     margin: 0;
     padding: 0;
 }
 .chatHeader{
-    width: 100%;
+    width: var(--width);
     background-color: #EF5DA8;
     color: white;
     padding: 0px 10px;
@@ -105,6 +105,7 @@ body{
     flex-direction: column;
     align-items: center;
     justify-content: start;
+    width: var(--width);
 }
 .chatInbox{
     font-weight: bold;
@@ -173,7 +174,7 @@ body{
     flex-direction: column;
 }
 @media only screen and (max-width: 768px){
-    body{
-        width: 100vw;
+    :root{
+        --width: 100vw;
     }
 }

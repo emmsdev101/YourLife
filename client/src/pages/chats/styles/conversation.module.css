@@ -1,9 +1,8 @@
-body{
-    width: 768px;
-    margin: auto;
+:root{
+    --width: 768px;
 }
 .conversation{
-    width: 100%;
+    width: var(--width);
     height: 100vh;
     background-color: white;
 }
@@ -36,7 +35,7 @@ body{
 .convoBody{
     background-color: white;
     height: calc(100vh - 110px);
-    width: 100%;
+    width: var(--width);
     display: flex;
     flex-direction: column-reverse;
     overflow: auto;
@@ -166,7 +165,7 @@ textarea{
     background-color: #75013d2d;
 }
 @media only screen and (max-width: 768px){
-    body{
-        width: 100vw;
+    :root{
+        --width: 100vw;
     }
 }
