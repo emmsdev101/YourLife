@@ -59,7 +59,7 @@
 .msgDiv{
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: left;
     align-items: center;
     width: calc(var(--width) - 30px);
     margin: 10px;
@@ -68,7 +68,7 @@
     width: calc(var(--width) - 30px);
     display: flex;
     flex-direction: row;
-    justify-content: end;
+    justify-content: right;
     align-items: center;
     margin: 10px;    
 }
