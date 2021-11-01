@@ -14,9 +14,7 @@ import { MY_API } from "../../config";
 import axios from "axios";
 import MessageItem from "./Message";
 import { SocketContext } from "../../logic/socketHandler";
-import { GlobalUserContext } from "../../logic/userContext";
-export default function Conversataion({ setOpen, room, chatRooms, initChats, addRoom }) {
-  const userContext = useContext(GlobalUserContext);
+export default function Conversataion({userContext, setOpen, room, chatRooms, initChats, addRoom }) {
   const [messageInput, setMessageInput] = useState("");
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -32,7 +30,6 @@ export default function Conversataion({ setOpen, room, chatRooms, initChats, add
   const socket = useContext(SocketContext);
 
   useEffect(() => {
-      console.log("rendered", room)
     if (activeRoom) {
       initRoom();
     }
@@ -91,7 +88,9 @@ export default function Conversataion({ setOpen, room, chatRooms, initChats, add
   }
 
   const closeMe = () => {
+    if(activeRoom)socket.emit('leave', activeRoom)
     setOpen(null);
+    setActiveRoom(null)
   };
   const inputMessage = (e) => {
     setMessageInput(e.target.value);
@@ -112,9 +111,12 @@ export default function Conversataion({ setOpen, room, chatRooms, initChats, add
                 message: sendRequest.data,
                 isSender: true,
               },...chats]
+
           setChats(chatsCopy);
           setSending(false);
           room.last_sender.message = messageInput
+          room._id=activeRoom
+
           const newRoom = chatRooms.filter(({_id})=> _id !== activeRoom )
           addRoom([room, ...newRoom])
           axios({
@@ -125,7 +127,6 @@ export default function Conversataion({ setOpen, room, chatRooms, initChats, add
           });
         }
       } else {
-        console.log("sending new message");
         const sendRequest = await axios({
           method: "post",
           url: MY_API + "/chat/create",
@@ -133,7 +134,6 @@ export default function Conversataion({ setOpen, room, chatRooms, initChats, add
           data: { message: messageInput, recipient: room.recipient._id },
         });
         if (sendRequest.status === 200) {
-          console.log(sendRequest.data);
           setActiveRoom(sendRequest.data.room_id);
           setChats((oldChat) => [
             ...oldChat,

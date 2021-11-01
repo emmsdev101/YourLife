@@ -10,7 +10,7 @@
     position: sticky;
     top: 0;
     margin: 0;
-    height: 120px;
+    height: 130px;
 }
 .pageTitle{
     margin-right: auto;
@@ -36,8 +36,8 @@
     justify-content: space-between;
     border-radius: 20px;
     color: rgb(20, 20, 20);
-    font-size: small;
-    font-weight: bold;
+    font-size: .7rem;
+    font-weight: 400;
     padding-left: 10px;
     border: none;
     padding-right: 0;
@@ -63,8 +63,8 @@
     width: 100%;
     margin-top: 0;
     display: flex;
-    align-items: center;
     flex-direction: row;
+    align-items: center;
     justify-self: center;
 
 }
@@ -80,6 +80,7 @@
     color: rgb(41, 41, 41);
     font-size:larger;
     width: calc(100% - 40px);
+    margin: auto;
 }
 .searchLabel{
     font-size: larger;

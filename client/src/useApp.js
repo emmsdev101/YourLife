@@ -94,25 +94,11 @@ const useApp = () => {
     }
   }, [notifLoaded]);
   useEffect(() => {
-    socket.on('chat', (msg)=>{
-      console.log(msg)
-      if (msg.sender !== userContext._id) {
-        let existing = chats.find(
-          (item) => item._id === msg.chat._id
-        );
-        if(existing){
-          console.log("exists", existing)
-          let oldChats = chats.filter(
-            (item) => item._id !== existing._id
-          );
-          oldChats.unshift(msg.chat)
-          setChats(null)
-          setChats(oldChats)
-        }else{
-          initChats()
-        }
-      }
-    })
+    if(chatsLoaded){
+      socket.on('chat', (msg)=>{
+        initChats()
+      })
+    }
   }, [chatsLoaded])
   async function  initializeFeed(){
     const myFeeds = await generateFeeds()

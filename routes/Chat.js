@@ -26,14 +26,13 @@ router.get("/inbox", auth, async (req, res) => {
 
     for (let i = 0; i < myRooms.length; i++) {
       const room = myRooms[i];
+      const me = room.participants.find((mine) => mine.user_id === userId);
       if (!room?.isgroup) {
         const recptId =
           room.participants[0].user_id === userId
             ? room.participants[1].user_id
             : room.participants[0].user_id;
         const recptData = await user.findOne({ _id: recptId }, { password: 0 });
-        const me = room.participants.find((mine) => mine.user_id === userId);
-
         roomsToSend.push({
           last_sender: room.last_sender,
           _id: room._id,
@@ -43,7 +42,15 @@ router.get("/inbox", auth, async (req, res) => {
           seen: me?.seen,
         });
       } else {
-        roomsToSend.push(room);
+        roomsToSend.push({
+          last_sender: room.last_sender,
+          _id: room._id,
+          updatedAt: room.updatedAt,
+          isgroup: room.isgroup,
+          seen: me?.seen,
+          name:room.name,
+          photo:room.photo
+        });
       }
     }
     res.send(roomsToSend);
@@ -203,7 +210,7 @@ router.post("/reply", auth, async (req, res) => {
         }
         room.last_sender.user_id = sender;
         room.last_sender.message = message;
-        room.last_sender.data = Date.now();
+        room.last_sender.date = Date.now();
         const newRoom = await room.save();
 
         let chatToSend = {};
@@ -266,7 +273,8 @@ router.post("/read", auth, async (req, res)=>{
         break
       }
     }
-    if(await room.save()){
+    const updatedChatRoom = await room.save()
+    if(updatedChatRoom){
       res.send(true)
     }else res.sendStatus(403)
   } catch (error) {

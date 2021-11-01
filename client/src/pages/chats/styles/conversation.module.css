@@ -12,6 +12,7 @@
     justify-content: space-between;
     height: 60px;
     width: 100%;
+    position: sticky;
 }
 .recieverName{
     margin: 0;
@@ -63,6 +64,7 @@
     flex-direction: row;
     justify-content: end;
     width: calc(100% - 20px);
+    margin-left: auto;
     margin: 10px;
 }
 .msgInner{
@@ -78,7 +80,6 @@
 .msgInnerIsme{
     max-width: calc(100%/2);
     height: auto;
-    margin-left: auto;
     background-color: #ef5da8;
     color:white;
     border-radius: 10px;

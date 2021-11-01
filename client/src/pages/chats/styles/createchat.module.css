@@ -3,7 +3,7 @@
     background-color: rgb(255, 255, 255);
 }
 .peopleList{
-    height: calc(100% - 120px);
+    height: 50%;
     overflow: auto;
     display: flex;
     flex-direction: column;
@@ -23,6 +23,8 @@
     color: white;
     padding-left: 10px;
     padding-right: 10px;
+    position: sticky;
+    top:0;
 }
 .createButton{
     border: none;
@@ -67,11 +69,28 @@
 .participants{
     display: flex;
     flex-direction: row;
+    justify-content: start;
+    align-items: center;
     margin-bottom: 10px;
     flex-wrap: wrap;
+    height: 100px;
+    overflow-y: auto;
 }
 .removeParticipant{
     margin: 1px;
     height: 15px;
     width: 15px;
+}
+.chatSearch{
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 40px;
+    background-color: rgb(245, 245, 245);
+    padding: 0 15px;
+    color: rgb(41, 41, 41);
+    font-size:larger;
+    width: calc(100% - 10px);
 }

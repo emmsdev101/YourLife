@@ -6,7 +6,7 @@ import myStyle from "./styles/createchat.module.css";
 import usePeople from "../../logic/usePeople";
 import {MY_API} from './../../config'
 import axios from "axios";
-function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChats }) {
+function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChats,userContext }) {
   const { getFollowed, searchPeople } = usePeople();
   const [loading, setLoading] = useState(false);
   const [people, setPeople] = useState([]);
@@ -29,7 +29,6 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
   }, []);
 
   useEffect(() => {
-    console.log(searchInput)
     if(searchInput.length >= 2){
       setLoading(true)
       setPeople([])
@@ -52,30 +51,32 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
     console.log(data)
 
     try {
-      setLoadingRoom(true)
-      const checkRoom = await axios({
-        method:'get',
-        url:MY_API + '/chat/isMember',
-        withCredentials:true,
-        params:{recipient:data._id}
-      })
-      if(checkRoom.status === 200){
-        console.log(checkRoom.data)
-        if(checkRoom.data){
-          setRoom({
-            room_id:checkRoom.data._id,
-            recipient:data
-          })
-        }else{
-          setRoom({
-            room_id:null,
-            recipient:data
-          })
+      if(data._id !== userContext._id){
+        setLoadingRoom(true)
+        const checkRoom = await axios({
+          method:'get',
+          url:MY_API + '/chat/isMember',
+          withCredentials:true,
+          params:{recipient:data._id}
+        })
+        if(checkRoom.status === 200){
+          console.log(checkRoom.data)
+          if(checkRoom.data){
+            setRoom({
+              room_id:checkRoom.data._id,
+              recipient:data
+            })
+          }else{
+            setRoom({
+              room_id:null,
+              recipient:data
+            })
+          }
+          setLoadingRoom(false)
+          setOnread(true)
+          setNewMessage(false)
+  
         }
-        setLoadingRoom(false)
-        setOnread(true)
-        setNewMessage(false)
-
       }
     } catch (error) {
       console.log(error)
@@ -120,7 +121,7 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
     setGroupName(e.target.value)
   }
   const addPariticipant = (data) => {
-    const participatExists = participants.find(({_id})=>_id === data._id)
+    const participatExists = participants.find(({_id})=>_id === data._id || data._id === userContext._id)
     if(!participatExists){
       setParticipants((olds)=>[...olds, data])
     }
@@ -152,18 +153,8 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
             Group Name :
           <input type = 'text' className = {myStyle.groupName} value = {groupName} onChange = {inputGroupName}/>
           Participants :
-          <div className = {myStyle.participants}>
-            {participants?.map((participant, id)=>(
-              <div className = {myStyle.participant} key = {id}>
-              {participant.firstname}
-              <FaWindowClose className = {myStyle.removeParticipant} onClick = {()=>{removeParticipant(id)}}/>
-              </div>
-            ))}
-          </div>
-          </div>
-
           <div className={style.searchHolder}>
-          <div className={style.chatSearch}>
+          <div className={myStyle.chatSearch}>
             <input
               className={style.chatInput}
               type="text"
@@ -174,6 +165,16 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
             <FaSearch></FaSearch>
           </div>
         </div>
+          <div className = {myStyle.participants}>
+            {participants?.map((participant, id)=>(
+              <div className = {myStyle.participant} key = {id}>
+              {participant.firstname}
+              <FaWindowClose className = {myStyle.removeParticipant} onClick = {()=>{removeParticipant(id)}}/>
+              </div>
+            ))}
+            {!participants.length?"Select participant":''}
+          </div>
+          </div>
         </header>
         <div className={myStyle.peopleList}>
           {people?.map((data, id) => (

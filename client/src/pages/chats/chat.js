@@ -1,7 +1,7 @@
 import style from "./styles/chat.module.css";
 import Conversation from "./Conversataion";
 import { useIcons, useReactHooks } from "../../logic/library";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 
 import CreateChat from "./CreateChat";
 import axios from "axios";
@@ -9,7 +9,9 @@ import { MY_API } from "../../config";
 import InboxItem from "./InboxItem";
 import Loader from "../../components/Loader/Loader";
 import { FaPeopleArrows, FaUsers } from "react-icons/fa";
+import { GlobalUserContext } from "../../logic/userContext";
 function Chat({ chats, setChats, initChats }) {
+  const userContext = useContext(GlobalUserContext);
   const { useHistory, useState } = useReactHooks();
   const { FaArrowLeft, FaPen, FaSearch } = useIcons();
   const history = useHistory();
@@ -95,9 +97,9 @@ function Chat({ chats, setChats, initChats }) {
   return (
     <>
       {onread ? (
-        <Conversation setOpen={setOnread} room={room} initChats ={initChats} addRoom = {setChats} chatRooms = {chats} />
+        <Conversation userContext = {userContext} setOpen={setOnread} room={room} initChats ={initChats} addRoom = {setChats} chatRooms = {chats} />
       ) : newMessage ? (
-        <CreateChat
+        <CreateChat userContext = {userContext}
           setNewMessage={setNewMessage}
           isGroup={isGroup}
           style={style}
