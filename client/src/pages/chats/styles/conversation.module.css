@@ -63,9 +63,10 @@
     display: flex;
     flex-direction: row;
     justify-content: end;
-    width: calc(100% - 20px);
-    margin-left: auto;
+    align-items: center;
     margin: 10px;
+    margin-left:auto;
+    
 }
 .msgInner{
     max-width: calc(100%/2);
