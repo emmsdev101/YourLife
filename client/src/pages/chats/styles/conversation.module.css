@@ -50,8 +50,8 @@
     
 }
 .msgProfilePic{
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     color: rgb(107, 107, 107);
     object-fit: cover;
     border-radius: 50%;
@@ -59,17 +59,18 @@
 .msgDiv{
     display: flex;
     flex-direction: row;
-    max-width: 100%;
+    justify-content: start;
+    align-items: center;
+    width: calc(var(--width) - 30px);
     margin: 10px;
 }
 .msgDivIsme{
+    width: calc(var(--width) - 30px);
     display: flex;
     flex-direction: row;
     justify-content: end;
     align-items: center;
-    margin: 10px;
-    margin-left:auto;
-    
+    margin: 10px;    
 }
 .msgInner{
     max-width: calc(100%/2);
