@@ -145,6 +145,7 @@ export default function Conversataion({userContext, setOpen, room, chatRooms, in
           ]);
           initChats();
           setSending(false);
+          setChatsLoaded(true)
         }
       }
     } catch (error) {
