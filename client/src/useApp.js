@@ -25,7 +25,9 @@ const useApp = () => {
   const [stories, setStories] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState(null);
+  const [chats, setChats] = useState([])
   const [notifLoaded, setNotifLoaded] = useState(false);
+  const [chatsLoaded, setChatsLoaded] = useState(false)
 
   const [page, setPage] = useState(1);
   let refreshed = useRef(false);
@@ -51,6 +53,7 @@ const useApp = () => {
   }, [location.pathname]);
   useEffect(() => {
     initNotifications();
+    initChats()
     if (userContext._id) {
       socket.emit("connect-me", userContext._id);
     }
@@ -90,6 +93,27 @@ const useApp = () => {
       });
     }
   }, [notifLoaded]);
+  useEffect(() => {
+    socket.on('chat', (msg)=>{
+      console.log(msg)
+      if (msg.sender !== userContext._id) {
+        let existing = chats.find(
+          (item) => item._id === msg.chat._id
+        );
+        if(existing){
+          console.log("exists", existing)
+          let oldChats = chats.filter(
+            (item) => item._id !== existing._id
+          );
+          oldChats.unshift(msg.chat)
+          setChats(null)
+          setChats(oldChats)
+        }else{
+          initChats()
+        }
+      }
+    })
+  }, [chatsLoaded])
   async function  initializeFeed(){
     const myFeeds = await generateFeeds()
     if(myFeeds){
@@ -97,6 +121,7 @@ const useApp = () => {
       setStories(myFeeds)
     }
   }
+
   async function fetchStory() {
     setLoading(true);
     const fetched_stories = await generateFeeds()
@@ -136,6 +161,22 @@ const useApp = () => {
     setNotifications(getNotifications.data);
     setNotifLoaded(true);
   }
+  async function initChats(){
+    try {
+      const chatRequest =  await axios({
+        method:'get',
+        url:MY_API + '/chat/inbox',
+        withCredentials:true
+      })
+      if(chatRequest.status === 200){
+        console.log(chatRequest.data)
+        setChats(chatRequest.data)
+        setChatsLoaded(true)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const refreshNotifs = async () => {
     setNotifications([]);
     initNotifications();
@@ -154,7 +195,9 @@ const useApp = () => {
     setStories,
     page,
     setPage,
-    notifLoaded
+    notifLoaded,
+    chats, setChats,
+    initChats
   };
 };
 export default useApp;

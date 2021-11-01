@@ -1,7 +1,6 @@
 import './style.css'
-import './style.css'
 import { useIcons } from '../../logic/library'
-function Chat({setOpen}){
+function Conversation({setOpen}){
     const { FaArrowLeft, FaCamera, FaEllipsisV, FaImage, FaPaperPlane } = useIcons()
     
     const MessageItem = ({isme, id}) => {
@@ -21,12 +20,12 @@ function Chat({setOpen}){
                 <div className = "conversation-back"><FaEllipsisV></FaEllipsisV></div>
             </div>
       <div className = "convo-body">
-            <MessageItem isme = {true}></MessageItem>
+            {/* <MessageItem isme = {true}></MessageItem>
             <MessageItem isme = {false}></MessageItem>
             <MessageItem isme = {true}></MessageItem>
             <MessageItem isme = {true}></MessageItem>
             <MessageItem isme = {false}></MessageItem>
-            <MessageItem isme = {true}></MessageItem>
+            <MessageItem isme = {true}></MessageItem> */}
       </div>
       <div className = "message-inputs">
           <div className = "photo-div"><FaCamera className = "photo-icon"></FaCamera></div>
@@ -38,4 +37,4 @@ function Chat({setOpen}){
 </>
     )
 }
-export default Chat
+export default Conversation

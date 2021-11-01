@@ -202,6 +202,35 @@ router.get("/followers", auth, async (req, res) => {
     res.send(444);
   }
 });
+router.get("/following", auth, async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 0
+    const limit = 10
+    const skip = page * limit
+    let username = req.query.username;
+    if (!username) {
+      const user = await User.findOne({ _id: req.session.user });
+      if (user) username = user.username;
+      else return res.sendStatus(304);
+    }
+    const  following = await Following.find({follower:username}).skip(skip).limit(limit)
+    if(following){
+      const followedResult = []
+      for (let i = 0; i < following.length; i++) {
+        const followed = following[i];
+        const followedData = await User.findOne({username:followed.following},{password:0})
+        followedResult.push(followedData)
+      }
+      res.send(followedResult)
+    }
+    else {
+      res.send(304);
+    }
+  } catch (err) {
+    console.log(err);
+    res.send(444);
+  }
+});
 router.get("/accout-followers", auth, async (req, res) => {
   try {
     const limit = parseInt(req.query.limit);

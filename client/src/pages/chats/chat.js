@@ -1,71 +1,114 @@
-import './style.css'
-import Conversation from "../Conversation/conversation";
-import { useIcons, useReactHooks } from '../../logic/library'
-function Chat(){
-    const {useHistory, useState} = useReactHooks()
-    const {FaArrowLeft,  FaPen, FaSearch} = useIcons()
-    const history = useHistory()
-    const [onread, setOnread] = useState(false);
+import style from "./styles/chat.module.css";
+import Conversation from "./Conversataion";
+import { useIcons, useReactHooks } from "../../logic/library";
+import React, { useEffect } from "react";
 
-    function switchPage(page){
-        history.push(page)
-    }
-const InboxItem = ({unread}) => {
+import CreateChat from "./CreateChat";
+import axios from "axios";
+import { MY_API } from "../../config";
+import InboxItem from "./InboxItem";
+import Loader from "../../components/Loader/Loader";
+import { FaPeopleArrows, FaUsers } from "react-icons/fa";
+function Chat({ chats, setChats, initChats }) {
+  const { useHistory, useState } = useReactHooks();
+  const { FaArrowLeft, FaPen, FaSearch } = useIcons();
+  const history = useHistory();
+  const [onread, setOnread] = useState(false);
+  const [newMessage, setNewMessage] = useState(false);
+  const [room, setRoom] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [isGroup, setIsGroup] = useState(false);
 
-    return(<>
-        <div className = {unread? "chat-inbox unread":"chat-inbox"} onClick = {()=>{setOnread(true)}}>
-            <img className = "chat-picture" ></img>
-            <div className = "chat-detail">
-                <p className = "chat-name">Jonalyn Garder</p>
-                <p className = "chat-content">Gwapo ungoy koba</p>
-                <p className = "chat-status">1 hour ago</p>
+  useEffect(() => {
+  }, [onread])
+  function switchPage(page) {
+    history.push(page);
+  }
+  const createNewMessage = () => {
+    setIsGroup(false);
+    setNewMessage(!newMessage);
+  };
+  const createNewGroup = () => {
+    setIsGroup(true);
+    setNewMessage(!newMessage);
+  };
+  const Inbox = () => {
+    return (
+      <>
+        <header className={style.chatHeader}>
+          <div className={style.chatNav}>
+            <nav
+              onClick={() => {
+                switchPage("/");
+              }}
+            >
+              <FaArrowLeft className={style.backIcon}></FaArrowLeft>
+            </nav>
+            <h3 className={style.pageTitle}>Chats</h3>
+            <button className={style.newMessage} onClick={createNewMessage}>
+              New Message
+              <div className={style.iconDiv}>
+                <FaPen className={style.newMessageIcon}></FaPen>
+              </div>
+            </button>
+            <button className={style.newMessage} onClick={createNewGroup}>
+              New Group
+              <div className={style.iconDiv}>
+                <FaUsers className={style.newMessageIcon}></FaUsers>
+              </div>
+            </button>
+          </div>
+          <div className={style.searchHolder}>
+            <div className={style.chatSearch}>
+              <input
+                className={style.chatInput}
+                type="text"
+                placeholder="Search:"
+              ></input>
+              <FaSearch></FaSearch>
             </div>
+          </div>
+        </header>
+        <div className={style.chatBody}>
+          {chats?.map((chat, id) => (
+            <InboxItem
+              chat={chat}
+              key={id}
+              setRoom={setRoom}
+              setOnread={setOnread}
+              id = {id}
+              chats = {chats}
+              setChats = {setChats}
+            />
+          ))}
+          {loading ? (
+            <div className={style.loaderDiv}>
+              <Loader />
+            </div>
+          ) : (
+            ""
+          )}
         </div>
-
-    </>)
+      </>
+    );
+  };
+  return (
+    <>
+      {onread ? (
+        <Conversation setOpen={setOnread} room={room} initChats ={initChats} addRoom = {setChats} chatRooms = {chats} />
+      ) : newMessage ? (
+        <CreateChat
+          setNewMessage={setNewMessage}
+          isGroup={isGroup}
+          style={style}
+          setOnread={setOnread}
+          setRoom={setRoom}
+          initChats = {initChats}
+        />
+      ) : (
+        <Inbox />
+      )}
+    </>
+  );
 }
-const Inbox = ()=> {
-    return(
-        <>
-        <header className="chat-header">
-            <div className = "chat-nav">
-                <nav onClick = {()=>{switchPage("/")}}><FaArrowLeft className = "back-icon"></FaArrowLeft></nav>
-                <h3 className = "page-title">Chats</h3>
-                <nav className = "new-message"><FaPen></FaPen></nav>
-                </div>
-      </header>
-      <div className = "search-holder">
-            <div className = "chat-search">
-                <input className = "chat-input" type = "text" placeholder = "Search:"></input>
-                <FaSearch></FaSearch>
-            </div>
-    </div>
-      <div className = "chat-body">
-          <h3>Comming soon...</h3>
-
-        {/* <InboxItem unread = {true}></InboxItem>
-        <InboxItem></InboxItem>
-        <InboxItem unread = {true}></InboxItem>
-        <InboxItem unread = {true}></InboxItem>
-        <InboxItem unread = {true}></InboxItem>
-        <InboxItem unread = {true}></InboxItem>
-        <InboxItem unread = {true}></InboxItem>
-        <InboxItem unread = {true}></InboxItem>
-        <InboxItem unread = {true}></InboxItem>
-        <InboxItem unread = {true}></InboxItem>
-        <InboxItem unread = {true}></InboxItem>
-        <InboxItem unread = {true}></InboxItem> */}
-      </div>
-        </>
-        
-    )
-}
-    return(
-        <>
-        {onread?<Conversation setOpen = {setOnread}/>:
-        <Inbox/>}
-        
-</>
-    )
-}
-export default Chat
+export default Chat;

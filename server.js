@@ -21,7 +21,7 @@ const postRoute = require("./routes/Story");
 const photoRoute = require('./routes/Photo')
 const notificationRoute = require('./routes/Notification')
 const SocketSchema = require('./model/socketclients')
-
+const chatRoute = require('./routes/Chat')
 let onlineUsers = new Object()
 app.set('socketio', io)
 
@@ -52,6 +52,7 @@ app.use("/user", accRoute);
 app.use("/post", postRoute);
 app.use('/photo', photoRoute)
 app.use('/notification', notificationRoute)
+app.use('/chat',chatRoute)
 //----------------------------------------- END OF MIDDLEWARE---------------------------------------------------
 
 // Routes
@@ -84,6 +85,7 @@ io.on('connection', (socket) => {
 });
   socket.on('join', (room)=>{
     socket.join(room)
+    console.log("user joined", socket.id)
   })
 });
 

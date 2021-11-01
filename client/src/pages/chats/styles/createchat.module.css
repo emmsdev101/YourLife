@@ -1,0 +1,77 @@
+.createChat{
+    height: 100vh;
+    background-color: rgb(255, 255, 255);
+}
+.peopleList{
+    height: calc(100% - 120px);
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+.loadingRoom{
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    background-color: white;
+    z-index: 3;
+}
+.createGroupHeader{
+    height: auto;
+    background-color: #EF5DA8;
+    color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.createButton{
+    border: none;
+    width: 70px;
+    height: 40px;
+    background-color: #bd4583;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    
+}
+.groupDetails{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: left;
+}
+.groupName{
+    width: calc(100% - 10px);
+    height: 40px;
+    outline: none;
+    border:none;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    font-size: medium;
+    font-weight: bold;
+    color: #2c2c2c;
+}
+.participant{
+    font-size: small;
+    background-color: #88345f;
+    padding: 8px;
+    border-radius: 10px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+.participants{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+.removeParticipant{
+    margin: 1px;
+    height: 15px;
+    width: 15px;
+}

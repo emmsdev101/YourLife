@@ -29,6 +29,9 @@ function App() {
     page,
     setPage,
     notifLoaded,
+    chats,
+    setChats,
+    initChats,
   } = useApp();
 
   return (
@@ -56,11 +59,22 @@ function App() {
                     notifications={notifications}
                     setNotifications={setNotifications}
                     refreshNotifs={refreshNotifs}
-                    notifLoaded = {notifLoaded}
+                    notifLoaded={notifLoaded}
                   />
                 )}
               />
-              <Route exact path="/chat" component={Chat} />
+              <Route
+                exact
+                path="/chat"
+                render={(props) => (
+                  <Chat
+                    {...props}
+                    chats={chats}
+                    setChats={setChats}
+                    initChats={initChats}
+                  />
+                )}
+              />
               <Route exact path="/profile" component={Profile} />
               <Route
                 exact
