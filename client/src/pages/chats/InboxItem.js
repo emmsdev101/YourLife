@@ -71,7 +71,7 @@ const InboxItem = ({chat, setRoom, setOnread, chats, setChats, id  }) => {
             <p className={style.chatName}>{name}</p>
             <p className={style.chatStatus}>{chatTime + " : " +chatDate}</p>
           </div>
-          <p className={style.chatContent}>"{message}"</p>
+          <p className={style.chatContent}>"{message.length > 20? message.slice(0, 20)+'...':message.slice(0, 20)}"</p>
         </div>
       </div>
     </>

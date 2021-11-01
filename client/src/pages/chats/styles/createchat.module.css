@@ -1,3 +1,7 @@
+body{
+    width: 768px;
+    margin: auto;
+}
 .createChat{
     height: 100vh;
     background-color: rgb(255, 255, 255);
@@ -93,4 +97,9 @@
     color: rgb(41, 41, 41);
     font-size:larger;
     width: calc(100% - 10px);
+}
+@media only screen and (max-width: 768px){
+    body{
+        width: 100vw;
+    }
 }
