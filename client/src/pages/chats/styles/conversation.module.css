@@ -63,6 +63,7 @@
     align-items: center;
     width: calc(var(--width) - 30px);
     margin: 10px;
+    background-color: #00000027;
 }
 .msgDivIsme{
     width: calc(var(--width) - 30px);
@@ -70,7 +71,8 @@
     flex-direction: row;
     justify-content: right;
     align-items: center;
-    margin: 10px;    
+    margin: 10px;
+    background-color: #0000001f;
 }
 .msgInner{
     max-width: calc(100%/2);
