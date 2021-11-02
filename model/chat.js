@@ -15,6 +15,14 @@ const ChatSchema = new mongoose.Schema({
     photo:{
         type:String,
         required:false
+    },
+    type:{
+        type:String,
+        default:'chat'
+    },
+    details:{
+        user_id:String,
+        message:String
     }
 
 },{timestamps:true})

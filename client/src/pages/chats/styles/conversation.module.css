@@ -1,176 +1,320 @@
-:root{
-    --width: 768px;
+:root {
+  --width: 768px;
 }
-.conversation{
-    width: var(--width);
-    height: 100vh;
-    background-color: white;
+.conversation {
+  width: var(--width);
+  height: 100vh;
+  background-color: white;
 }
-.conversationNav{
-    background-color: #EF5DA8;
-    color: white;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    height: 60px;
-    width: 100%;
-    position: sticky;
+.conversationNav {
+  background-color: #ef5da8;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  width: 100%;
+  position: sticky;
 }
-.recieverName{
-    margin: 0;
-    margin-right: auto;
-    margin-left: 5px;
-    font-size: large;
+.recieverName {
+  margin: 0;
+  margin-right: auto;
+  margin-left: 5px;
+  font-size: large;
 }
 
-.conversationBack{
-    margin: 0;
-    height: 100%;
-    width: 40px;
+.conversationBack {
+  margin: 0;
+  height: 100%;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.convoBody {
+  background-color: white;
+  height: calc(100vh - 110px);
+  width: var(--width);
+  display: flex;
+  flex-direction: column-reverse;
+  overflow: auto;
+}
+.recieverPicture {
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  margin-left: 10px;
+  object-fit: cover;
+}
+.msgProfilePic {
+  width: 45px;
+  height: 45px;
+  color: rgb(107, 107, 107);
+  object-fit: cover;
+  border-radius: 50%;
+}
+.msgDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  width: calc(var(--width) - 20px);
+  margin: 10px;
+}
+.msgDivIsme {
+  width: calc(var(--width) - 20px);
+  display: flex;
+  flex-direction: row;
+  align-items: top;
+  margin: 10px;
+}
+.msgInner {
+  max-width: calc(100% / 2);
+  height: auto;
+  background-color: #00000013;
+  border-radius: 10px;
+  padding: 10px 10px 3px 10px;
+  margin: 5px;
+  text-align: left;
+  font-size: small;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.msgInnerIsme {
+  max-width: calc(100% / 2);
+  height: auto;
+  background-color: #ef5da8;
+  color: white;
+  border-radius: 10px;
+  padding: 10px 10px 3px 10px;
+  margin: 5px;
+  margin-left: auto;
+  text-align: left;
+  font-size: small;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.messageInputs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  height: 50px;
+  align-items: center;
+  background-color: #ef5da823;
+}
+.notification{
+    margin: 10px;
+}
+.notificationContent{
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
-.convoBody{
-    background-color: white;
-    height: calc(100vh - 110px);
-    width: var(--width);
-    display: flex;
-    flex-direction: column-reverse;
-    overflow: auto;
-    
+.notificationMessage{
+    font-size: large;
 }
-.recieverPicture{
-    height: 40px;
-    width: 40px;
-    border-radius: 20px;
-    margin-left: 10px;
-    object-fit: cover;
-    
-}
-.msgProfilePic{
-    width: 45px;
-    height: 45px;
-    color: rgb(107, 107, 107);
-    object-fit: cover;
-    border-radius: 50%;
-}
-.msgDiv{
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    align-items: center;
-    width: calc(var(--width) - 20px);
-    margin: 10px;
-}
-.msgDivIsme{
-    width: calc(var(--width) - 20px);
-    display: flex;
-    flex-direction: row;
-    align-items: top;
-    margin: 10px;
-}
-.msgInner{
-    max-width: calc(100%/2);
-    height: auto;
-    background-color: #00000013;
-    border-radius: 10px;
-    padding:10px 10px 3px 10px;
-    margin: 5px;
-    text-align: left;
+.notificationDate{
+    color: grey;
     font-size: small;
-    white-space: pre-wrap;
-    word-wrap:break-word;
 }
-.msgInnerIsme{
-    max-width: calc(100%/2);
-    height: auto;
-    background-color: #ef5da8;
-    color:white;
-    border-radius: 10px;
-    padding:10px 10px 3px 10px;
-    margin: 5px;
-    margin-left: auto;
-    text-align: left;
-    font-size: small;
-    white-space: pre-wrap;
-    word-wrap:break-word;
+.notificationProfile{
+    color: #ef5da8;
+    font-weight: 700;
 }
-.messageInputs{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    height: 50px;
-    align-items: center;
-    background-color: #ef5da823;
+.photoDiv {
+  height: 100%;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
 }
-.photoDiv{
-    height: 100%;
-    width: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 25px;
+.photoIcon {
+  width: 25px;
+  height: 25px;
+  color: #ef5da8;
 }
-.photoIcon{
-    width: 25px;
-    height: 25px;
-    color: #EF5DA8;
+textarea {
+  height: 40px;
+  width: 50%;
+  background-color: #ef5da81e;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow: hidden;
+  resize: none;
+  font-size: medium;
+  color: #68304d;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
-textarea{
-    height: 40px;
-    width: 50%;
-    background-color: #ef5da81e;
-    border: none;
-    outline: none;
-    border-radius: 20px;
-    padding-top: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-    overflow: hidden;
-    resize: none;
-    font-size: medium;
-    color: #68304d;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+.sendBtn {
+  color: #ef5da8;
+  height: 100%;
+  width: 50px;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  border-radius: 25px;
+  display: grid;
+  place-items: center;
 }
-.sendBtn{
-    color: #EF5DA8;
-    height: 100%;
-    width: 50px;
-    border: none;
-    background-color: transparent;
-    outline: none;
-    border-radius: 25px;
+.chatsLoading {
+  background-color: #68304d;
+  color: white;
+  padding: 5px;
+}
+.sendIcon {
+  height: 25px;
+  width: 25px;
+  padding: 1px;
+}
+.messageFooter {
+  font-size: x-small;
+  font-weight: 200;
+  margin-top: 5px;
+}
+.menu {
+  background-color: white;
+}
+.conversationHeader {
+  margin-bottom: 20px;
+  color: #ef5da8;
+}
+.conversationMenu {
+  height: 60px;
+  color: #ef5da8;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: sticky;
+}
+.pageTitle {
+  font-size: larger;
+  font-weight: 650;
+}
+.membersList {
+  height: calc(100vh - 60px);
+  width: 100%;
+  background-color: #ecebeb;
+  overflow: auto;
+}
+.recieverPictureMenu {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 5px;
+  color: #ef5da8;
+}
+.participantsNumber {
+  font-weight: 600;
+  font-size: x-large;
+}
+.menuOptions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+}
+.menuButton {
+  width: calc(100% - 10px);
+  border: none;
+  background-color: transparent;
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  font-size: larger;
+  color: #ef5da8;
+  font-weight: 700;
+}
+.menuIcon {
+  width: 50px;
+  height: 50px;
+  background-color: rgb(231, 228, 228);
+  padding: 10px;
+  border-radius: 50%;
+}
+.recieverNameMenu {
+  font-size: xx-large;
+}
+.modalWrapper {
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  position: absolute;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.removing{
+    width:var(--width);
+    height: 100vh;
     display: grid;
     place-items: center;
+    background-color: #00000062;
+    z-index: 5;
 }
-.chatsLoading{
-    background-color: #68304d;
-    color: white;
-    padding: 5px;
+.modalAlert {
+  width: calc(var(--width) - 10px);
+  height: auto;
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 1px 1px 8px #68304d;
+  color: #ef5da8;
 }
-.sendIcon{
-    height: 25px;
-    width: 25px;
-    padding:1px;
+.modalHeader {
+  font-size: x-large;
+  font-weight: 500;
+  margin-bottom: 10px;
+  padding: 10px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #07070736;
 }
-.messageFooter{
-    font-size: x-small;
-    font-weight: 200;
-    margin-top: 5px;
+.modalFooter {
+  float: right;
 }
-.App{
-    background-color: rgb(255, 255, 255);
+.modalOk {
+  background-color: #5d5fef;
+  border: none;
+  font-size: larger;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
 }
-.sendBtn:hover,  .photoDiv:hover {
-    background-color: #ef5da831;
+.modalCancel {
+  background-color: #ef5da8;
+  border: none;
+  font-size: larger;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  margin-left: 5px;
 }
-.nav:hover{
-    background-color: #75013d2d;
+
+.App {
+  background-color: rgb(255, 255, 255);
 }
-@media only screen and (max-width: 768px){
-    :root{
-        --width: 100vw;
-    }
+.sendBtn:hover,
+.photoDiv:hover {
+  background-color: #ef5da831;
+}
+.nav:hover {
+  background-color: #75013d2d;
+}
+@media only screen and (max-width: 768px) {
+  :root {
+    --width: 100vw;
+  }
 }

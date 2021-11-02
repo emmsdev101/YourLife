@@ -48,8 +48,8 @@ router.get("/inbox", auth, async (req, res) => {
           updatedAt: room.updatedAt,
           isgroup: room.isgroup,
           seen: me?.seen,
-          name:room.name,
-          photo:room.photo
+          name: room.name,
+          photo: room.photo,
         });
       }
     }
@@ -64,15 +64,84 @@ router.get("/isMember", auth, async (req, res) => {
     const userId = req.session.user;
     const recipient = req.query.recipient;
     const room = await chatRoom.findOne({
-      isgroup:false,
-      "participants.user_id":{
-        $all:[userId,recipient]
-      }
+      isgroup: false,
+      "participants.user_id": {
+        $all: [userId, recipient],
+      },
     });
     res.send(room);
   } catch (err) {
     console.log(err);
     res.send(500);
+  }
+});
+router.get("/members", auth, async (req, res) => {
+  const roomId = req.query.room_id;
+  try {
+    const room = await chatRoom.findOne({ _id: roomId });
+    const members = room.participants;
+    let response = [];
+    for (let i = 0; i < members.length; i++) {
+      const member = members[i].user_id;
+
+      const memberData = await user.findOne({ _id: member }, { password: 0 });
+      if (memberData) {
+        response.push(memberData);
+      }
+    }
+    res.send(response);
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.post("/remove", auth, async (req, res) => {
+  let io = req.app.get("socketio");
+  const roomId = req.body.room_id;
+  const userId = req.body.user_id;
+  try {
+    const room = await chatRoom.findOne({ _id: roomId });
+    const members = room.participants;
+    const newMembers = members.filter((member) => member.user_id !== userId);
+    room.participants = newMembers;
+    const newRoom = await room.save();
+    if (newRoom) {
+      const createMessage = new chat({
+        room_id: roomId,
+        sender: req.session.user,
+        content: userId === req.session.user ? "left" : "removed",
+        details: {
+          user_id: userId,
+          message: userId === req.session.user ? "the group" : "from the group",
+        },
+        type: "notification",
+      });
+      if (await createMessage.save()) {
+        res.send(true);
+
+        const senderProfile = await user.findOne(
+          { _id: createMessage.sender },
+          { password: 0 }
+        );
+          const person = await user.findOne(
+            { _id: createMessage.details.user_id },
+            { firstname: 1, lastname: 1, _id: 1 }
+          );
+
+        io.in(roomId).emit("message", {
+          message: {
+            person: person,
+            content: createMessage.content,
+            createdAt: createMessage.createdAt,
+          },
+          details: createMessage.details.message,
+          sender: senderProfile,
+          isSender: false,
+          type: createMessage.type,
+        });
+      } else res.sendStatus(403);
+    } else res.send(403);
+  } catch (error) {
+    console.log(error);
   }
 });
 router.post("/create", auth, async (req, res) => {
@@ -150,6 +219,20 @@ router.post("/newGroup", auth, async (req, res) => {
       });
       const createdGroup = await createGroup.save();
       if (createdGroup) {
+        for (let i = 0; i < createGroup.participants.length; i++) {
+          const participant = createGroup.participants[i].user_id;
+          const createMessage = new chat({
+            room_id: createdGroup._id,
+            sender: sender,
+            content: "added",
+            details: {
+              user_id: participant,
+              message: "to the group",
+            },
+            type: "notification",
+          });
+          await createMessage.save();
+        }
         res.send({
           updatedAt: createdGroup.updatedAt,
           isgroup: createdGroup.isgroup,
@@ -193,16 +276,15 @@ router.post("/reply", auth, async (req, res) => {
         });
         const savedMessage = await createMessage.save();
         res.send(savedMessage);
-        const senderData = await user.findOne({_id:sender}, {password:0})
-        
+        const senderData = await user.findOne({ _id: sender }, { password: 0 });
 
-        if(savedMessage && senderData){
-          io.in(roomId).emit('message', {
+        if (savedMessage && senderData) {
+          io.in(roomId).emit("message", {
             sender: senderData,
             message: savedMessage,
             isSender: false,
-            sender_id:sender
-          })
+            sender_id: sender,
+          });
         }
         for (let i = 0; i < room.participants.length; i++) {
           const participant = room.participants[i];
@@ -262,29 +344,28 @@ router.post("/reply", auth, async (req, res) => {
     res.sendStatus(500);
   }
 });
-router.post("/read", auth, async (req, res)=>{
+router.post("/read", auth, async (req, res) => {
   try {
-    const roomId =  req.body.room_id
-    const userId = req.session.user
+    const roomId = req.body.room_id;
+    const userId = req.session.user;
 
-    const room = await chatRoom.findOne({_id:roomId})
+    const room = await chatRoom.findOne({ _id: roomId });
     for (let i = 0; i < room.participants.length; i++) {
       const participant = room.participants[i];
-      if(participant.user_id === userId){
-        room.participants[i].seen = true
-        break
+      if (participant.user_id === userId) {
+        room.participants[i].seen = true;
+        break;
       }
     }
-    const updatedChatRoom = await room.save()
-    if(updatedChatRoom){
-      res.send(true)
-    }else res.sendStatus(403)
+    const updatedChatRoom = await room.save();
+    if (updatedChatRoom) {
+      res.send(true);
+    } else res.sendStatus(403);
   } catch (error) {
-    console.log(error)
-    res.sendStatus(500)
+    console.log(error);
+    res.sendStatus(500);
   }
-
-})
+});
 router.get("/messages", auth, async (req, res) => {
   try {
     const roomId = req.query.room;
@@ -293,6 +374,7 @@ router.get("/messages", auth, async (req, res) => {
     const limit = 20;
     const skip = limit * page;
     if (roomId) {
+      const room = await chatRoom.findOne({ _id: roomId });
       const messages = await chat
         .find({ room_id: roomId })
         .skip(skip)
@@ -302,23 +384,61 @@ router.get("/messages", auth, async (req, res) => {
       for (let i = 0; i < messages.length; i++) {
         const message = messages[i];
         if (message.sender === userId) {
-          messagesResponse.push({
-            message: message,
-            isSender: true,
-          });
+          if (message.type === "notification") {
+            const person = await user.findOne(
+              { _id: message.details.user_id },
+              { firstname: 1, lastname: 1, _id: 1 }
+            );
+            messagesResponse.push({
+              message: {
+                person: person,
+                content: message.content,
+                createdAt: message.createdAt,
+              },
+              details: message.details.message,
+              isSender: true,
+              type: message.type,
+            });
+          } else {
+            messagesResponse.push({
+              message: message,
+              isSender: true,
+            });
+          }
         } else {
           const senderProfile = await user.findOne(
             { _id: message.sender },
             { password: 0 }
           );
-          messagesResponse.push({
-            sender: senderProfile,
-            message: message,
-            isSender: false,
-          });
+          if (message.type === "notification") {
+            const person = await user.findOne(
+              { _id: message.details.user_id },
+              { firstname: 1, lastname: 1, _id: 1 }
+            );
+            messagesResponse.push({
+              message: {
+                person: person,
+                content: message.content,
+                createdAt: message.createdAt,
+              },
+              details: message.details.message,
+              sender: senderProfile,
+              isSender: false,
+              type: message.type,
+            });
+          } else {
+            messagesResponse.push({
+              sender: senderProfile,
+              message: message,
+              isSender: false,
+            });
+          }
         }
       }
-      res.send(messagesResponse);
+      res.send({
+        messages: messagesResponse,
+        num_members: room.participants.length,
+      });
     } else res.sendStatus(403);
   } catch (err) {
     console.log(err);
