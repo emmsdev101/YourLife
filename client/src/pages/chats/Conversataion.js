@@ -49,6 +49,8 @@ export default function Conversataion({
   const [toRemove, setToRemove] = useState(null)
   const [removing, setRemoving] = useState(false)
   const [numMmebers, setNumMembers] = useState(0)
+  const [addMember, setAddMember] = useState(false)
+  const [membersToAdd, setMembersToAdd] = useState(null)
   const isNew = room.room_id ? false : true;
   const name = room.isgroup
     ? room.name
@@ -72,9 +74,7 @@ export default function Conversataion({
   }, []);
 
   useEffect(() => {
-    console.log("chats loaded")
     if (chatsLoaded) {
-      console.log("Joining room")
       socket.emit("join", activeRoom);
 
       socket.on("message", (msg) => {
@@ -338,8 +338,7 @@ export default function Conversataion({
             )}
             <h3 className={myStyle.recieverNameMenu}>{name}</h3>
             </div>
-            
-
+      
           </div>
           <div className={myStyle.menuOptions}>
             {room.isgroup ? (
@@ -383,7 +382,7 @@ export default function Conversataion({
               </button>
             )}
             {room.isgroup ? (
-              <button className={myStyle.menuButton}>
+              <button className={myStyle.menuButton} onClick = {leave}>
                 Leave Group <FaMinusCircle className={myStyle.menuIcon} />{" "}
               </button>
             ) : (
