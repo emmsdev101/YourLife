@@ -48,13 +48,13 @@ function Chat({ chats, setChats, initChats }) {
             </nav>
             <h3 className={style.pageTitle}>Chats</h3>
             <button className={style.newMessage} onClick={createNewMessage}>
-              New Message
+              New
               <div className={style.iconDiv}>
                 <FaPen className={style.newMessageIcon}></FaPen>
               </div>
             </button>
             <button className={style.newMessage} onClick={createNewGroup}>
-              New Group
+              Create
               <div className={style.iconDiv}>
                 <FaUsers className={style.newMessageIcon}></FaUsers>
               </div>

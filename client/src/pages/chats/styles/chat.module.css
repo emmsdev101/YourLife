@@ -125,6 +125,11 @@
     object-fit: cover;
     color: #b9b9b9;
 }
+.inboxSetting{
+    margin-left: 5px;
+    color: #2c2c2c;
+    font-size: medium;
+}
 .chatDetails{
     display: flex;
     flex-direction: column;
@@ -132,7 +137,8 @@
     justify-content: start;
     text-align: left;
     margin-left: 10px;
-    width: calc(100% - 70px);
+    width: auto;
+    margin-right: auto;
 }
 .chatName{
     font-size: medium;
@@ -150,6 +156,8 @@
 }
 .chatStatus{
     font-size: x-small;
+    text-align: right;
+    min-width: 80px;
 }
 .chatInboxRead{
     display: flex;

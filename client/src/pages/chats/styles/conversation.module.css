@@ -35,10 +35,11 @@
 .convoBody {
   background-color: white;
   height: calc(100vh - 110px);
-  width: var(--width);
+  width:100%;
   display: flex;
   flex-direction: column-reverse;
-  overflow: auto;
+  overflow-y: auto;
+  margin: 0;
 }
 .recieverPicture {
   height: 40px;
@@ -53,42 +54,47 @@
   color: rgb(107, 107, 107);
   object-fit: cover;
   border-radius: 50%;
+  margin: 5px;
 }
 .msgDiv {
   display: flex;
   flex-direction: row;
   justify-content: left;
-  align-items: center;
-  width: calc(var(--width) - 20px);
-  margin: 10px;
+  align-items: top;
+  width: 100%;
+  margin: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+
 }
 .msgDivIsme {
-  width: calc(var(--width) - 20px);
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: top;
-  margin: 10px;
+  justify-content: end;
+  margin: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 .msgInner {
-  max-width: calc(100% / 2);
+  max-width: 60%;
   height: auto;
   background-color: #00000013;
-  border-radius: 10px;
+  border-radius: 0 20px 0 20px;
   padding: 10px 10px 3px 10px;
-  margin: 5px;
   text-align: left;
   font-size: small;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
 .msgInnerIsme {
-  max-width: calc(100% / 2);
+  max-width: 60%;
   height: auto;
   background-color: #ef5da8;
   color: white;
-  border-radius: 10px;
+  border-radius: 20px 0 20px 0;
   padding: 10px 10px 3px 10px;
-  margin: 5px;
   margin-left: auto;
   text-align: left;
   font-size: small;
@@ -102,6 +108,8 @@
   height: 50px;
   align-items: center;
   background-color: #ef5da823;
+  position: fixed;
+  width: 100%;
 }
 .notification {
   margin: 10px;
@@ -111,13 +119,27 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-size: smaller;
+  background-color: #eeebeb;
+  padding: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: fit-content;
+  margin: auto;
+  border-radius: 10px;
+  word-wrap: break-word;
+  white-space:pre-wrap;
+  color: #292929;
 }
 .notificationMessage {
-  font-size: large;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 }
 .notificationDate {
   color: grey;
-  font-size: small;
+  font-size: x-small;
 }
 .notificationProfile {
   color: #ef5da8;

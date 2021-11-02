@@ -1,5 +1,5 @@
 import React, {useEffect, useState, setChats, id} from "react";
-import { FaUser, FaUserCircle, FaUsers } from "react-icons/fa";
+import { FaEllipsisH, FaEllipsisV, FaUser, FaUserCircle, FaUsers } from "react-icons/fa";
 import style from './styles/chat.module.css'
 import { MY_API } from "../../config";
 import axios from "axios";
@@ -69,9 +69,13 @@ const InboxItem = ({chat, setRoom, setOnread, chats, setChats, id  }) => {
         <div className={style.chatDetails}>
           <div className={style.header}>
             <p className={style.chatName}>{name}</p>
-            <p className={style.chatStatus}>{chatTime + " : " +chatDate}</p>
           </div>
           <p className={style.chatContent}>"{message.length > 20? message.slice(0, 20)+'...':message.slice(0, 20)}"</p>
+        </div>
+        <div className={style.chatStatus}>
+        <FaEllipsisH className = {style.inboxSetting}/>
+          <p >{chatTime}</p>
+          <p>{chatDate}</p>
         </div>
       </div>
     </>
