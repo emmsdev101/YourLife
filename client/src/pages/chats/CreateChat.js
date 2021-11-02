@@ -212,7 +212,7 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
           </div>
         </div>
         </header>
-        <div className={myStyle.peopleList}>
+        <div className={myStyle.peopleListNewMessage}>
           {people?.map((data, id) => (
             <User selectUser = {selectUser} data={data} id={id} isSearching={true} key = {id} page = {'chat'}/>
           ))}

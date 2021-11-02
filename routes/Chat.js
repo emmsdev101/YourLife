@@ -366,6 +366,89 @@ router.post("/read", auth, async (req, res) => {
     res.sendStatus(500);
   }
 });
+router.post('/addToGroup', auth, async(req, res)=>{
+  try {
+    const sender = req.session.user
+    let io = req.app.get("socketio");
+    const roomId = req.body.room_id
+    const participants = req.body.participants
+    if(roomId){
+      const room = await chatRoom.findOne({_id:roomId})
+      if(room){
+        let roomParticipants = room.participants
+        let toAdd = []
+        for (let i = 0; i < participants.length; i++) {
+          const memberId = participants[i].user_id;
+          const isExists = roomParticipants.find(({user_id})=>user_id === memberId)
+          if(!isExists){
+            toAdd.push({user_id:memberId})
+            roomParticipants.push({user_id:memberId})
+          }
+        }
+        if(toAdd){
+          room.participant = roomParticipants
+          const newRoom = await room.save()
+          if(newRoom){
+            for (let i = 0; i < toAdd.length; i++) {
+              const participant = toAdd[i].user_id;
+              const createMessage = new chat({
+                room_id: newRoom._id,
+                sender: sender,
+                content: "added",
+                details: {
+                  user_id: participant,
+                  message: "to the group",
+                },
+                type: "notification",
+              });
+              const createdMessage = await createMessage.save()
+              if (createdMessage) {
+                const senderProfile = await user.findOne(
+                  { _id: createMessage.sender },
+                  { password: 0 }
+                );
+                  const person = await user.findOne(
+                    { _id: createMessage.details.user_id },
+                    { firstname: 1, lastname: 1, _id: 1 }
+                  );
+        
+                io.in(roomId).emit("message", {
+                  message: {
+                    person: person,
+                    content: createMessage.content,
+                    createdAt: createMessage.createdAt,
+                  },
+                  details: createMessage.details.message,
+                  sender: senderProfile,
+                  isSender: false,
+                  type: createMessage.type,
+                });
+              }
+            }
+            res.send(true);
+            const recipients = newRoom.participants;
+            for (let i = 0; i < recipients.length; i++) {
+              const reciever = recipients[i].user_id;
+              if (reciever !== sender) {
+                const connected = await SocketSchema.findOne({ user_id: reciever });
+                if (connected) {
+                  io.to(connected.socket_id).emit("chat", {
+                    sender: sender,
+                    chat: newRoom,
+                  });
+                }
+              }
+            }
+          }else res.sendStatus(403)
+        }else res.sendStatus(403)
+
+      }else res.sendStatus(403)
+    }else res.send(403)
+  } catch (error) {
+    console.log(error)
+    res.sendStatus(500)
+  }
+})
 router.get("/messages", auth, async (req, res) => {
   try {
     const roomId = req.query.room;

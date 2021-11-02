@@ -1,6 +1,78 @@
 :root {
   --width: 768px;
 }
+.searchHolder{
+    height: 50px;
+    width: calc(100% - 10px);
+    margin-top: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-self: center;
+}
+.chatSearch{
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 40px;
+    background-color: rgb(233, 233, 233);
+    padding: 0 15px;
+    color: rgb(41, 41, 41);
+    font-size:larger;
+    width: calc(100% - 10px);
+    margin: auto;
+}
+.searchLabel{
+    font-size: larger;
+    margin-right: 5px;
+    font-weight: bold;
+}
+.addMemberButton{
+    font-size: large;
+    padding: 10px;
+    color: #505050;
+    font-weight: 500;
+    border: none;
+    margin-left: auto;
+    margin-right: 10px;
+    background-color: #cecece;
+}
+.chatInput{
+    background-color: transparent;
+    outline: none;
+    border: none;
+    width: 95%;
+    color:inherit;
+    font-size: medium;
+}
+.toAddDiv{
+    height: 100px;
+    overflow: auto;
+    justify-content: center;
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+
+}
+.participant{
+    font-size: small;
+    background-color: #ef5da8;
+    padding: 8px;
+    border-radius: 10px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: white;
+}
+.memberHeader{
+    position: sticky;
+    top: 0;
+
+}
 .conversation {
   width: var(--width);
   height: 100vh;
@@ -202,6 +274,7 @@ textarea {
 }
 .menu {
   background-color: white;
+  height: 100vh;
 }
 .conversationHeader {
   display: grid;
@@ -229,7 +302,7 @@ textarea {
   font-weight: 650;
 }
 .membersList {
-  height: calc(100vh - 60px);
+  height: calc(100vh - 33%);
   width: 100%;
   background-color: #ecebeb;
   overflow: auto;
@@ -333,11 +406,11 @@ textarea {
 }
 .modalFooter {
   float: right;
+  font-size: medium;
 }
 .modalOk {
   background-color: #5d5fef;
   border: none;
-  font-size: larger;
   color: white;
   padding: 10px;
   border-radius: 5px;
@@ -345,7 +418,6 @@ textarea {
 .modalCancel {
   background-color: #ef5da8;
   border: none;
-  font-size: larger;
   color: white;
   padding: 10px;
   border-radius: 5px;

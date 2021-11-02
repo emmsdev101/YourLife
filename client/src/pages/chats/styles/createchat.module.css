@@ -7,7 +7,15 @@ body{
     background-color: rgb(255, 255, 255);
 }
 .peopleList{
-    height: 50%;
+    height: 58%;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+.peopleListNewMessage{
+    height: 84%;
     overflow: auto;
     display: flex;
     flex-direction: column;

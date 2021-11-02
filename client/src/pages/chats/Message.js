@@ -13,7 +13,6 @@ const MessageItem = ({ id, chat }) => {
   const chatDay = dateCreated.toDateString();
   const chatTime = dateCreated.toLocaleTimeString();
   useEffect(() => {
-    console.log(chat);
     if (chat.type !== "notification") {
       setProfilePhoto(null);
       const photoUrl = isme

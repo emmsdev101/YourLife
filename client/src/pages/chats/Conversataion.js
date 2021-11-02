@@ -10,6 +10,7 @@ import {
   FaMinusCircle,
   FaMinusSquare,
   FaPaperPlane,
+  FaSearch,
   FaUser,
   FaUserCheck,
   FaUserCircle,
@@ -19,6 +20,7 @@ import {
   FaUsers,
   FaUsersCog,
   FaUserTimes,
+  FaWindowClose,
 } from "react-icons/fa";
 import { MY_API } from "../../config";
 import axios from "axios";
@@ -26,6 +28,7 @@ import MessageItem from "./Message";
 import { SocketContext } from "../../logic/socketHandler";
 import User from "../../components/people/user";
 import Loader from "../../components/Loader/Loader";
+import usePeople from "../../logic/usePeople";
 export default function Conversataion({
   userContext,
   setOpen,
@@ -34,6 +37,7 @@ export default function Conversataion({
   initChats,
   addRoom,
 }) {
+  const {getFollowed, searchPeople}  =  usePeople()
   const [messageInput, setMessageInput] = useState("");
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -50,7 +54,9 @@ export default function Conversataion({
   const [removing, setRemoving] = useState(false)
   const [numMmebers, setNumMembers] = useState(0)
   const [addMember, setAddMember] = useState(false)
-  const [membersToAdd, setMembersToAdd] = useState(null)
+  const [membersToAdd, setMembersToAdd] = useState([])
+  const [searchInput, setSearchInput] = useState('')
+  const [leaveGroup, setLeaveGroup] = useState(false)
   const isNew = room.room_id ? false : true;
   const name = room.isgroup
     ? room.name
@@ -95,6 +101,34 @@ export default function Conversataion({
     }
   }, [chats]);
 
+  useEffect(() => {
+    if(addMember){
+      async function getPeople() {
+        setLoading(true);
+        const peopleResult = await getFollowed();
+        if (peopleResult) {
+          setMembers(peopleResult);
+        }
+      }
+      getPeople();
+    }
+  }, [addMember])
+
+  useEffect(()=>{
+    if(searchInput.length > 2){
+      requestSearch()
+      async function requestSearch() {
+        setMembersLoading(true)
+        setMembers(null)
+        const searchRequest = await searchPeople(searchInput)
+        if(searchRequest){
+          setMembersLoading(false)
+          setMembers(searchRequest)
+        }
+      }
+    }
+  },[searchInput])
+
   async function initRoom(room_id) {
     try {
       setChats([]);
@@ -124,8 +158,18 @@ export default function Conversataion({
   const inputMessage = (e) => {
     setMessageInput(e.target.value);
   };
+  const toggleLeaveGroup = () => {
+    setLeaveGroup(!leaveGroup)
+  }
+  const toggleAddMember = () => {
+    setAddMember(!addMember)
+  }
+  const handleSearch = (e) => {
+    setSearchInput(e.target.value)
+  }
   const leave = async() => {
     try {
+      setRemoving(true)
       const removeRequest = await axios({
         url:MY_API+"/chat/remove",
         method:'post',
@@ -134,10 +178,10 @@ export default function Conversataion({
       })
       if(removeRequest.status === 200){
         const isRemoved = removeRequest.data
-        console.log(isRemoved)
         if(isRemoved){
           initChats()
           closeMe()
+          setRemoving(false)
         }
       }
     } catch (error) {
@@ -242,7 +286,6 @@ export default function Conversataion({
     setSeeMembers(!seeMembers);
   };
   const confirmRemove = async() => {
-    console.log(toRemove)
     setRemoving(true)
     try {
       const removeRequest = await axios({
@@ -272,6 +315,32 @@ export default function Conversataion({
       setRemoving(false)
     }
   }
+  const addMembersSelected = async() => {
+    try {
+      setRemoving(true)
+      setOpenModal(true)
+      const userIds = membersToAdd.map((participant)=>{ return {user_id:participant._id}})
+      console.log(userIds)
+      const addRequest = await axios({
+        url:MY_API+"/chat/addToGroup",
+        method:'post',
+        withCredentials:true,
+        data:{room_id:activeRoom, participants:userIds}
+      })
+      if(addRequest.status === 200){
+        console.log(addRequest.data)
+        setRemoving(false)
+        setOpenModal(false)
+        initRoom()
+        toggleAddMember()
+      }
+
+
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
   const toggleRemoveMember = (data) => {
     if(!toRemove){
       setToRemove(data._id)
@@ -279,6 +348,17 @@ export default function Conversataion({
       setToRemove(null)
     }
     setOpenModal(!openModal)
+  }
+  const addParticipant = (data) => {
+    const exists = membersToAdd.find(({_id})=>_id === data._id)
+    if(!exists){
+      setMembersToAdd((added) => [...added, data])
+    }
+  }
+  const removeParticipant = (id) => {
+    const toRemove = membersToAdd[id]
+    const newmembersToAdd = membersToAdd.filter(({_id})=>_id !== toRemove._id)
+    setMembersToAdd(newmembersToAdd)
   }
   const ModalAlert = ({message}) => {
     return (
@@ -288,30 +368,68 @@ export default function Conversataion({
         <div className={myStyle.modalHeader}>{message}</div>
         <div className={myStyle.modalBody}></div>
         <div className={myStyle.modalFooter}>
-          <button className={myStyle.modalOk} onClick = {confirmRemove}>Confirm</button>
-          <button className={myStyle.modalCancel} onClick = {toggleRemoveMember}>Cancel</button>
+          <button className={myStyle.modalOk} onClick = {leaveGroup?leave:confirmRemove}>Confirm</button>
+          <button className={myStyle.modalCancel} onClick = {leaveGroup?toggleLeaveGroup:toggleRemoveMember}>Cancel</button>
         </div>
       </div>}
       </div>
     );
   };
   if (menu) {
-    if (seeMembers) {
+    if (seeMembers || addMember) {
       return (
         <div className={myStyle.menu}>
           {openModal?<ModalAlert message = {'Remove?'} list = {'sdfgsdf'}/>:''}
+          <div className = {myStyle.memberHeader}>
           <div className={myStyle.conversationMenu}>
-            <div className={myStyle.conversationBack} onClick={openMembers}>
+            <div className={myStyle.conversationBack} onClick={addMember?toggleAddMember:openMembers}>
               <FaArrowLeft className={myStyle.backIcon}></FaArrowLeft>
             </div>
             <p className={myStyle.pageTitle}>
-              {removeMember ? "Remove member" : "Members"}
+              {removeMember ? "Remove member" : addMember? "Add Member": 'Members'}
             </p>
+            {addMember?<button className = {myStyle.addMemberButton}onClick  = {addMembersSelected}>Add</button>:''}
+          </div>
+          {addMember?          
+
+          <div>
+            <div className={myStyle.searchHolder}>
+          <div className={myStyle.chatSearch}>
+            <input
+              className={myStyle.chatInput}
+              type="text"
+              placeholder="Search:"
+              value = {searchInput}
+              onChange = {handleSearch}
+            ></input>
+            <FaSearch></FaSearch>
+          </div>
+        </div>
+        <div className = {myStyle.toAddDiv}>
+        {membersToAdd?.map((participant, id)=>(
+          <div className = {myStyle.participant} key = {id}>
+          {participant.firstname}
+          <FaWindowClose className = {myStyle.removeParticipant} onClick = {()=>{removeParticipant(id)}}/>
+          </div>
+        ))}
+        {!membersToAdd.length?"Select participant":''}
+      </div>
+            </div>
+        :''}
           </div>
           <div className={myStyle.membersList}>
-            {members?.map((memberData, id) => (
-              <User selectUser = {removeMember?toggleRemoveMember:''} data={memberData} id={id} isSearching={true} key = {id} page = {removeMember?'chat':''}/>
-            ))}
+            {
+              addMember?
+              members?.map((memberData, id) => (
+                <User selectUser = {addParticipant} data={memberData} id={id} isSearching={true} key = {id} page = {'chat'}/>
+              ))
+              :
+              members?.map((memberData, id) => (
+                <User selectUser = {removeMember?toggleRemoveMember:''} data={memberData} id={id} isSearching={true} key = {id} page = {removeMember?'chat':''}/>
+              ))
+            
+            
+            }
             {membersLoading ? <Loader /> : ""}
           </div>
         </div>
@@ -319,6 +437,7 @@ export default function Conversataion({
     } else {
       return (
         <div className={myStyle.menu}>
+          {leaveGroup?<ModalAlert message = {'Leave Group?'}/>:''}
           <div className={myStyle.conversationMenu}>
             <div className={myStyle.conversationBack} onClick={openMenu}>
               <FaArrowLeft className={myStyle.backIcon}></FaArrowLeft>
@@ -349,7 +468,7 @@ export default function Conversataion({
               ""
             )}
             {room.isgroup ? (
-              <button className={myStyle.menuButton}>
+              <button className={myStyle.menuButton} onClick = {toggleAddMember}>
                 Add Member <FaUserPlus className={myStyle.menuIcon} />
               </button>
             ) : (
@@ -382,7 +501,7 @@ export default function Conversataion({
               </button>
             )}
             {room.isgroup ? (
-              <button className={myStyle.menuButton} onClick = {leave}>
+              <button className={myStyle.menuButton} onClick = {toggleLeaveGroup}>
                 Leave Group <FaMinusCircle className={myStyle.menuIcon} />{" "}
               </button>
             ) : (
