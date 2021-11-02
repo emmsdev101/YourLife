@@ -325,55 +325,57 @@ export default function Conversataion({
             </div>
           </div>
           <div className={myStyle.conversationHeader}>
-            {profilePhoto ? (
+            <div className = {myStyle.roomPhotoDiv}> {profilePhoto ? (
               <img
                 className={myStyle.recieverPictureMenu}
                 alt=""
                 src={profilePhoto}
               ></img>
             ) : room.isgroup ? (
-              <FaUsers className={myStyle.recieverPictureMenu} />
+              <FaUsers className={myStyle.recieverAvatarMenu} />
             ) : (
-              <FaUserCircle className={myStyle.recieverPictureMenu} />
+              <FaUserCircle className={myStyle.recieverAvatarMenu} />
             )}
             <h3 className={myStyle.recieverNameMenu}>{name}</h3>
-            <p className={myStyle.participantsNumber}> {numMmebers} People</p>
+            </div>
+            
+
           </div>
           <div className={myStyle.menuOptions}>
             {room.isgroup ? (
               <button className={myStyle.menuButton} onClick={openMembers}>
-                See group members <FaUsers className={myStyle.menuIcon} />{" "}
+                See Members <FaUsers className={myStyle.menuIcon} />{" "}
               </button>
             ) : (
               ""
             )}
             {room.isgroup ? (
               <button className={myStyle.menuButton}>
-                Add person <FaUserPlus className={myStyle.menuIcon} />
+                Add Member <FaUserPlus className={myStyle.menuIcon} />
               </button>
             ) : (
               <button className={myStyle.menuButton}>
-                Delete conversation{" "}
+                Delete Conversation{" "}
                 <FaMinusSquare className={myStyle.menuIcon} />
               </button>
             )}
             {room.isgroup ? (
               <button className={myStyle.menuButton} onClick={openRemoveMember}>
-                Remove person <FaUserMinus className={myStyle.menuIcon} />
+                Remove Member <FaUserMinus className={myStyle.menuIcon} />
               </button>
             ) : (
               <button className={myStyle.menuButton}>
-                View profile <FaUser className={myStyle.menuIcon} />
+                View Profile <FaUser className={myStyle.menuIcon} />
               </button>
             )}
             {room.isgroup ? (
-              <button className={myStyle.menuButton}>Change group name </button>
+              <button className={myStyle.menuButton}>Change Group Name </button>
             ) : (
               ""
             )}
             {room.isgroup ? (
               <button className={myStyle.menuButton}>
-                Change group photo <FaImage className={myStyle.menuIcon} />
+                Change Group Photo <FaImage className={myStyle.menuIcon} />
               </button>
             ) : (
               <button className={myStyle.menuButton}>
@@ -382,7 +384,7 @@ export default function Conversataion({
             )}
             {room.isgroup ? (
               <button className={myStyle.menuButton}>
-                Leave group <FaMinusCircle className={myStyle.menuIcon} />{" "}
+                Leave Group <FaMinusCircle className={myStyle.menuIcon} />{" "}
               </button>
             ) : (
               ""
