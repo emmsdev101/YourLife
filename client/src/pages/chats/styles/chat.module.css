@@ -137,7 +137,7 @@
     justify-content: start;
     text-align: left;
     margin-left: 10px;
-    width: auto;
+    width: calc(100% -60%);
     margin-right: auto;
 }
 .chatName{
