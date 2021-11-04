@@ -6,20 +6,15 @@ import {
   FaEllipsisH,
   FaEllipsisV,
   FaImage,
-  FaMinus,
   FaMinusCircle,
   FaMinusSquare,
   FaPaperPlane,
   FaSearch,
   FaUser,
-  FaUserCheck,
   FaUserCircle,
-  FaUserMd,
   FaUserMinus,
   FaUserPlus,
   FaUsers,
-  FaUsersCog,
-  FaUserTimes,
   FaWindowClose,
 } from "react-icons/fa";
 import { MY_API } from "../../config";
@@ -29,6 +24,7 @@ import { SocketContext } from "../../logic/socketHandler";
 import User from "../../components/people/user";
 import Loader from "../../components/Loader/Loader";
 import usePeople from "../../logic/usePeople";
+import ChangeDp from "../../components/changeDp/changeDp";
 export default function Conversataion({
   userContext,
   setOpen,
@@ -37,7 +33,7 @@ export default function Conversataion({
   initChats,
   addRoom,
 }) {
-  const {getFollowed, searchPeople}  =  usePeople()
+  const { getFollowed, searchPeople } = usePeople();
   const [messageInput, setMessageInput] = useState("");
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -49,15 +45,16 @@ export default function Conversataion({
   const [members, setMembers] = useState([]);
   const [membersLoading, setMembersLoading] = useState([]);
   const [removeMember, setRemoveMember] = useState(false);
-  const [openModal, setOpenModal] = useState(false)
-  const [toRemove, setToRemove] = useState(null)
-  const [removing, setRemoving] = useState(false)
-  const [numMmebers, setNumMembers] = useState(0)
-  const [addMember, setAddMember] = useState(false)
-  const [membersToAdd, setMembersToAdd] = useState([])
-  const [searchInput, setSearchInput] = useState('')
-  const [leaveGroup, setLeaveGroup] = useState(false)
+  const [openModal, setOpenModal] = useState(false);
+  const [toRemove, setToRemove] = useState(null);
+  const [removing, setRemoving] = useState(false);
+  const [numMmebers, setNumMembers] = useState(0);
+  const [addMember, setAddMember] = useState(false);
+  const [membersToAdd, setMembersToAdd] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [leaveGroup, setLeaveGroup] = useState(false);
   const isNew = room.room_id ? false : true;
+  const [changePhoto, setChangePhoto] = useState(false);
   const name = room.isgroup
     ? room.name
     : room.recipient?.firstname + " " + room.recipient?.lastname;
@@ -85,10 +82,7 @@ export default function Conversataion({
 
       socket.on("message", (msg) => {
         if (msg.sender_id !== userContext._id) {
-          let chatsCopy = [
-            msg,
-            ...chats,
-          ];
+          let chatsCopy = [msg, ...chats];
           setChats(chatsCopy);
           axios({
             url: MY_API + "/chat/read",
@@ -102,7 +96,7 @@ export default function Conversataion({
   }, [chats]);
 
   useEffect(() => {
-    if(addMember){
+    if (addMember) {
       async function getPeople() {
         setLoading(true);
         const peopleResult = await getFollowed();
@@ -112,22 +106,22 @@ export default function Conversataion({
       }
       getPeople();
     }
-  }, [addMember])
+  }, [addMember]);
 
-  useEffect(()=>{
-    if(searchInput.length > 2){
-      requestSearch()
+  useEffect(() => {
+    if (searchInput.length > 2) {
+      requestSearch();
       async function requestSearch() {
-        setMembersLoading(true)
-        setMembers(null)
-        const searchRequest = await searchPeople(searchInput)
-        if(searchRequest){
-          setMembersLoading(false)
-          setMembers(searchRequest)
+        setMembersLoading(true);
+        setMembers(null);
+        const searchRequest = await searchPeople(searchInput);
+        if (searchRequest) {
+          setMembersLoading(false);
+          setMembers(searchRequest);
         }
       }
     }
-  },[searchInput])
+  }, [searchInput]);
 
   async function initRoom(room_id) {
     try {
@@ -137,12 +131,12 @@ export default function Conversataion({
         method: "get",
         withCredentials: true,
         url: MY_API + "/chat/messages",
-        params: { room: room_id||activeRoom },
+        params: { room: room_id || activeRoom },
       });
       if (fetchRoom.status === 200) {
         setChatsLoaded(true);
         setChats(fetchRoom.data.messages);
-        setNumMembers(fetchRoom.data.num_members)
+        setNumMembers(fetchRoom.data.num_members);
         setLoading(false);
       }
     } catch (error) {
@@ -159,36 +153,36 @@ export default function Conversataion({
     setMessageInput(e.target.value);
   };
   const toggleLeaveGroup = () => {
-    setLeaveGroup(!leaveGroup)
-  }
+    setLeaveGroup(!leaveGroup);
+  };
   const toggleAddMember = () => {
-    setAddMember(!addMember)
-  }
+    setAddMember(!addMember);
+  };
   const handleSearch = (e) => {
-    setSearchInput(e.target.value)
-  }
-  const leave = async() => {
+    setSearchInput(e.target.value);
+  };
+  const leave = async () => {
     try {
-      setRemoving(true)
+      setRemoving(true);
       const removeRequest = await axios({
-        url:MY_API+"/chat/remove",
-        method:'post',
-        withCredentials:true,
-        data:{room_id:activeRoom, user_id:userContext._id}
-      })
-      if(removeRequest.status === 200){
-        const isRemoved = removeRequest.data
-        if(isRemoved){
-          initChats()
-          closeMe()
-          setRemoving(false)
+        url: MY_API + "/chat/remove",
+        method: "post",
+        withCredentials: true,
+        data: { room_id: activeRoom, user_id: userContext._id },
+      });
+      if (removeRequest.status === 200) {
+        const isRemoved = removeRequest.data;
+        if (isRemoved) {
+          initChats();
+          closeMe();
+          setRemoving(false);
         }
       }
     } catch (error) {
-      console.log(error)
-      setRemoving(false)
+      console.log(error);
+      setRemoving(false);
     }
-  }
+  };
   const sendMessage = async () => {
     try {
       setMessageInput("");
@@ -240,7 +234,7 @@ export default function Conversataion({
             },
           ]);
           initChats();
-          initRoom(sendRequest.data.room_id)
+          initRoom(sendRequest.data.room_id);
           setSending(false);
           setChatsLoaded(true);
         }
@@ -252,7 +246,7 @@ export default function Conversataion({
   };
   async function loadMembers() {
     setMembersLoading(true);
-    setMembers([])
+    setMembers([]);
     const getMembers = await axios({
       url: MY_API + "/chat/members",
       method: "get",
@@ -276,102 +270,124 @@ export default function Conversataion({
       loadMembers();
     }
     setSeeMembers(!seeMembers);
-    setRemoveMember(false)
+    setRemoveMember(false);
   };
   const openRemoveMember = () => {
-     if (!removeMember) {
-       loadMembers();
-     }
+    if (!removeMember) {
+      loadMembers();
+    }
     setRemoveMember(!removeMember);
     setSeeMembers(!seeMembers);
   };
-  const confirmRemove = async() => {
-    setRemoving(true)
+  const confirmRemove = async () => {
+    setRemoving(true);
     try {
       const removeRequest = await axios({
-        url:MY_API+"/chat/remove",
-        method:'post',
-        withCredentials:true,
-        data:{room_id:activeRoom, user_id:toRemove}
-      })
-      if(removeRequest.status === 200){
-        const isRemoved = removeRequest.data
-        console.log(isRemoved)
-        if(isRemoved){
-          if(toRemove === userContext._id){
-            initChats()
-            closeMe()
-          }else{
-            loadMembers()
-          setRemoving(false)
-          initChats()
-          initRoom()
-          setOpenModal(!openModal)
+        url: MY_API + "/chat/remove",
+        method: "post",
+        withCredentials: true,
+        data: { room_id: activeRoom, user_id: toRemove },
+      });
+      if (removeRequest.status === 200) {
+        const isRemoved = removeRequest.data;
+        if (isRemoved) {
+          if (toRemove === userContext._id) {
+            initChats();
+            closeMe();
+          } else {
+            loadMembers();
+            setRemoving(false);
+            initChats();
+            initRoom();
+            setOpenModal(!openModal);
           }
         }
       }
     } catch (error) {
-      console.log(error)
-      setRemoving(false)
+      console.log(error);
+      setRemoving(false);
     }
-  }
-  const addMembersSelected = async() => {
+  };
+  const addMembersSelected = async () => {
     try {
-      setRemoving(true)
-      setOpenModal(true)
-      const userIds = membersToAdd.map((participant)=>{ return {user_id:participant._id}})
-      console.log(userIds)
+      setRemoving(true);
+      setOpenModal(true);
+      const userIds = membersToAdd.map((participant) => {
+        return { user_id: participant._id };
+      });
       const addRequest = await axios({
-        url:MY_API+"/chat/addToGroup",
-        method:'post',
-        withCredentials:true,
-        data:{room_id:activeRoom, participants:userIds}
-      })
-      if(addRequest.status === 200){
-        console.log(addRequest.data)
-        setRemoving(false)
-        setOpenModal(false)
-        initRoom()
-        toggleAddMember()
+        url: MY_API + "/chat/addToGroup",
+        method: "post",
+        withCredentials: true,
+        data: { room_id: activeRoom, participants: userIds },
+      });
+      if (addRequest.status === 200) {
+        setRemoving(false);
+        setOpenModal(false);
+        initRoom();
+        toggleAddMember();
       }
-
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-
-  }
+  };
   const toggleRemoveMember = (data) => {
-    if(!toRemove){
-      setToRemove(data._id)
-    }else{
-      setToRemove(null)
+    if (!toRemove) {
+      setToRemove(data._id);
+    } else {
+      setToRemove(null);
     }
-    setOpenModal(!openModal)
-  }
+    setOpenModal(!openModal);
+  };
   const addParticipant = (data) => {
-    const exists = membersToAdd.find(({_id})=>_id === data._id)
-    if(!exists){
-      setMembersToAdd((added) => [...added, data])
+    const exists = membersToAdd.find(({ _id }) => _id === data._id);
+    if (!exists) {
+      setMembersToAdd((added) => [...added, data]);
     }
-  }
+  };
   const removeParticipant = (id) => {
-    const toRemove = membersToAdd[id]
-    const newmembersToAdd = membersToAdd.filter(({_id})=>_id !== toRemove._id)
-    setMembersToAdd(newmembersToAdd)
+    const toRemove = membersToAdd[id];
+    const newmembersToAdd = membersToAdd.filter(
+      ({ _id }) => _id !== toRemove._id
+    );
+    setMembersToAdd(newmembersToAdd);
+  };
+  const toggleChangePhoto = () => {
+    setChangePhoto(!changePhoto);
+  };
+  const successChange = () => {
+    initRoom()
+    initChats()
   }
-  const ModalAlert = ({message}) => {
+  const ModalAlert = ({ message, isPrompt }) => {
     return (
-      <div className = {myStyle.modalWrapper}>
-        {removing?<div className = {myStyle.removing}><Loader/></div>:
-        <div className={myStyle.modalAlert}>
-        <div className={myStyle.modalHeader}>{message}</div>
-        <div className={myStyle.modalBody}></div>
-        <div className={myStyle.modalFooter}>
-          <button className={myStyle.modalOk} onClick = {leaveGroup?leave:confirmRemove}>Confirm</button>
-          <button className={myStyle.modalCancel} onClick = {leaveGroup?toggleLeaveGroup:toggleRemoveMember}>Cancel</button>
-        </div>
-      </div>}
+      <div className={myStyle.modalWrapper}>
+        {removing ? (
+          <div className={myStyle.removing}>
+            <Loader />
+          </div>
+        ) : (
+          <div className={myStyle.modalAlert}>
+            <div className={myStyle.modalHeader}>{message}</div>
+            <div className={myStyle.modalBody}>
+              {isPrompt ? <input className={myStyle.ModalInput} /> : ""}
+            </div>
+            <div className={myStyle.modalFooter}>
+              <button
+                className={myStyle.modalOk}
+                onClick={leaveGroup ? leave : confirmRemove}
+              >
+                Confirm
+              </button>
+              <button
+                className={myStyle.modalCancel}
+                onClick={leaveGroup ? toggleLeaveGroup : toggleRemoveMember}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   };
@@ -379,57 +395,88 @@ export default function Conversataion({
     if (seeMembers || addMember) {
       return (
         <div className={myStyle.menu}>
-          {openModal?<ModalAlert message = {'Remove?'} list = {'sdfgsdf'}/>:''}
-          <div className = {myStyle.memberHeader}>
-          <div className={myStyle.conversationMenu}>
-            <div className={myStyle.conversationBack} onClick={addMember?toggleAddMember:openMembers}>
-              <FaArrowLeft className={myStyle.backIcon}></FaArrowLeft>
+          {openModal ? <ModalAlert message={"Remove?"} list={"sdfgsdf"} /> : ""}
+          <div className={myStyle.memberHeader}>
+            <div className={myStyle.conversationMenu}>
+              <div
+                className={myStyle.conversationBack}
+                onClick={addMember ? toggleAddMember : openMembers}
+              >
+                <FaArrowLeft className={myStyle.backIcon}></FaArrowLeft>
+              </div>
+              <p className={myStyle.pageTitle}>
+                {removeMember
+                  ? "Remove member"
+                  : addMember
+                  ? "Add Member"
+                  : "Members"}
+              </p>
+              {addMember ? (
+                <button
+                  className={myStyle.addMemberButton}
+                  onClick={addMembersSelected}
+                >
+                  Add
+                </button>
+              ) : (
+                ""
+              )}
             </div>
-            <p className={myStyle.pageTitle}>
-              {removeMember ? "Remove member" : addMember? "Add Member": 'Members'}
-            </p>
-            {addMember?<button className = {myStyle.addMemberButton}onClick  = {addMembersSelected}>Add</button>:''}
-          </div>
-          {addMember?          
-
-          <div>
-            <div className={myStyle.searchHolder}>
-          <div className={myStyle.chatSearch}>
-            <input
-              className={myStyle.chatInput}
-              type="text"
-              placeholder="Search:"
-              value = {searchInput}
-              onChange = {handleSearch}
-            ></input>
-            <FaSearch></FaSearch>
-          </div>
-        </div>
-        <div className = {myStyle.toAddDiv}>
-        {membersToAdd?.map((participant, id)=>(
-          <div className = {myStyle.participant} key = {id}>
-          {participant.firstname}
-          <FaWindowClose className = {myStyle.removeParticipant} onClick = {()=>{removeParticipant(id)}}/>
-          </div>
-        ))}
-        {!membersToAdd.length?"Select participant":''}
-      </div>
-            </div>
-        :''}
+            {addMember ? (
+              <div>
+                <div className={myStyle.searchHolder}>
+                  <div className={myStyle.chatSearch}>
+                    <input
+                      className={myStyle.chatInput}
+                      type="text"
+                      placeholder="Search:"
+                      value={searchInput}
+                      onChange={handleSearch}
+                    ></input>
+                    <FaSearch></FaSearch>
+                  </div>
+                </div>
+                <div className={myStyle.toAddDiv}>
+                  {membersToAdd?.map((participant, id) => (
+                    <div className={myStyle.participant} key={id}>
+                      {participant.firstname}
+                      <FaWindowClose
+                        className={myStyle.removeParticipant}
+                        onClick={() => {
+                          removeParticipant(id);
+                        }}
+                      />
+                    </div>
+                  ))}
+                  {!membersToAdd.length ? "Select participant" : ""}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
           <div className={myStyle.membersList}>
-            {
-              addMember?
-              members?.map((memberData, id) => (
-                <User selectUser = {addParticipant} data={memberData} id={id} isSearching={true} key = {id} page = {'chat'}/>
-              ))
-              :
-              members?.map((memberData, id) => (
-                <User selectUser = {removeMember?toggleRemoveMember:''} data={memberData} id={id} isSearching={true} key = {id} page = {removeMember?'chat':''}/>
-              ))
-            
-            
-            }
+            {addMember
+              ? members?.map((memberData, id) => (
+                  <User
+                    selectUser={addParticipant}
+                    data={memberData}
+                    id={id}
+                    isSearching={true}
+                    key={id}
+                    page={"chat"}
+                  />
+                ))
+              : members?.map((memberData, id) => (
+                  <User
+                    selectUser={removeMember ? toggleRemoveMember : ""}
+                    data={memberData}
+                    id={id}
+                    isSearching={true}
+                    key={id}
+                    page={removeMember ? "chat" : ""}
+                  />
+                ))}
             {membersLoading ? <Loader /> : ""}
           </div>
         </div>
@@ -437,27 +484,41 @@ export default function Conversataion({
     } else {
       return (
         <div className={myStyle.menu}>
-          {leaveGroup?<ModalAlert message = {'Leave Group?'}/>:''}
+          {changePhoto ? (
+            <ChangeDp
+              setUpload={toggleChangePhoto}
+              setProfilePhotoUrl={setProfilePhoto}
+              message={"Change Group Photo"}
+              roomId = {activeRoom}
+              page = {'chat'}
+              onSuccess = {successChange}
+              profile_photo_url = {profilePhoto}
+            />
+          ) : (
+            ""
+          )}
+          {leaveGroup ? <ModalAlert message={"Leave Group?"} /> : ""}
           <div className={myStyle.conversationMenu}>
             <div className={myStyle.conversationBack} onClick={openMenu}>
               <FaArrowLeft className={myStyle.backIcon}></FaArrowLeft>
             </div>
           </div>
           <div className={myStyle.conversationHeader}>
-            <div className = {myStyle.roomPhotoDiv}> {profilePhoto ? (
-              <img
-                className={myStyle.recieverPictureMenu}
-                alt=""
-                src={profilePhoto}
-              ></img>
-            ) : room.isgroup ? (
-              <FaUsers className={myStyle.recieverAvatarMenu} />
-            ) : (
-              <FaUserCircle className={myStyle.recieverAvatarMenu} />
-            )}
-            <h3 className={myStyle.recieverNameMenu}>{name}</h3>
+            <div className={myStyle.roomPhotoDiv}>
+              {" "}
+              {profilePhoto ? (
+                <img
+                  className={myStyle.recieverPictureMenu}
+                  alt=""
+                  src={profilePhoto}
+                ></img>
+              ) : room.isgroup ? (
+                <FaUsers className={myStyle.recieverAvatarMenu} />
+              ) : (
+                <FaUserCircle className={myStyle.recieverAvatarMenu} />
+              )}
+              <h3 className={myStyle.recieverNameMenu}>{name}</h3>
             </div>
-      
           </div>
           <div className={myStyle.menuOptions}>
             {room.isgroup ? (
@@ -468,7 +529,7 @@ export default function Conversataion({
               ""
             )}
             {room.isgroup ? (
-              <button className={myStyle.menuButton} onClick = {toggleAddMember}>
+              <button className={myStyle.menuButton} onClick={toggleAddMember}>
                 Add Member <FaUserPlus className={myStyle.menuIcon} />
               </button>
             ) : (
@@ -492,7 +553,10 @@ export default function Conversataion({
               ""
             )}
             {room.isgroup ? (
-              <button className={myStyle.menuButton}>
+              <button
+                className={myStyle.menuButton}
+                onClick={toggleChangePhoto}
+              >
                 Change Group Photo <FaImage className={myStyle.menuIcon} />
               </button>
             ) : (
@@ -501,7 +565,7 @@ export default function Conversataion({
               </button>
             )}
             {room.isgroup ? (
-              <button className={myStyle.menuButton} onClick = {toggleLeaveGroup}>
+              <button className={myStyle.menuButton} onClick={toggleLeaveGroup}>
                 Leave Group <FaMinusCircle className={myStyle.menuIcon} />{" "}
               </button>
             ) : (

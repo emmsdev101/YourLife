@@ -20,7 +20,6 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
     async function getPeople() {
       setLoading(true);
       const peopleResult = await getFollowed();
-      console.log(peopleResult);
       if (peopleResult) {
         setPeople(peopleResult);
       }
@@ -48,7 +47,6 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
   }, [searchInput])
 
   const selectUser = async(data) => {
-    console.log(data)
 
     try {
       if(data._id !== userContext._id){
@@ -60,7 +58,6 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
           params:{recipient:data._id}
         })
         if(checkRoom.status === 200){
-          console.log(checkRoom.data)
           if(checkRoom.data){
             setRoom({
               room_id:checkRoom.data._id,
@@ -97,7 +94,6 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
   
         if(createRequest.status === 200){
           if(createRequest.data){
-            console.log(createRequest)
             setRoom({
               name:createRequest.data.name,
               room_id:createRequest.data._id,
@@ -127,7 +123,6 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
     }
   }
   const removeParticipant = (id) => {
-    console.log(id)
     const toRemove = participants[id]
     const newParticipants = participants.filter(({_id})=>_id !== toRemove._id)
     setParticipants(newParticipants)

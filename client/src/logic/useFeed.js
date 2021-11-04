@@ -121,6 +121,18 @@ function useFeed() {
       
     }
   };
+  const changeGroupDp = async(file, room_id) =>{
+    const uploadImage = await axios({
+      method: "post",
+      withCredentials: true,
+      url: my_api + "/chat/changeGroupPhoto",
+      data: { file: file, room_id:room_id },
+      onUploadProgress: uploadProgress,
+    });
+    if (uploadImage.status === 200) {
+      return uploadImage.data;
+    }
+  }
   const postStory = async (content,files) => {
       try{
         const posting = await axios({
@@ -347,7 +359,8 @@ function useFeed() {
     addComment,
     getComments,
     requestUnlike,
-    generateFeeds
+    generateFeeds,
+    changeGroupDp
   };
 }
 export default useFeed;

@@ -1,14 +1,15 @@
 import React from "react";
 import { FaUserCircle } from "react-icons/fa";
+import './changedp.css'
 
-function PickerView ({pickedPhoto,profile_photo_url,profilePicLoaded,uploadProfilePic, uploadProfile, closeUpload}) {
+function PickerView ({pickedPhoto,profile_photo_url,profilePicLoaded,uploadProfilePic, uploadProfile, closeUpload, message}) {
     return (
       <React.Fragment>
         <div className="upload-menu-body">
-          <h3 className="upload-menu-title">Change Profile Photo</h3>
+          <h3 className="upload-menu-title">{message}</h3>
           {pickedPhoto !== null || profilePicLoaded ? 
             <img
-              className="profilepic-preview"
+              className="temp-profilepic-preview"
               alt=""
               src={pickedPhoto !== null ? pickedPhoto : profile_photo_url}
             />

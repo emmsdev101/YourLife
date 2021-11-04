@@ -1,4 +1,6 @@
 const express = require("express");
+const { uploadFile } = require("../helper/s3");
+const saveImage = require("../helper/Upload");
 const chat = require("../model/chat");
 const chatRoom = require("../model/chatRoom");
 const user = require("../model/user");
@@ -422,6 +424,7 @@ router.post('/addToGroup', auth, async(req, res)=>{
                   sender: senderProfile,
                   isSender: false,
                   type: createMessage.type,
+                  sender_id: sender,
                 });
               }
             }
@@ -526,6 +529,71 @@ router.get("/messages", auth, async (req, res) => {
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
+  }
+});
+router.post("/changeGroupPhoto", auth, async (req, res, next) => {
+  try {
+    let io = req.app.get("socketio");
+    const file = req.body.file;
+    const roomId = req.body.room_id
+    const sender = req.session.user
+    const path = await saveImage(req, res, file);
+    if (path) {
+      const uploaded = await uploadFile(path);
+      const topUpdateRoom = await chatRoom.findOne(
+        { _id: roomId },
+      );
+      topUpdateRoom.photo = uploaded.key
+      const updatedRoom = await topUpdateRoom.save()
+      if (updatedRoom) {
+        res.send(uploaded.key);
+        const createMessage = new chat({
+          room_id: roomId,
+          sender: sender,
+          content: "changed",
+          details: {
+            user_id: sender,
+            message: "the group photo",
+          },
+          type: "notification",
+        });
+        const createdMessage = await createMessage.save()
+        if (createdMessage) {
+          const senderProfile = await user.findOne(
+            { _id: sender },
+            { password: 0 }
+          );
+          io.in(roomId).emit("message", {
+            message: {
+              person: senderProfile,
+              content: createMessage.content,
+              createdAt: createMessage.createdAt,
+            },
+            details: createMessage.details.message,
+            sender: senderProfile,
+            isSender: false,
+            type: createMessage.type,
+            sender_id: sender,
+          });
+          const recipients = updatedRoom.participants;
+          for (let i = 0; i < recipients.length; i++) {
+            const reciever = recipients[i].user_id;
+            if (reciever !== sender) {
+              const connected = await SocketSchema.findOne({ user_id: reciever });
+              if (connected) {
+                io.to(connected.socket_id).emit("chat", {
+                  sender: sender,
+                  chat: updatedRoom,
+                });
+              }
+            }
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(444);
   }
 });
 module.exports = router;

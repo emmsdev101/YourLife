@@ -63,6 +63,7 @@ const InboxItem = ({chat, setRoom, setOnread, chats, setChats, id  }) => {
   return (
     <>
       <div className={unread ? style.chatInbox : style.chatInboxRead} onClick = {openChat}>
+        {chat.isgroup?<FaUsers className = {style.isGroup}/>:''}
         {photoUrl?<img className={style.chatPicture} alt="" src = {photoUrl}></img>:
         chat.isgroup?<FaUsers className = {style.chatPicture}/>:<FaUserCircle className = {style.chatPicture}/>
         }

@@ -28,7 +28,7 @@ const MessageItem = ({ id, chat }) => {
   if (isme) {
     if (chat.type === "notification") {
       const fullname =
-        chat.message.person?.firstname + " " + chat.message.person?.lastname;
+      chat.message.person?.firstname + " " + chat.message.person?.lastname;
       const content = chat.message.content;
       const message = chat.details;
       return (
@@ -39,7 +39,7 @@ const MessageItem = ({ id, chat }) => {
           <div className={myStyle.notificationContent}>
             <div className={myStyle.notificationMessage}>
               <p>{"You " + content}</p>&nbsp;
-              <p className={myStyle.notificationProfile}>{fullname}</p>
+              <p className={myStyle.notificationProfile}>{content === 'changed'?'':fullname}</p>
             </div>
 
             <p className={myStyle.notificationMessage}>{message}</p>
@@ -80,13 +80,13 @@ const MessageItem = ({ id, chat }) => {
             <p className={myStyle.notificationProfile}>{senderName}</p>
             
             &nbsp;
-              {content === 'left'?content + " " + message: content}
+              {content === 'left' || content === 'changed'?content + " " + message: content}
             </div>
             <p className={myStyle.notificationProfile}>
-              {content === "left" ? "" : fullname}
+              {content === "left" || content === 'changed' ? "" : fullname}
             </p>
             <p className={myStyle.notificationMessage}>
-              {content === "left" ? "" : message}
+              {content === "left" || content === 'changed' ? "" : message}
               
             </p>
           </div>

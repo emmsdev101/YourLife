@@ -2,14 +2,25 @@ import React from "react";
 import imageCompression from "../../logic/imageCompression";
 import { useCustomHooks, useReactHooks } from "../../logic/library";
 import PickerView from "./UploadPicker";
-import {MY_API} from './../../config'
-function ChangeDp({ setUpload, setProfilePhotoUrl, profile_photo_url }) {
-  const my_api = MY_API
+import { MY_API } from "./../../config";
+
+import "./changedp.css";
+import axios from "axios";
+function ChangeDp({
+  setUpload,
+  setProfilePhotoUrl,
+  profile_photo_url,
+  message,
+  page,
+  roomId,
+  onSuccess
+}) {
+  const my_api = MY_API;
   const { useState, useContext, useRef, useEffect } = useReactHooks();
   const { useFeed, usePeople, GlobalUserContext, GlobalUserActionsContext } =
     useCustomHooks();
   let uploadPicker = useRef(null);
-  const { uploadDp, uploadingProgress } = useFeed();
+  const { uploadDp, uploadingProgress, changeGroupDp } = useFeed();
   const { updateDp } = usePeople();
   const { getUrlImage } = imageCompression();
   const [pickedPhoto, setPickedPhoto] = useState(null);
@@ -36,13 +47,28 @@ function ChangeDp({ setUpload, setProfilePhotoUrl, profile_photo_url }) {
     await getUrlImage(picked, setPickedPhoto);
   };
   const uploadProfilePic = async () => {
-    const uploadResult = await uploadDp(pickedPhoto);
-    if (uploadResult) {
-      set_user_context(user_context.username);
-      setProfilePhotoUrl(my_api + "/photo/" + uploadResult);
-      setUpload(false);
+    if (page === 'chat') {
+      try {
+        const uploadResult = await changeGroupDp(pickedPhoto, roomId);
+        if (uploadResult) {
+          setProfilePhotoUrl(my_api + "/photo/" + uploadResult);
+          onSuccess()
+          setUpload(false);
+        } else {
+          console.log("Error while uploading photo");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     } else {
-      console.log("Error while uploading photo");
+      const uploadResult = await uploadDp(pickedPhoto);
+      if (uploadResult) {
+        set_user_context(user_context.username);
+        setProfilePhotoUrl(my_api + "/photo/" + uploadResult);
+        setUpload(false);
+      } else {
+        console.log("Error while uploading photo");
+      }
     }
   };
 
@@ -88,6 +114,7 @@ function ChangeDp({ setUpload, setProfilePhotoUrl, profile_photo_url }) {
           uploadProfilePic={uploadProfilePic}
           uploadProfile={uploadProfile}
           closeUpload={closeUpload}
+          message={message}
         />
       )}
     </div>
