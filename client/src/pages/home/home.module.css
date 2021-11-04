@@ -1,3 +1,9 @@
+:root{
+    --left: calc(768px - 457px);
+}
+*{
+    scroll-behavior: smooth;
+}
 .active{
     height: 59px;
     border-bottom: 5px solid #5D5FEF;
@@ -98,4 +104,26 @@
 }
 .loadingDiv{
     padding: 30px;
+}
+.scrollUp{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    bottom: 10px;
+    background-color: #ffffff;
+    border: none;
+    color: #5D5FEF;
+    box-shadow: 1px 1px 8px #000000f8;
+    left:calc(var(--left));
+    border-radius: 50%;
+    font-size: xx-large;
+    display: grid;
+    place-items:center;
+    text-decoration: none;
+    outline: none;
+}
+@media only screen and (max-width: 768px){
+    :root{
+        --left: 15px;
+    }
 }

@@ -1,17 +1,13 @@
-import { useEffect, useState, useContext,useRef } from "react";
+import { useEffect, useState,useRef } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import axios from "axios"
-import {
-    GlobalUserContext,
-  } from "../../logic/userContext";
-const useHeader = (notifications) =>{
+
+const useHeader = (notifications, chats) =>{
     const [active, setActive] = useState("");
     const [newNotifs, setNewNotifs] = useState(0)
+    const [newChats, setNewChats] = useState(0)
     const history = useHistory();
     const location = useLocation()
     const isMounted = useRef(false)
-
-    const user_context = useContext(GlobalUserContext);
 
     useEffect(() => {
         isMounted.current = true
@@ -27,17 +23,34 @@ const useHeader = (notifications) =>{
         history.push(page);
       }
       useEffect(()=>{
-        countUnread()
+        isMounted.current = true
+        if(isMounted.current){
+            setNewNotifs(countUnread(notifications))
+        }
+        return () => {
+            isMounted.current = false
+        };
     },[notifications])
 
-    const countUnread = ()=>{
+    useEffect(() => {
+        isMounted.current = true
+        if(isMounted.current){
+            const unreadChats = countUnread(chats)
+            setNewChats(unreadChats)
+        }
+        return () => {
+            isMounted.current = false
+        };
+    }, [chats])
+
+    const countUnread = (array)=>{
         let unReads = 0
-        notifications?.forEach(notification => {
-            if(!notification.seen)unReads++
+        array?.forEach(arrayItem => {
+            if(!arrayItem.seen)unReads++
         });
-        setNewNotifs(unReads)
+        return unReads
     }
       
-    return {switchPage, setActive, active, newNotifs}
+    return {switchPage, setActive, active, newNotifs, newChats}
 }
 export default useHeader

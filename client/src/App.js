@@ -39,7 +39,7 @@ function App() {
       <React.Fragment>
         {isLogged() ? (
           <div className={style.App}>
-            {renderHeader ? <Header notifications={notifications} /> : ""}
+            {renderHeader ? <Header notifications={notifications} chats= {chats} /> : ""}
             <Suspense fallback={<div>Loading...</div>}>
               <Route exact path="/menu" component={Menu} />
               <Route

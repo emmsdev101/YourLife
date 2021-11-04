@@ -9,7 +9,7 @@ import Loader from "../../components/Loader/Loader";
 const ViewPost = lazy(() => import ("./../../components/post/viewPost"));
 
 function Home({ feedStories, addFeed, fetchFeeds, loading, setRenderHeader, setFeeds, page, setPage }) {
-  const { createPost, createStory, viewPost, view, isLoading, loadMore} = useHome(setRenderHeader, setFeeds, page, setPage);
+  const { createPost, createStory, viewPost, view, isLoading, loadMore, isMiddle} = useHome(setRenderHeader, setFeeds, page, setPage);
 
   if(view){
    return (
@@ -42,7 +42,7 @@ function Home({ feedStories, addFeed, fetchFeeds, loading, setRenderHeader, setF
               {loading ? (
                 <Loader />
               ) : (
-                <div className={style.postList}>
+                <div className={style.postList} id = 'postList'>
                   {feedStories && feedStories.length === 0 ? (
                     <>
                       <h3>No stories yet </h3>
@@ -59,6 +59,9 @@ function Home({ feedStories, addFeed, fetchFeeds, loading, setRenderHeader, setF
                 </div>
               )}
               {feedStories?.length > 10? isLoading?<div className = {style.loadingDiv}><Loader/></div>:<button className = {style.loadMore} onClick = {loadMore}>Load more</button>:''}
+              {isMiddle?<a className = {style.scrollUp} href = "#postList">
+                <FaArrowUp/>
+                </a>:''}
             </div>
           )}
         </React.Fragment>

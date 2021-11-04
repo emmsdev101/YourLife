@@ -11,8 +11,8 @@
     top: 0;
 }
 .navIcon{
-    height: 25px;
-    width: 25px;
+    height: 20px;
+    width: 20px;
 }
 .active{
     height: 100%;
@@ -33,13 +33,14 @@
 
 .notificationCount{
     background-color: rgb(202, 27, 27);
-    padding-left:3px;
-    padding-right: 3px;
-    height: 23px;
+    padding: 3px;
     border-radius: 5px;
     text-align: center;
+    display: grid;
+    place-items: center;
     position: relative;
     left: -10px;
     top: -10px;
     color: white;
+    font-size:small;
 }

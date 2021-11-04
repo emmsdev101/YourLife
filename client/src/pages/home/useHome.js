@@ -10,6 +10,7 @@ const useHome = (setRenderHeader, setFeeds, page, setPage) => {
     const [createPost, setCreatePost] = useState(false);
     const [view, setView] = useState(null)
     const [isLoading, setLoading]= useState(false)
+    const [isMiddle, setIsMiddle] = useState(true)
     const history = useHistory()
     const set_user_context = useContext(GlobalUserActionsContext)
     const { fetchFeeds } = useFeed();
@@ -45,7 +46,8 @@ const useHome = (setRenderHeader, setFeeds, page, setPage) => {
         viewPost,
         view,
         isLoading,
-        loadMore
+        loadMore,
+        isMiddle
     }
 }
 export default useHome

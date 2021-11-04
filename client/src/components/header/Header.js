@@ -3,8 +3,8 @@ import { FaBars, FaBell, FaEnvelope, FaHome, FaUser, FaUsers } from "react-icons
 import useHeader from "./useHeader";
 import style from './header.module.css'
 
-const Header = ({notifications}) => {
-    const {switchPage, active, newNotifs} = useHeader(notifications)
+const Header = ({notifications, chats}) => {
+    const {switchPage, active, newNotifs, newChats} = useHeader(notifications, chats)
     return (
       <header className={style.homeHeader}>
         <div
@@ -42,6 +42,7 @@ const Header = ({notifications}) => {
           }}
         >
           <FaEnvelope className={style.navIcon}></FaEnvelope>
+          {newChats?<div className={style.notificationCount}>{newChats > 9?'9+':newChats}</div>:""}
         </div>
         <div
           className={active === "/menu" ? style.active:style.inactive}
