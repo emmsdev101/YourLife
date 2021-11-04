@@ -3,7 +3,7 @@ import { FaBars, FaBell, FaEnvelope, FaHome, FaUser, FaUsers } from "react-icons
 import useHeader from "./useHeader";
 import style from './header.module.css'
 
-const Header = ({notifications, chats}) => {
+const Header = ({notifications, chats, toggleSound}) => {
     const {switchPage, active, newNotifs, newChats} = useHeader(notifications, chats)
     return (
       <header className={style.homeHeader}>

@@ -34,9 +34,21 @@ function Chat({ chats, setChats, initChats }) {
     setIsGroup(true);
     setNewMessage(!newMessage);
   };
-  const Inbox = () => {
-    return (
-      <>
+  return (
+    <>
+      {onread ? (
+        <Conversation userContext = {userContext} setOpen={setOnread} room={room} initChats ={initChats} addRoom = {setChats} chatRooms = {chats} />
+      ) : newMessage ? (
+        <CreateChat userContext = {userContext}
+          setNewMessage={setNewMessage}
+          isGroup={isGroup}
+          style={style}
+          setOnread={setOnread}
+          setRoom={setRoom}
+          initChats = {initChats}
+        />
+      ) : (
+        <>
         <header className={style.chatHeader}>
           <div className={style.chatNav}>
             <nav
@@ -92,23 +104,6 @@ function Chat({ chats, setChats, initChats }) {
           )}
         </div>
       </>
-    );
-  };
-  return (
-    <>
-      {onread ? (
-        <Conversation userContext = {userContext} setOpen={setOnread} room={room} initChats ={initChats} addRoom = {setChats} chatRooms = {chats} />
-      ) : newMessage ? (
-        <CreateChat userContext = {userContext}
-          setNewMessage={setNewMessage}
-          isGroup={isGroup}
-          style={style}
-          setOnread={setOnread}
-          setRoom={setRoom}
-          initChats = {initChats}
-        />
-      ) : (
-        <Inbox />
       )}
     </>
   );

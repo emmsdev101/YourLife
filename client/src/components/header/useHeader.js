@@ -1,6 +1,5 @@
 import { useEffect, useState,useRef } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-
 const useHeader = (notifications, chats) =>{
     const [active, setActive] = useState("");
     const [newNotifs, setNewNotifs] = useState(0)

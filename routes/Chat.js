@@ -19,11 +19,12 @@ router.get("/inbox", auth, async (req, res) => {
   try {
     const page = parseInt(req.params.page || "0");
     const userId = req.session.user;
+    const limit = 30;
     const myRooms = await chatRoom
       .find({ "participants.user_id": userId })
-      .skip(page * 10)
+      .skip(page * limit)
       .sort({ "last_sender.date": -1 })
-      .limit(10);
+      .limit(limit);
     let roomsToSend = [];
 
     for (let i = 0; i < myRooms.length; i++) {

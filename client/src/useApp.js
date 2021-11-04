@@ -10,6 +10,9 @@ import {
   GlobalUserContext,
 } from "./logic/userContext";
 import axios from "axios";
+import useAudio from "./useAudio";
+import notifSound from './res/sounds/msg.mp3';
+
 const cookie = new Cookies();
 const username = cookie.get("username");
 
@@ -28,6 +31,8 @@ const useApp = () => {
   const [chats, setChats] = useState([])
   const [notifLoaded, setNotifLoaded] = useState(false);
   const [chatsLoaded, setChatsLoaded] = useState(false)
+
+  const [playing, toggle] = useAudio(notifSound);
 
   const [page, setPage] = useState(1);
   let refreshed = useRef(false);
@@ -61,7 +66,6 @@ const useApp = () => {
   useEffect(() => {
     if (notifLoaded) {
       socket.on("notification", (msg) => {
-        console.log(msg)
         if (msg.type === "follow") {
           setNotifications((olds) => [msg, ...olds]);
         } else {
@@ -96,8 +100,10 @@ const useApp = () => {
   useEffect(() => {
     if(chatsLoaded){
       socket.on('chat', (msg)=>{
+        toggle()
         initChats()
       })
+
     }
   }, [chatsLoaded])
   async function  initializeFeed(){
@@ -155,7 +161,6 @@ const useApp = () => {
         withCredentials:true
       })
       if(chatRequest.status === 200){
-        console.log(chatRequest.data)
         setChats(chatRequest.data)
         setChatsLoaded(true)
       }
@@ -183,7 +188,8 @@ const useApp = () => {
     setPage,
     notifLoaded,
     chats, setChats,
-    initChats
+    initChats,
+    toggle
   };
 };
 export default useApp;
