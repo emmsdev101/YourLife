@@ -172,7 +172,7 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
         </header>
         <div className={myStyle.peopleList}>
           {people?.map((data, id) => (
-            <User selectUser = {addPariticipant} data={data} id={id} isSearching={true} key = {id} page = {'chat'}/>
+            <User selectUser = {addPariticipant} data={data} id={id} isSearching={true} key = {data._id} page = {'chat'}/>
           ))}
           <br/>
           {loading ? <Loader /> : ""}
@@ -208,7 +208,7 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
         </header>
         <div className={myStyle.peopleListNewMessage}>
           {people?.map((data, id) => (
-            <User selectUser = {selectUser} data={data} id={id} isSearching={true} key = {id} page = {'chat'}/>
+            <User selectUser = {selectUser} data={data} id={id} isSearching={true} key = {data._id} page = {'chat'}/>
           ))}
           <br/>
           {loading ? <Loader /> : ""}

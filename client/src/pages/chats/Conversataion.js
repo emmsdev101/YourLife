@@ -26,6 +26,7 @@ import Loader from "../../components/Loader/Loader";
 import usePeople from "../../logic/usePeople";
 import ChangeDp from "../../components/changeDp/changeDp";
 import { useHistory } from "react-router";
+import LoadMoreButton from "../../components/loadMoreButton/LoadMoreButton";
 export default function Conversataion({
   userContext,
   room,
@@ -53,8 +54,11 @@ export default function Conversataion({
   const [membersToAdd, setMembersToAdd] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [leaveGroup, setLeaveGroup] = useState(false);
+  const [page, setPage] = useState(1)
+  const [loadingNextChat, setLoadingNextChat] = useState(false)
   const isNew = room.room_id ? false : true;
   const [changePhoto, setChangePhoto] = useState(false);
+  const [noMoreChats, setNoMoreChats] = useState(false)
   
   const name = room.isgroup
     ? room.name
@@ -145,6 +149,28 @@ export default function Conversataion({
     }
   }
 
+  const nextChats = async() => {
+    try {
+      setLoadingNextChat(true)
+      const fetchRoom = await axios({
+        method: "get",
+        withCredentials: true,
+        url: MY_API + "/chat/messages",
+        params: { room: activeRoom, page:page },
+      });
+      if (fetchRoom.status === 200) {
+        setLoadingNextChat(false)
+        const newChats = fetchRoom.data.messages
+        if(Array.isArray(newChats)){
+          setPage(page+1)
+          setChats((oldChats)=>[...oldChats, ...newChats]);
+          if(newChats.length<20)setNoMoreChats(true)
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const closeMe = () => {
     if (activeRoom) socket.emit("leave", activeRoom);
     setActiveRoom(null);
@@ -610,8 +636,9 @@ export default function Conversataion({
         )}
         <div className={myStyle.convoBody}>
           {chats?.map((chat, id) => (
-            <MessageItem chat={chat} key={id} />
+            <MessageItem chat={chat} key={chat.message._id} />
           ))}
+          {chats?.length >= 20 && !noMoreChats?loadingNextChat?<div className = {myStyle.loadMoreChats}>Loading...</div>:<div className = {myStyle.loadMoreChats} onClick = {nextChats}>Load more</div>:''}
         </div>
         <div className={myStyle.messageInputs}>
           <div className={myStyle.photoDiv}>

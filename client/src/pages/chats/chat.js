@@ -11,6 +11,7 @@ import Loader from "../../components/Loader/Loader";
 import { FaPeopleArrows, FaUsers } from "react-icons/fa";
 import { GlobalUserContext } from "../../logic/userContext";
 import { useParams } from "react-router";
+import LoadMoreButton from "../../components/loadMoreButton/LoadMoreButton";
 function Chat({ chats, setChats, initChats, match: { url, params }, Router }) {
   const userContext = useContext(GlobalUserContext);
   const { useHistory, useState } = useReactHooks();
@@ -18,10 +19,13 @@ function Chat({ chats, setChats, initChats, match: { url, params }, Router }) {
   const history = useHistory();
   const [newMessage, setNewMessage] = useState(false);
   const [room, setRoom] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isGroup, setIsGroup] = useState(false);
+  const [chatPage,setChatPage] = useState(1)
+  const [lastChat, setLastChat] = useState(false)
   const userId = params.chatId;
   const page = url.substring(0, 5);
+  
 
   useEffect(() => {
     if (userId && page !== "/chat") initChatParams();
@@ -67,6 +71,32 @@ function Chat({ chats, setChats, initChats, match: { url, params }, Router }) {
     setNewMessage(!newMessage);
     history.push(`${url}/create`);
   };
+  const loadMoreChats = async() => {
+    setLoading(true)
+    try {
+      const nextChat = await axios({
+        method:'get',
+        url:MY_API + "/chat/inbox",
+        params:{page:chatPage},
+        withCredentials:true
+      })
+      if(nextChat.status === 200){
+        const newChats = nextChat.data
+        if(Array.isArray(newChats)){
+          if(newChats.length > 0){
+            setChatPage(chatPage+1)
+            setChats((oldChats)=>[...oldChats, ...newChats])
+            setLoading(false)
+            if(newChats.length < 20)setLastChat(true)
+          }else{
+            setLastChat(true)
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <>
       {page !== "/chat" ? (
@@ -163,7 +193,7 @@ function Chat({ chats, setChats, initChats, match: { url, params }, Router }) {
                   {chats?.map((chat, id) => (
                     <InboxItem
                       chat={chat}
-                      key={id}
+                      key={chat._id}
                       setRoom={setRoom}
                       id={id}
                       chats={chats}
@@ -172,11 +202,11 @@ function Chat({ chats, setChats, initChats, match: { url, params }, Router }) {
                   ))}
                   {loading ? (
                     <div className={style.loaderDiv}>
-                      <Loader />
+                      Loading...
                     </div>
-                  ) : (
-                    ""
-                  )}
+                  ) : chats.length >= 20?!lastChat?(
+                    <LoadMoreButton onClick = {loadMoreChats}/>
+                  ):<div>---------- end of chat -----------</div>:<Loader/>}
                 </div>
               </>
             )}

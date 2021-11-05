@@ -82,6 +82,7 @@ function App() {
                     setChats={setChats}
                     initChats={initChats}
                     Router={Route}
+                    Switch = {Switch}
                   />
                 )}
               />

@@ -17,14 +17,15 @@ const auth = (req, res, next) => {
 
 router.get("/inbox", auth, async (req, res) => {
   try {
-    const page = parseInt(req.params.page || "0");
+    const page = parseInt(req.query.page) || 0;
     const userId = req.session.user;
-    const limit = 30;
+    const limit = 20;
+    const skip = page * limit
     const myRooms = await chatRoom
       .find({ "participants.user_id": userId })
-      .skip(page * limit)
+      .skip(skip)
+      .limit(limit)
       .sort({ "last_sender.date": -1 })
-      .limit(limit);
     let roomsToSend = [];
 
     for (let i = 0; i < myRooms.length; i++) {
@@ -462,7 +463,7 @@ router.post('/addToGroup', auth, async(req, res)=>{
 router.get("/messages", auth, async (req, res) => {
   try {
     const roomId = req.query.room;
-    const page = parseInt(req.query.page || 0);
+    const page = parseInt(req.query.page) || 0;
     const userId = req.session.user;
     const limit = 20;
     const skip = limit * page;
@@ -487,6 +488,7 @@ router.get("/messages", auth, async (req, res) => {
                 person: person,
                 content: message.content,
                 createdAt: message.createdAt,
+                _id:message._id
               },
               details: message.details.message,
               isSender: true,
@@ -513,11 +515,13 @@ router.get("/messages", auth, async (req, res) => {
                 person: person,
                 content: message.content,
                 createdAt: message.createdAt,
+                _id:message._id
               },
               details: message.details.message,
               sender: senderProfile,
               isSender: false,
               type: message.type,
+              _id:message._id
             });
           } else {
             messagesResponse.push({

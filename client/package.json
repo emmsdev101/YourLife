@@ -10,6 +10,7 @@
     "axios": "^0.21.1",
     "dotenv": "^10.0.0",
     "express-session": "^1.17.2",
+    "framer-motion": "^5.2.1",
     "gzipper": "^5.0.0",
     "mkcert": "^1.4.0",
     "react": "^17.0.2",
