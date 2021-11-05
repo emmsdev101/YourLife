@@ -82,6 +82,9 @@ function NotificationItem({
     const numCommentors = notification.comments.count - 2;
     const who = notification.comments.owner ? "your" : "a";
 
+    const notifLastMessage = notification.comments.last_comment.slice(0, 35)
+    const more = notification.comments.last_comment.length > 35?"...":''
+
     function getCommentorsNames() {
       let names = comments[0].firstname + " " + comments[0].lastname;
       const other = numCommentors > 1 ? " others " : " other ";
@@ -102,7 +105,7 @@ function NotificationItem({
         <div className={style.notificationDetail}>
           <p className={style.notificationName}>{getCommentorsNames()}</p>
           <p className={style.notificationContent}>
-            {`Commented on  ${who} story:"${notification.comments.last_comment}"`}
+            {`Commented on  ${who} story:"${notifLastMessage + more}"`}
           </p>
           <p className={style.notificationStatus}>
             {daysLapsed > 0
