@@ -4,7 +4,7 @@ import style from './styles/chat.module.css'
 import { MY_API } from "../../config";
 import axios from "axios";
 import { useHistory } from "react-router";
-const InboxItem = ({chat, setRoom, setOnread, chats, setChats, id }) => {
+const InboxItem = ({chat, setRoom, chats, setChats, id }) => {
     const message = chat.last_sender.message
     const name = chat.isgroup?chat.name:chat.recipient.firstname + " " + chat.recipient.lastname
     const roomId = chat._id
@@ -48,7 +48,6 @@ const InboxItem = ({chat, setRoom, setOnread, chats, setChats, id }) => {
             seen:true
         })
         }
-        setOnread(true)
         if(unread){
           const readMessage = await axios({
             url:MY_API+"/chat/read",

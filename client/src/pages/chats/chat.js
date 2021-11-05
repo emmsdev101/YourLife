@@ -16,19 +16,16 @@ function Chat({ chats, setChats, initChats, match: { url, params }, Router }) {
   const { useHistory, useState } = useReactHooks();
   const { FaArrowLeft, FaPen, FaSearch } = useIcons();
   const history = useHistory();
-  const [onread, setOnread] = useState(false);
   const [newMessage, setNewMessage] = useState(false);
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isGroup, setIsGroup] = useState(false);
-  const [fromProfile, setFromProfile] = useState(false);
   const userId = params.chatId;
   const page = url.substring(0, 5);
 
   useEffect(() => {
-    if (userId && page === "/sendMessage") initChatParams();
+    if (userId && page !== "/chat") initChatParams();
     async function initChatParams() {
-      setFromProfile(true);
       try {
         if (userId !== userContext._id) {
           const checkRoom = await axios({
@@ -50,7 +47,7 @@ function Chat({ chats, setChats, initChats, match: { url, params }, Router }) {
               });
             }
           }
-          setOnread(true);
+          
         }
       } catch (error) {
         console.log(error);
@@ -73,10 +70,9 @@ function Chat({ chats, setChats, initChats, match: { url, params }, Router }) {
   return (
     <>
       {page !== "/chat" ? (
-        onread && room ? (
+        room ? (
           <Conversation
             userContext={userContext}
-            setOpen={setOnread}
             room={room}
             initChats={initChats}
             addRoom={setChats}
@@ -96,7 +92,6 @@ function Chat({ chats, setChats, initChats, match: { url, params }, Router }) {
               <Conversation
                 {...props}
                 userContext={userContext}
-                setOpen={setOnread}
                 room={room}
                 initChats={initChats}
                 addRoom={setChats}
@@ -114,7 +109,6 @@ function Chat({ chats, setChats, initChats, match: { url, params }, Router }) {
                 setNewMessage={setNewMessage}
                 isGroup={isGroup}
                 style={style}
-                setOnread={setOnread}
                 setRoom={setRoom}
                 initChats={initChats}
               />
@@ -171,7 +165,6 @@ function Chat({ chats, setChats, initChats, match: { url, params }, Router }) {
                       chat={chat}
                       key={id}
                       setRoom={setRoom}
-                      setOnread={setOnread}
                       id={id}
                       chats={chats}
                       setChats={setChats}

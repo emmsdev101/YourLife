@@ -13,7 +13,7 @@ function Home({ feedStories, addFeed, fetchFeeds, loading, setRenderHeader, setF
 
   if(view){
    return (
-       <Suspense fallback = {loading}>
+       <Suspense fallback = {<div className = {style.postLoading}><Loader/></div>}>
             <ViewPost id = {view} back = {viewPost} setRenderHeader = {setRenderHeader}/>
        </Suspense>
    )

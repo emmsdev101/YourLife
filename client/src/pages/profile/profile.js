@@ -106,7 +106,7 @@ function Profile() {
   else if (viewFollowers) return <FollowersList isOwn = {isOwn} back = {toggleOpenFollowers} numFollowers = {followers} fullname = {fullname}/>;
   else if (viewPost)
     return (
-      <Suspense fallback={<div>Loading</div>}>
+      <Suspense fallback={<div className = {style.postLoading}><Loader/></div>}>
         <ViewPost id={viewPost} back={setViewPost} setRenderHeader={null} />
       </Suspense>
     );

@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { Route, Switch } from "react-router-dom";
 import style from "./app.module.css";
 import Header from "./components/header/Header";
+import Loader from "./components/Loader/Loader";
 import useApp from "./useApp";
 
 const Profile = lazy(() => import("./pages/profile/profile"));
@@ -32,7 +33,7 @@ function App() {
     chats,
     setChats,
     initChats,
-    toggle
+    toggle,
   } = useApp();
 
   return (
@@ -40,8 +41,16 @@ function App() {
       <React.Fragment>
         {isLogged() ? (
           <div className={style.App}>
-            {renderHeader ? <Header toggleSound = {toggle} notifications={notifications} chats= {chats} /> : ""}
-            <Suspense fallback={<div>Loading...</div>}>
+            {renderHeader ? (
+              <Header
+                toggleSound={toggle}
+                notifications={notifications}
+                chats={chats}
+              />
+            ) : (
+              ""
+            )}
+            <Suspense fallback={<div className = {style.pageLoading}><Loader/></div>}>
               <Route exact path="/menu" component={Menu} />
               <Route
                 exact
@@ -72,19 +81,20 @@ function App() {
                     chats={chats}
                     setChats={setChats}
                     initChats={initChats}
-                    Router = {Route}
+                    Router={Route}
                   />
                 )}
               />
-                            <Route
-                exact path="/sendMessage/:chatId?"
+              <Route
+                exact
+                path="/sendMessage/:chatId?"
                 render={(props) => (
                   <Chat
                     {...props}
                     chats={chats}
                     setChats={setChats}
                     initChats={initChats}
-                    Router = {Route}
+                    Router={Route}
                   />
                 )}
               />

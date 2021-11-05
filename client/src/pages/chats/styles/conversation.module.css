@@ -156,7 +156,7 @@
   border-radius: 0 20px 0 20px;
   padding: 10px 10px 3px 10px;
   text-align: left;
-  font-size: small;
+  font-size: medium;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
@@ -169,7 +169,7 @@
   padding: 10px 10px 3px 10px;
   margin-left: auto;
   text-align: left;
-  font-size: small;
+  font-size: medium;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
@@ -302,7 +302,13 @@ textarea {
   font-weight: 650;
 }
 .membersList {
-  height: calc(100vh - 33%);
+  height: calc(100vh - 8%);
+  width: 100%;
+  background-color: #ecebeb;
+  overflow: auto;
+}
+.addMembersList{
+  height: calc(100vh - 26%);
   width: 100%;
   background-color: #ecebeb;
   overflow: auto;

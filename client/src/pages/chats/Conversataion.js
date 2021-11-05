@@ -25,10 +25,9 @@ import User from "../../components/people/user";
 import Loader from "../../components/Loader/Loader";
 import usePeople from "../../logic/usePeople";
 import ChangeDp from "../../components/changeDp/changeDp";
-import { useHistory, useParams } from "react-router";
+import { useHistory } from "react-router";
 export default function Conversataion({
   userContext,
-  setOpen,
   room,
   chatRooms,
   initChats,
@@ -148,7 +147,6 @@ export default function Conversataion({
 
   const closeMe = () => {
     if (activeRoom) socket.emit("leave", activeRoom);
-    setOpen(false);
     setActiveRoom(null);
     history.goBack()
   };
@@ -298,6 +296,7 @@ export default function Conversataion({
             initChats();
             closeMe();
           } else {
+            setToRemove(null);
             loadMembers();
             setRemoving(false);
             initChats();
@@ -361,6 +360,9 @@ export default function Conversataion({
   const successChange = () => {
     initRoom()
     initChats()
+  }
+  const visitProfile = (data)=>{
+    history.replace("/profile/"+data.username)
   }
   const ModalAlert = ({ message, isPrompt }) => {
     return (
@@ -441,7 +443,7 @@ export default function Conversataion({
                 </div>
                 <div className={myStyle.toAddDiv}>
                   {membersToAdd?.map((participant, id) => (
-                    <div className={myStyle.participant} key={id}>
+                    <div className={myStyle.participant} key={participant._id}>
                       {participant.firstname}
                       <FaWindowClose
                         className={myStyle.removeParticipant}
@@ -458,7 +460,7 @@ export default function Conversataion({
               ""
             )}
           </div>
-          <div className={myStyle.membersList}>
+          <div className={addMember?myStyle.addMembersList:myStyle.membersList}>
             {addMember
               ? members?.map((memberData, id) => (
                   <User
@@ -466,18 +468,18 @@ export default function Conversataion({
                     data={memberData}
                     id={id}
                     isSearching={true}
-                    key={id}
+                    key={memberData._id}
                     page={"chat"}
                   />
                 ))
               : members?.map((memberData, id) => (
                   <User
-                    selectUser={removeMember ? toggleRemoveMember : ""}
+                    selectUser={removeMember ? toggleRemoveMember : visitProfile}
                     data={memberData}
                     id={id}
                     isSearching={true}
-                    key={id}
-                    page={removeMember ? "chat" : ""}
+                    key={memberData._id}
+                    page={"chat"}
                   />
                 ))}
             {membersLoading ? <Loader /> : ""}
