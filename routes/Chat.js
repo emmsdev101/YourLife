@@ -72,7 +72,13 @@ router.get("/isMember", auth, async (req, res) => {
         $all: [userId, recipient],
       },
     });
-    res.send(room);
+    const userProfile = await user.findOne({_id:recipient}, {password:0})
+    if(userProfile){
+      res.send({
+        profile:userProfile,
+        room:room
+      });
+    }else res.sendStatus(403)
   } catch (err) {
     console.log(err);
     res.send(500);

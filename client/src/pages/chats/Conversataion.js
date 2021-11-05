@@ -25,6 +25,7 @@ import User from "../../components/people/user";
 import Loader from "../../components/Loader/Loader";
 import usePeople from "../../logic/usePeople";
 import ChangeDp from "../../components/changeDp/changeDp";
+import { useHistory, useParams } from "react-router";
 export default function Conversataion({
   userContext,
   setOpen,
@@ -55,12 +56,14 @@ export default function Conversataion({
   const [leaveGroup, setLeaveGroup] = useState(false);
   const isNew = room.room_id ? false : true;
   const [changePhoto, setChangePhoto] = useState(false);
+  
   const name = room.isgroup
     ? room.name
     : room.recipient?.firstname + " " + room.recipient?.lastname;
   const [profilePhoto, setProfilePhoto] = useState(null);
 
   const socket = useContext(SocketContext);
+  const history = useHistory();
 
   useEffect(() => {
     if (activeRoom) {
@@ -94,7 +97,6 @@ export default function Conversataion({
       });
     }
   }, [chats]);
-
   useEffect(() => {
     if (addMember) {
       async function getPeople() {
@@ -146,8 +148,9 @@ export default function Conversataion({
 
   const closeMe = () => {
     if (activeRoom) socket.emit("leave", activeRoom);
-    setOpen(null);
+    setOpen(false);
     setActiveRoom(null);
+    history.goBack()
   };
   const inputMessage = (e) => {
     setMessageInput(e.target.value);

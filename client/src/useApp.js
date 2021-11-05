@@ -49,7 +49,9 @@ const useApp = () => {
       curr_path === "viewpost" ||
       curr_path.substring(0, curr_path.indexOf("/")) === "profile" ||
       curr_path === "profile" ||
-      curr_path === "chat"
+      curr_path.substring(0, curr_path.indexOf("/")) === "chat" ||
+      curr_path === "chat" ||
+      curr_path.substring(0, curr_path.indexOf("/")) === "sendMessage" 
     ) {
       setRenderHeader(false);
     } else {
@@ -187,7 +189,8 @@ const useApp = () => {
     page,
     setPage,
     notifLoaded,
-    chats, setChats,
+    chats,
+    setChats,
     initChats,
     toggle
   };

@@ -41,7 +41,8 @@ function Profile() {
     profilePhoto,
     back,
     isFollowed,
-    followUser
+    followUser,
+    messageProfile
   } = useProfile();
   const { addFeed, feedStories, loading } = useStories();
   const {
@@ -158,7 +159,7 @@ function Profile() {
             <button className={isFollowed?"button-unfollow":"button-follow"} onClick = {followUser}>
               {isFollowed?<><FaUserMinus className = "unfollow-icon"/>Unfollow</>:<><FaUserPlus className="follow-icon"/> Follow</>}
             </button>
-            <button className="button-message">
+            <button className="button-message" onClick = {messageProfile}> 
               <FaEnvelope className="message-icon"></FaEnvelope> Message
             </button>
           </div>

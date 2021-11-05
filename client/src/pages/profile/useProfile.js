@@ -14,7 +14,6 @@ const cookie = new Cookies();
 const useProfile = () => {
   const params = useParams()
   const user = params.username
-  ///console.log(user)
   const owner = cookie.get("username");
   const my_api = MY_API
   let isOwn = user === owner || user === undefined?true:false;
@@ -83,6 +82,9 @@ const useProfile = () => {
     setIsFollwed(!isFollowed)
     
   }
+  const messageProfile = () => {
+    history.push("/sendMessage/"+_id)
+  }
   return {
     following,
     followers,
@@ -94,7 +96,8 @@ const useProfile = () => {
     isOwn,
     back,
     isFollowed,
-    followUser
+    followUser,
+    messageProfile
   };
 };
 export default useProfile;

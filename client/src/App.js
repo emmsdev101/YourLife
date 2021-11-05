@@ -65,7 +65,6 @@ function App() {
                 )}
               />
               <Route
-                exact
                 path="/chat"
                 render={(props) => (
                   <Chat
@@ -73,6 +72,19 @@ function App() {
                     chats={chats}
                     setChats={setChats}
                     initChats={initChats}
+                    Router = {Route}
+                  />
+                )}
+              />
+                            <Route
+                exact path="/sendMessage/:chatId?"
+                render={(props) => (
+                  <Chat
+                    {...props}
+                    chats={chats}
+                    setChats={setChats}
+                    initChats={initChats}
+                    Router = {Route}
                   />
                 )}
               />

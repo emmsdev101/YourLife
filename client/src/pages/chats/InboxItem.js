@@ -3,7 +3,8 @@ import { FaEllipsisH, FaEllipsisV, FaUser, FaUserCircle, FaUsers } from "react-i
 import style from './styles/chat.module.css'
 import { MY_API } from "../../config";
 import axios from "axios";
-const InboxItem = ({chat, setRoom, setOnread, chats, setChats, id  }) => {
+import { useHistory } from "react-router";
+const InboxItem = ({chat, setRoom, setOnread, chats, setChats, id }) => {
     const message = chat.last_sender.message
     const name = chat.isgroup?chat.name:chat.recipient.firstname + " " + chat.recipient.lastname
     const roomId = chat._id
@@ -12,6 +13,8 @@ const InboxItem = ({chat, setRoom, setOnread, chats, setChats, id  }) => {
     const chatDate = dateCreated.toDateString()
     const chatTime = dateCreated.toLocaleTimeString()
     const unread = !chat.seen
+
+    const history = useHistory();
 
     useEffect(() => {
         const photo = chat.isgroup?MY_API + "/photo/"+chat.photo:MY_API + "/photo/"+chat.recipient.photo
@@ -59,6 +62,7 @@ const InboxItem = ({chat, setRoom, setOnread, chats, setChats, id  }) => {
             setChats(chatCopy)
           }
         }
+        history.push(`/chat/conversation`)
     }
   return (
     <>

@@ -6,6 +6,7 @@ import myStyle from "./styles/createchat.module.css";
 import usePeople from "../../logic/usePeople";
 import {MY_API} from './../../config'
 import axios from "axios";
+import { useHistory } from "react-router";
 function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChats,userContext }) {
   const { getFollowed, searchPeople } = usePeople();
   const [loading, setLoading] = useState(false);
@@ -14,6 +15,8 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
   const [participants, setParticipants]= useState([])
   const [groupName, setGroupName] = useState('')
   const [searchInput, setSearchInput] = useState('')
+
+  const history = useHistory();
 
 
   useEffect(() => {
@@ -47,7 +50,6 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
   }, [searchInput])
 
   const selectUser = async(data) => {
-
     try {
       if(data._id !== userContext._id){
         setLoadingRoom(true)
@@ -58,10 +60,11 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
           params:{recipient:data._id}
         })
         if(checkRoom.status === 200){
-          if(checkRoom.data){
+          if(checkRoom.data.room){
+            console.log(checkRoom.data)
             setRoom({
-              room_id:checkRoom.data._id,
-              recipient:data
+              room_id:checkRoom.data.room._id,
+              recipient:checkRoom.data.profile
             })
           }else{
             setRoom({
@@ -69,11 +72,9 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
               recipient:data
             })
           }
-          setLoadingRoom(false)
-          setOnread(true)
-          setNewMessage(false)
-  
         }
+        setLoadingRoom(false)
+        history.push('/chat/conversation')
       }
     } catch (error) {
       console.log(error)
@@ -84,14 +85,12 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
       if(participants && groupName){
         setLoadingRoom(true)
         const userIds = participants.map((participant)=>{ return {user_id:participant._id}})
-
         const createRequest = await axios({
           method:'post',
           url:MY_API + '/chat/newGroup',
           withCredentials:true,
           data:{recipients:userIds, name:groupName}
         })
-  
         if(createRequest.status === 200){
           if(createRequest.data){
             setRoom({
@@ -101,8 +100,7 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
             })
             initChats()
             setLoadingRoom(false)
-            setOnread(true)
-            setNewMessage(false)
+            history.push('/chat/conversation')
           }
         }
       }
@@ -112,6 +110,7 @@ function CreateChat({ style, setNewMessage, setOnread,setRoom, isGroup, initChat
   }
   const closeMe = () => {
     setNewMessage(false)
+    history.goBack()
   }
   const inputGroupName = (e)=> {
     setGroupName(e.target.value)
