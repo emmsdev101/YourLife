@@ -244,6 +244,28 @@ function usePeople() {
       }
     }
   };
+  const getFollowees = async (limit, page, user) => {
+    try {
+      const followers = await axios({
+        method: "get",
+        headers: { "Content-type": "application/json" },
+        withCredentials: true,
+        url: my_api + "/user/following",
+        params : {limit:limit, page:page, username:user}
+      });
+      if (followers.status === 200) {
+        return followers.data;
+      }
+    } catch (err) {
+      if (err.response) {
+        if (err.response.status === 401) {
+          cookie.remove("username");
+          window.location.replace("/login")
+          return null;
+        }
+      }
+    }
+  };
   const getFollowed = async (page, user) => {
     try {
       const followers = await axios({
@@ -300,7 +322,8 @@ function usePeople() {
     fetchGalerry,
     searchPeople,
     searchFollower,
-    getFollowed
+    getFollowed,
+    getFollowees
   };
 }
 export default usePeople;

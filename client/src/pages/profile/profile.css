@@ -130,30 +130,31 @@
     margin-right: 5px;
   }
   .photos-div{
-    background-color: rgb(255, 255, 255);
-    text-align: left;
-    padding: 10px;
-    padding-bottom: 40px;
-    margin-top: 10px;
+    height:auto;
     width: 100%;
-    height: auto;
+    background-color: white;
+    text-align: left;
+    padding-bottom: 20px;
+    margin-bottom: 10px;
   }
   .photo-list-div{
-    height: auto;
     width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
     flex-wrap: wrap;
-    margin-top: 10px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
   }
   .photo-item-div{
-    width:calc(var(--width)/2 - 20px);
-    height:calc(var(--width)/2 - 20px);
-    margin: 5px;
-    border-radius: 10px;
+    width: calc(var(--width)/2 - 6%);
+    height:calc(var(--width)/2);
+    display: grid;
+    place-items: center;
+    margin: 2px;
     background-size: cover;
+    border-radius: 10px;
+    color: #9b9b9b;
   }
   .photos-div h4{
     margin-left: 10px;
@@ -196,13 +197,13 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: start;
   justify-content: center;
   flex-wrap: wrap;
   padding-bottom: 10px;
 }
 .friends-item-div{
-  width: calc(var(--width)/3 - 20px);
+  width: calc(var(--width)/3 - 7%);
   height:auto;
   display: flex;
   flex-direction: column;
@@ -221,6 +222,7 @@
   height:calc(var(--width)/3 - 20px);
   background-size: cover;
   border-radius: 10px;
+  color: #9b9b9b;
 }
 .primary-button{
   width: 100%;

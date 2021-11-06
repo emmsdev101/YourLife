@@ -5,9 +5,9 @@ import { GlobalUserContext } from '../../../logic/userContext';
 import Follower from './Follower';
 import style from './followersList.module.css'
 import useFollowersList from './useFollowersList';
-const FollowersList = ({isOwn, back, numFollowers, fullname}) => {
+const FollowersList = ({isOwn, back, numFollowers,numFollowing, fullname, viewFollowers}) => {
     const user_context = useContext(GlobalUserContext)
-    const {followers, loading, searchInput, toSearch, loadingNext, nextPage, isSearching} = useFollowersList(isOwn)
+    const {followers, loading, searchInput, toSearch, loadingNext, nextPage, isSearching} = useFollowersList(isOwn, viewFollowers)
 
     return (
         <div className = {style.followersList}>
@@ -24,12 +24,12 @@ const FollowersList = ({isOwn, back, numFollowers, fullname}) => {
                     <FaSearch className = {style.searchIcon}/>
             </div>
             <div className = {style.listHeader}>
-                <p className = {style.listLabel}>Followers</p>
-                <p className = {style.followerCount}>{numFollowers}</p>
+                <p className = {style.listLabel}>{viewFollowers === 'followers'?'Followers':'Following'}</p>
+                <p className = {style.followerCount}>{viewFollowers === 'followers'?numFollowers:numFollowing}</p>
             </div>
             <div className = {style.list}>
                 {followers? followers.map((user, id)=>(
-                    <Follower isSearching = {isSearching} user = {user} key = {id} style = {style} isOwn ={isOwn} back = {back}/>
+                    <Follower noButton = {viewFollowers === "following"} isSearching = {isSearching} user = {user} key = {id} style = {style} isOwn ={isOwn} back = {back}/>
                 )) :''
                 }
                 {loading?<div className = {style.loadingDiv}><Loader/></div>:followers?.length<numFollowers && !isSearching?<button className = {style.loadMore} onClick = {nextPage}>Load more</button>:followers?.length === 0?<div>No Result</div>:''}

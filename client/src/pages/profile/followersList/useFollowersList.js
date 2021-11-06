@@ -5,8 +5,8 @@ import usePeople from "../../../logic/usePeople";
 
 const cookie = new Cookies()
 
-const useFollowersList = (isOwn, back) => {
-    const {getFollowing, searchFollower} = usePeople()
+const useFollowersList = (isOwn, viewFollowers) => {
+    const {getFollowing, searchFollower, getFollowees} = usePeople()
     const [followers, setFollwers] = useState(null)
     const [loading, setLoading] = useState(true)
     const [loadingNext, setLoadingNext] = useState(false)
@@ -20,21 +20,21 @@ const useFollowersList = (isOwn, back) => {
     useEffect(()=> {
         setFollwers([])
         setLoading(true)
-        getFollowers()
+        getUsers()
     },[user])
     useEffect(()=>{
         if(toSearch.length > 2){
             search()
             setIsSearching(true)
         }else if(toSearch.length <= 0){
-            getFollowers()
+            getUsers()
             setIsSearching(false)
         }
     },[toSearch])
-    async function getFollowers(){
+    async function getUsers(){
         setLoading(true)
         setFollwers([])
-        const fetched_followers = await getFollowing(20,0, isOwn?null:user)
+        const fetched_followers = viewFollowers === "followers"?await getFollowing(20,0, isOwn?null:user):await getFollowees(20,0, isOwn?null:user)
         if(Array.isArray(fetched_followers)){
             setFollwers(fetched_followers)
         }
@@ -42,7 +42,7 @@ const useFollowersList = (isOwn, back) => {
     }
     const nextPage = async() => {
         setLoading(true)
-        const fetched_followers = await getFollowing(20,page, isOwn?null:user)
+        const fetched_followers = viewFollowers === 'followers'?await getFollowing(20,page, isOwn?null:user):await getFollowees(20,page, isOwn?null:user)
         if(fetched_followers){
             setFollwers((olds)=>[...olds, ...fetched_followers])
             setLoading(false)

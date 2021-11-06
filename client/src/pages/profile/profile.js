@@ -42,7 +42,8 @@ function Profile() {
     back,
     isFollowed,
     followUser,
-    messageProfile
+    messageProfile,
+    followedList
   } = useProfile();
   const { addFeed, feedStories, loading } = useStories();
   const {
@@ -55,6 +56,7 @@ function Profile() {
   const {
     viewFollowers,
     toggleOpenFollowers,
+    toggleOpenFollowing,
     createStory,
     createPost,
     seePhotos,
@@ -65,12 +67,10 @@ function Profile() {
 
   const PhtoItem = ({ image, id }) => {
     const my_api = MY_API
+    const picture_url = my_api + "/photo/"+image
     return (
-      <div
-        id={id}
-        className="photo-item-div"
-        style={{ backgroundImage: "url(" + my_api + "/photo/" + image + ")" }}
-      ></div>
+      <div className = "photo-item-div" id = {id} style = {{backgroundImage:'url('+picture_url+')'}}>
+    </div>
     );
   };
 
@@ -103,7 +103,7 @@ function Profile() {
     );
   };
   if (createPost) return <CreatePost showMe={createStory} addStory={addFeed} />;
-  else if (viewFollowers) return <FollowersList isOwn = {isOwn} back = {toggleOpenFollowers} numFollowers = {followers} fullname = {fullname}/>;
+  else if (viewFollowers) return <FollowersList isOwn = {isOwn} back = {toggleOpenFollowers} numFollowers = {followers} numFollowing={following} fullname = {fullname} viewFollowers = {viewFollowers}/>;
   else if (viewPost)
     return (
       <Suspense fallback={<div className = {style.postLoading}><Loader/></div>}>
@@ -224,6 +224,32 @@ function Profile() {
         {follows && follows.length === 0 ? (
           <center>
             <h4>No followers</h4>
+          </center>
+        ) : (
+          ""
+        )}
+      </div>
+      <div className="friends-div">
+        <h4>Following</h4>
+        <div className="friends-list-div">
+          {followedList ? (
+            followedList.map((user, id) => (
+              <FriendItem follower={user} key={id} id={id} />
+            ))
+          ) : (
+            <Loader />
+          )}
+        </div>
+        {followedList && followedList.length > 0 ? (
+          <div className="generic-button-div">
+            <button onClick={toggleOpenFollowing}> See Following</button>
+          </div>
+        ) : (
+          ""
+        )}
+        {followedList && followedList.length === 0 ? (
+          <center>
+            <h4>No Following</h4>
           </center>
         ) : (
           ""

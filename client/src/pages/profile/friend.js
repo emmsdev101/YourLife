@@ -1,5 +1,6 @@
 import { useCustomHooks, useReactHooks } from "../../logic/library"
 import { MY_API } from "../../config"
+import { FaUserCircle } from "react-icons/fa"
 const FriendItem = ({follower, id})=> {
     const {useState, useEffect} = useReactHooks()
     const {usePeople} = useCustomHooks()
@@ -18,7 +19,8 @@ const FriendItem = ({follower, id})=> {
 
 return(
     <div className = "friends-item-div" id = {id}>
-        <div className = "friend-image" style = {{backgroundImage:'url('+profilePicture+')'}}></div>
+        {profilePicture?<div className = "friend-image" style = {{backgroundImage:'url('+profilePicture+')'}}></div>:
+        <FaUserCircle className = "friend-image"/>}
         <p>{follower.firstname + "" + follower.lastname} </p>
     </div>
             )

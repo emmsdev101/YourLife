@@ -21,7 +21,7 @@ const useProfile = () => {
   const user_context = useContext(GlobalUserContext);
   const set_user_context = useContext(GlobalUserActionsContext);
 
-  const { fetchPhotos, getFollowing, getUserInfo, follow } = usePeople();
+  const { fetchPhotos, getFollowing,getFollowees, getUserInfo, follow } = usePeople();
 
   const [photos, setPhotos] = useState(null);
   const [follows, setFollows] = useState(null);
@@ -32,6 +32,7 @@ const useProfile = () => {
   const [profilePhoto, setProfilePhoto] = useState(null)
   const [isFollowed, setIsFollwed] = useState(false)
   const [_id, setId] = useState(null)
+  const [followedList, setFollowedList] = useState(null)
 
   let isMounted = useRef(true);
 
@@ -49,22 +50,23 @@ const useProfile = () => {
     }
     async function fetchProfileData() {
       const profileData = await getUserInfo(isOwn?null:user)
-      const following = await getFollowing(6,0,isOwn?null:user);
+      const followersList = await getFollowing(6,0,isOwn?null:user);
+      const followees = await getFollowees(6,0,isOwn?null:user);
       const fetchResult = await fetchPhotos(user);
       if (isMounted.current) {
         setPhotos(fetchResult);
-        setFollows(following);
+        setFollows(followersList);
         setFullname(profileData.firstname + " " + profileData.lastname)
         setGender(profileData.gender)
         setFollowers(profileData.followers)
         setFollowing(profileData.following)
+        setFollowedList(followees)
         setProfilePhoto(my_api + "/photo/"+profileData.photo)
         setIsFollwed(profileData.isFollowed)
         setId(profileData._id)
       }
     }
     fetchProfileData();
-    console.log(user)
     return () => {
       isMounted.current = false;
     };
@@ -97,7 +99,8 @@ const useProfile = () => {
     back,
     isFollowed,
     followUser,
-    messageProfile
+    messageProfile,
+    followedList
   };
 };
 export default useProfile;

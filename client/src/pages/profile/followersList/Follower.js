@@ -3,13 +3,13 @@ import { FaUserCircle } from 'react-icons/fa';
 import { useHistory } from 'react-router-dom';
 import usePeople from '../../../logic/usePeople';
 
-const Follower = ({style, user, back, isSearching}) => {
+const Follower = ({style, user, back, isSearching, noButton}) => {
     const history = useHistory()
     const my_api =
     process.env.NODE_ENV === "development" ? "http://localhost:4000" : "";
     const {follow} = usePeople()
     
-    const [follower, setFollowed] = useState(user.followed)
+    const [follower, setFollowed] = useState(noButton?true:user.followed)
     const fullname = user.firstname + user.lastname
     const [profilePiture, setProfilePicture] = useState(null)
     
