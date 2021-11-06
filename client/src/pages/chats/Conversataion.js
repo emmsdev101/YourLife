@@ -636,7 +636,7 @@ export default function Conversataion({
         )}
         <div className={myStyle.convoBody}>
           {chats?.map((chat, id) => (
-            <MessageItem chat={chat} key={chat.message._id} />
+            <MessageItem chat={chat} key={chat.message._id} isgroup = {room.isgroup} />
           ))}
           {chats?.length >= 20 && !noMoreChats?loadingNextChat?<div className = {myStyle.loadMoreChats}>Loading...</div>:<div className = {myStyle.loadMoreChats} onClick = {nextChats}>Load more</div>:''}
         </div>

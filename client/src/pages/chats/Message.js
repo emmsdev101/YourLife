@@ -4,7 +4,7 @@ import React, { useContext, useState, useEffect } from "react";
 
 import { GlobalUserContext } from "../../logic/userContext";
 import { MY_API } from "../../config";
-const MessageItem = ({ id, chat }) => {
+const MessageItem = ({ id, chat, isgroup }) => {
   const userContext = useContext(GlobalUserContext);
   const isme = chat.isSender;
   const [profilePhoto, setProfilePhoto] = useState(null);
@@ -56,9 +56,9 @@ const MessageItem = ({ id, chat }) => {
             </div>
           </div>
           {profilePhoto ? (
-            <img className={myStyle.msgProfilePic} alt="" src={profilePhoto} />
+            <img className={myStyle.myPic} alt="" src={profilePhoto} />
           ) : (
-            <FaUserCircle className={myStyle.msgProfilePic} />
+            <FaUserCircle className={myStyle.myPic} />
           )}
         </div>
       );
@@ -93,20 +93,27 @@ const MessageItem = ({ id, chat }) => {
         </div>
       );
     } else {
+      const fullname = chat.sender.firstname + " " + chat.sender.lastname;
       return (
         <div className={myStyle.msgDiv} id={id}>
           {profilePhoto ? (
-            <img className={myStyle.msgProfilePic} src={profilePhoto} alt="" />
+            <img className={isgroup?myStyle.groupSenderPic:myStyle.senderPic} src={profilePhoto} alt="" />
           ) : (
-            <FaUserCircle className={myStyle.msgProfilePic} />
+            <FaUserCircle className={isgroup?myStyle.groupSenderPic:myStyle.senderPic} />
           )}
+          <div className = {myStyle.msgBox}>
+          <p className = {myStyle.senderName}>
+          {isgroup?fullname:''}
+          </p>
           <div className={myStyle.msgInner}>
             <p className={myStyle.msgContent}>{chat.message.content}</p>
             <div className={myStyle.messageFooter}>
               {chatDay + " " + chatTime}
             </div>
           </div>
+          </div>
         </div>
+        
       );
     }
   }
