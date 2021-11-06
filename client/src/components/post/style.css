@@ -79,7 +79,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
-    border-top: 1px solid rgba(27, 27, 27, 0.219);
+    border-top: .02em solid #ccc;
     height: 35px;
     padding-top: 10px;
     margin-left: 10px;
