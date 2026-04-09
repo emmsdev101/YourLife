@@ -1,70 +1,106 @@
-# Getting Started with Create React App
+# YourLife
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack social web application: feed posts, comments and likes, user profiles, followers, real-time notifications and chat, and photo uploads backed by cloud storage.
 
-## Available Scripts
+## Stack
 
-In the project directory, you can run:
+| Layer | Technology |
+| --- | --- |
+| **API** | Node.js, Express |
+| **Database** | MongoDB (Mongoose) |
+| **Auth** | Passport (local strategy), sessions, bcrypt |
+| **Real-time** | Socket.IO |
+| **Media** | AWS S3 (`aws-sdk`) |
+| **Web UI** | React 17 (Create React App), React Router v5, Axios, Framer Motion |
 
-### `npm start`
+## Project layout
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **`server.js`** — Express app, HTTP + Socket.IO server, MongoDB connection, serves the production React build from `client/build`.
+- **`client/`** — React SPA; in development it runs its own dev server and talks to the API on port 4000.
+- **`routes/`** — REST-style handlers (`Account`, `Story`, `Photo`, `Notification`, `Chat`, etc.).
+- **`model/`** — Mongoose models (users, posts/stories, comments, likes, chats, notifications, etc.).
+- **`helper/`** — S3 upload/stream helpers.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Prerequisites
 
-### `npm test`
+- **Node.js** (LTS recommended)
+- **MongoDB** (local or Atlas) — connection string in `DB_CONNECTION`
+- **AWS account** — S3 bucket and IAM credentials for photo uploads (see environment variables)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Environment variables
 
-### `npm run build`
+Create a `.env` file in the **repository root** (same folder as `server.js`). The server loads it via `dotenv`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Variable | Purpose |
+| --- | --- |
+| `DB_CONNECTION` | MongoDB connection URI (required for the app to persist data). |
+| `PORT` | HTTP port (default **4000** if unset). |
+| `AWS_BUCKET_NAME` | S3 bucket for uploaded files. |
+| `AWS_BUCKET_REGION` | AWS region for that bucket. |
+| `AWS_BUCKET_ACCESS_KEY` | IAM access key for S3 uploads. |
+| `AWS_BUCKET_SECRET_KEY` | IAM secret key for S3 uploads. |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The React client uses `http://localhost:4000` as the API and Socket.IO URL when **`NODE_ENV` is `development`** (the default when you run `npm start` in `client/`). See `client/src/config.js`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**Security note:** Session secrets and CORS origins are currently fixed in code (`server.js`). For production, move secrets to environment variables and set CORS to your real frontend origin.
 
-### `npm run eject`
+## Local development
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Run the API and the React dev app in two terminals so the UI on port 3000 can reach the API on port 4000 with credentials.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. **Install dependencies**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+   ```bash
+   npm install
+   cd client && npm install && cd ..
+   ```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+2. **Start the backend** (from the repo root)
 
-## Learn More
+   ```bash
+   npm start
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   API and sockets listen on `http://localhost:4000` (or `PORT`).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+3. **Start the React app** (second terminal)
 
-### Code Splitting
+   ```bash
+   cd client
+   npm start
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+   Open [http://localhost:3000](http://localhost:3000). The dev build proxies API calls to the backend as configured in `client/src/config.js`.
 
-### Analyzing the Bundle Size
+Optional: use **`npm run devStart`** instead of `npm start` for the server if you have [nodemon](https://nodemon.io/) available (`nodemon server.js`).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Production build
 
-### Making a Progressive Web App
+Build the client and run a single Node process that serves the API and the static SPA:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+cd client && npm run build && cd ..
+npm start
+```
 
-### Advanced Configuration
+The `heroku-postbuild` script in `package.json` installs client dependencies and runs `npm run build` in `client/` for Heroku-style deployments.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## npm scripts (root)
 
-### Deployment
+| Script | Command |
+| --- | --- |
+| `npm start` | `node server.js` |
+| `npm run devStart` | `nodemon server.js` (requires nodemon) |
+| `heroku-postbuild` | Installs and builds the `client` app for deployment |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Client scripts (`client/`)
 
-### `npm run build` fails to minify
+| Script | Description |
+| --- | --- |
+| `npm start` | React dev server (port 3000) |
+| `npm run build` | Production bundle to `client/build` |
+| `npm test` | Jest test runner (interactive watch) |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## License
+
+ISC (see `package.json`).
